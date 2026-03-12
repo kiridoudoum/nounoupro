@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nounou Pro - Simplifiez votre quotidien</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #81c784;
+            --green-dark: #4caf50;
+            --green-light: #e8f5e9;
+            --pink: #f48fb1;
+            --pink-dark: #e91e63;
+            --pink-light: #fce4ec;
+            --yellow: #ffcc80;
+            --yellow-dark: #ff9800;
+            --teal: #4db6ac;
+            --text: #2d2d2d;
+            --text-light: #666;
+            --bg: #ffffff;
+            --bg-soft: #fafafa;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-hover: 0 20px 60px rgba(0,0,0,0.14);
+            --radius: 20px;
+            --font: 'Nunito', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font);
+            color: var(--text);
+            background: var(--bg);
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: box-shadow 0.3s;
+        }
+
+        nav.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--green-dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--green-dark), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-logo .logo-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--pink);
+            border-radius: 50%;
+            display: inline-block;
+            -webkit-text-fill-color: initial;
+            background-clip: initial;
+        }
+
+        .nav-links-desktop {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links-desktop a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links-desktop a:hover { color: var(--green-dark); }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--green), var(--teal));
+            color: white !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            box-shadow: 0 4px 14px rgba(77, 182, 172, 0.35);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(77, 182, 172, 0.45) !important;
+            color: white !important;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            padding-top: 70px;
+            background: linear-gradient(160deg, #fff 0%, #f0fdf4 40%, #fce4ec 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(129,199,132,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(244,143,177,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--pink-light);
+            color: var(--pink-dark);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            border: 1px solid rgba(233, 30, 99, 0.15);
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--pink-dark);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .hero-title {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--green-dark), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title .highlight-pink {
+            background: linear-gradient(135deg, var(--pink-dark), #ff6090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            line-height: 1.75;
+            margin-bottom: 40px;
+            max-width: 480px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green), var(--teal));
+            color: white;
+            padding: 16px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.05rem;
+            box-shadow: 0 8px 24px rgba(77, 182, 172, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(77, 182, 172, 0.5);
+        }
+
+        .btn-secondary {
+            color: var(--text);
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(0,0,0,0.1);
+            transition: border-color 0.2s, background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--green);
+            background: var(--green-light);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .stat-item { text-align: left; }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--green-dark);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-phone-mockup {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+            padding: 24px;
+            width: 320px;
+            position: relative;
+            z-index: 2;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .mockup-header {
+            background: linear-gradient(135deg, var(--green), var(--teal));
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .mockup-logo-text {
+            font-weight: 900;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .mockup-subtitle {
+            font-size: 0.78rem;
+            opacity: 0.85;
+        }
+
+        .mockup-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mockup-child-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-soft);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .mockup-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .mockup-avatar.green { background: var(--green-light); }
+        .mockup-avatar.pink { background: var(--pink-light); }
+        .mockup-avatar.yellow { background: #fff8e1; }
+
+        .mockup-child-info { flex: 1; }
+
+        .mockup-child-name {
+            font-weight: 800;
+            font-size: 0.88rem;
+            color: var(--text);
+        }
+
+        .mockup-child-status {
+            font-size: 0.72rem;
+            color: var(--text-light);
+        }
+
+        .mockup-badge {
+            background: var(--green-light);
+            color: var(--green-dark);
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .mockup-badge.pink {
+            background: var(--pink-light);
+            color: var(--pink-dark);
+        }
+
+        .mockup-summary {
+            background: linear-gradient(135deg, var(--green-light), #e0f2f1);
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 12px;
+            text-align: center;
+            border: 1px solid rgba(76,175,80,0.15);
+        }
+
+        .mockup-summary-label {
+            font-size: 0.72rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .mockup-summary-value {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--green-dark);
+            margin-top: 2px;
+        }
+
+        .hero-floating-badge {
+            position: absolute;
+            background: white;
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 3;
+            animation: float2 3.5s ease-in-out infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-8px) rotate(-2deg); }
+        }
+
+        .badge-top-right {
+            top: -10px;
+            right: -30px;
+            animation-delay: 0.5s;
+        }
+
+        .badge-bottom-left {
+            bottom: 20px;
+            left: -40px;
+            animation-delay: 1s;
+            animation-name: float3;
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translateY(0px) rotate(2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        .badge-icon { font-size: 1.2rem; }
+
+        /* ===== SECTION: FEATURES ===== */
+        .section {
+            padding: 100px 40px;
+        }
+
+        .section-alt { background: var(--bg-soft); }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--green-dark);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            line-height: 1.7;
+            max-width: 560px;
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 36px 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .feature-card.green::before { background: linear-gradient(90deg, var(--green), var(--teal)); }
+        .feature-card.pink::before { background: linear-gradient(90deg, var(--pink), #ff6090); }
+        .feature-card.yellow::before { background: linear-gradient(90deg, var(--yellow), var(--yellow-dark)); }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon.green { background: var(--green-light); }
+        .feature-icon.pink { background: var(--pink-light); }
+        .feature-icon.yellow { background: #fff8e1; }
+
+        .feature-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .feature-desc {
+            font-size: 0.92rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 36px;
+            left: calc(12.5% + 28px);
+            right: calc(12.5% + 28px);
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--pink));
+            z-index: 0;
+        }
+
+        .step-item {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .step-item:nth-child(1) .step-number { border-color: var(--green); color: var(--green-dark); }
+        .step-item:nth-child(2) .step-number { border-color: var(--teal); color: var(--teal); }
+        .step-item:nth-child(3) .step-number { border-color: var(--pink); color: var(--pink-dark); }
+        .step-item:nth-child(4) .step-number { border-color: var(--yellow-dark); color: var(--yellow-dark); }
+
+        .step-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.3s;
+        }
+
+        .testimonial-card:hover { transform: translateY(-4px); }
+
+        .stars {
+            color: var(--yellow-dark);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+
+        .testimonial-text {
+            font-size: 0.97rem;
+            color: var(--text);
+            line-height: 1.75;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .author-avatar.green { background: var(--green-light); }
+        .author-avatar.pink { background: var(--pink-light); }
+        .author-avatar.yellow { background: #fff8e1; }
+
+        .author-name {
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--text);
+        }
+
+        .author-role {
+            font-size: 0.78rem;
+            color: var(--text-light);
+        }
+
+        /* ===== PRICING ===== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            align-items: center;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            border-color: var(--green);
+            transform: scale(1.04);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .pricing-card:not(.featured):hover {
+            transform: translateY(-6px);
+            border-color: var(--green-light);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--green), var(--teal));
+            color: white;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .pricing-plan {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .pricing-card.featured .pricing-plan { color: rgba(255,255,255,0.6); }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card.featured .pricing-price { color: white; }
+
+        .pricing-price sup {
+            font-size: 1.2rem;
+            vertical-align: super;
+        }
+
+        .pricing-period {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 28px;
+        }
+
+        .pricing-card.featured .pricing-period { color: rgba(255,255,255,0.5); }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            padding: 9px 0;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .pricing-card.featured .pricing-features li {
+            color: rgba(255,255,255,0.85);
+            border-bottom-color: rgba(255,255,255,0.07);
+        }
+
+        .pricing-features li:last-child { border-bottom: none; }
+
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--green-light);
+            color: var(--green-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .pricing-card.featured .check-icon {
+            background: rgba(129,199,132,0.2);
+            color: var(--green);
+        }
+
+        .check-icon.disabled {
+            background: #f5f5f5;
+            color: #ccc;
+        }
+
+        .btn-pricing {
+            display: block;
+            text-align: center;
+            padding: 14px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-pricing.outline {
+            border: 2px solid rgba(0,0,0,0.12);
+            color: var(--text);
+        }
+
+        .btn-pricing.outline:hover {
+            border-color: var(--green);
+            background: var(--green-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-pricing.solid {
+            background: linear-gradient(135deg, var(--green), var(--teal));
+            color: white;
+            box-shadow: 0 6px 20px rgba(77,182,172,0.4);
+        }
+
+        .btn-pricing.solid:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(77,182,172,0.5);
+        }
+
+        /* ===== FAQ ===== */
+        .faq-list {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 22px 28px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .faq-question:hover { background: var(--bg-soft); }
+
+        .faq-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            color: var(--green-dark);
+            flex-shrink: 0;
+        }
+
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.2s;
+        }
+
+        .faq-item.open .faq-answer { max-height: 300px; }
+
+        .faq-answer-inner {
+            padding: 0 28px 22px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.75;
+        }
+
+        /* ===== CTA FINAL ===== */
+        .cta-section {
+            padding: 100px 40px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(129,199,132,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(244,143,177,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-container {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .cta-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .cta-desc {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-cta-primary {
+            background: linear-gradient(135deg, var(--green), var(--teal));
+            color: white;
+            padding: 18px 44px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(77,182,172,0.45);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .btn-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(77,182,172,0.55);
+        }
+
+        .btn-cta-secondary {
+            color: rgba(255,255,255,0.8);
+            padding: 18px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: border-color 0.2s, color 0.2s;
+            display: inline-block;
+        }
+
+        .btn-cta-secondary:hover {
+            border-color: rgba(255,255,255,0.5);
+            color: white;
+        }
+
+        .cta-note {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 20px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #111;
+            color: rgba(255,255,255,0.5);
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--green); }
+
+        .footer-copy {
+            font-size: 0.82rem;
+            margin-top: 12px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+            .pricing-card.featured { transform: none; }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid::before { display: none; }
+        }
+
+        @media (max-width: 900px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 50px;
+            }
+
+            .hero-title { font-size: 2.6rem; }
+            .hero-desc { margin: 0 auto 40px; }
+            .hero-actions { justify-content: center; }
+            .hero-stats { justify-content: center; }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .badge-top-right { right: 0; }
+            .badge-bottom-left { left: 0; }
+
+            .testimonials-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+
+            .section { padding: 70px 24px; }
+
+            .section-title { font-size: 1.9rem; }
+        }
+
+        @media (max-width: 640px) {
+            nav { padding: 0 20px; }
+            .nav-links-desktop { display: none; }
+
+            .hero-title { font-size: 2rem; }
+            .hero-container { padding: 50px 24px; }
+
+            .hero-phone-mockup { width: 280px; }
+
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr; max-width: 320px; margin: 40px auto 0; }
+
+            .cta-title { font-size: 2rem; }
+
+            .hero-stats { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <a href="#" class="nav-logo">
+            <span>Nounou Pro</span>
+            <span class="logo-dot"></span>
+        </a>
+        <div class="nav-links-desktop">
+            <a href="#fonctionnalites">Fonctionnalites</a>
+            <a href="#comment">Comment ca marche</a>
+            <a href="#avis">Avis</a>
+            <a href="#tarifs">Tarifs</a>
+            <a href="app.html" class="nav-cta">Essayer gratuitement</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    Nouveau - Gestion simplifiee pour nounous agreees
+                </div>
+                <h1 class="hero-title">
+                    Gerez vos enfants<br>
+                    <span class="highlight">sans stress</span>,<br>
+                    avec <span class="highlight-pink">Nounou Pro</span>
+                </h1>
+                <p class="hero-desc">
+                    L'application tout-en-un qui calcule automatiquement vos heures, vos indemnites et vos factures mensuelles. Passez plus de temps avec les enfants, moins de temps dans les paperasses.
+                </p>
+                <div class="hero-actions">
+                    <a href="app.html" class="btn-primary">Commencer gratuitement</a>
+                    <a href="#comment" class="btn-secondary">
+                        <span>&#9654;</span> Voir comment ca marche
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Calcul automatique</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Erreur de paie</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5min</div>
+                        <div class="stat-label">Pour demarrer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-phone-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-logo-text">Nounou Pro</div>
+                        <div class="mockup-subtitle">Tableau de bord - Mars 2026</div>
+                    </div>
+                    <div class="mockup-cards">
+                        <div class="mockup-child-card">
+                            <div class="mockup-avatar green">&#128103;</div>
+                            <div class="mockup-child-info">
+                                <div class="mockup-child-name">Lea, 2 ans</div>
+                                <div class="mockup-child-status">Arrivee a 8h00</div>
+                            </div>
+                            <div class="mockup-badge">Present</div>
+                        </div>
+                        <div class="mockup-child-card">
+                            <div class="mockup-avatar pink">&#128102;</div>
+                            <div class="mockup-child-info">
+                                <div class="mockup-child-name">Tom, 3 ans</div>
+                                <div class="mockup-child-status">Parti a 17h30</div>
+                            </div>
+                            <div class="mockup-badge pink">Depart</div>
+                        </div>
+                        <div class="mockup-child-card">
+                            <div class="mockup-avatar yellow">&#128100;</div>
+                            <div class="mockup-child-info">
+                                <div class="mockup-child-name">Emma, 1 an</div>
+                                <div class="mockup-child-status">Sieste en cours</div>
+                            </div>
+                            <div class="mockup-badge">Present</div>
+                        </div>
+                        <div class="mockup-summary">
+                            <div class="mockup-summary-label">TOTAL FACTURE DU MOIS</div>
+                            <div class="mockup-summary-value">1 842,50 EUR</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-floating-badge badge-top-right">
+                    <span class="badge-icon">&#9989;</span>
+                    Facture generee automatiquement
+                </div>
+                <div class="hero-floating-badge badge-bottom-left">
+                    <span class="badge-icon">&#128200;</span>
+                    +12h de gagnees par mois
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section section-alt" id="fonctionnalites">
+        <div class="section-container">
+            <span class="section-label">Fonctionnalites</span>
+            <h2 class="section-title">Tout ce dont vous avez<br>besoin, au meme endroit</h2>
+            <p class="section-desc">Concu specifiquement pour les assistantes maternelles agreees, Nounou Pro s'adapte a votre quotidien et a la legislation en vigueur.</p>
+
+            <div class="features-grid">
+                <div class="feature-card green">
+                    <div class="feature-icon green">&#9200;</div>
+                    <h3 class="feature-title">Suivi des presences</h3>
+                    <p class="feature-desc">Enregistrez les heures d'arrivee et de depart de chaque enfant en un clic. L'historique est sauvegarde automatiquement, sans effort.</p>
+                </div>
+                <div class="feature-card pink">
+                    <div class="feature-icon pink">&#128176;</div>
+                    <h3 class="feature-title">Calcul automatique</h3>
+                    <p class="feature-desc">Heures normales, heures supplementaires, indemnites d'entretien, frais de repas... Tout est calcule selon la convention collective.</p>
+                </div>
+                <div class="feature-card yellow">
+                    <div class="feature-icon yellow">&#128101;</div>
+                    <h3 class="feature-title">Multi-enfants</h3>
+                    <p class="feature-desc">Gerez plusieurs enfants simultanement avec des profils independants. Le cumul global de vos revenus mensuels est toujours visible.</p>
+                </div>
+                <div class="feature-card pink">
+                    <div class="feature-icon pink">&#128247;</div>
+                    <h3 class="feature-title">Profils personnalises</h3>
+                    <p class="feature-desc">Photo, prenom, date de naissance, mensualisation specifique... Chaque enfant a son propre profil avec les informations importantes.</p>
+                </div>
+                <div class="feature-card green">
+                    <div class="feature-icon green">&#128274;</div>
+                    <h3 class="feature-title">Securite garantie</h3>
+                    <p class="feature-desc">Vos donnees restent sur votre appareil. Un systeme de mot de passe protege l'acces a votre espace personnel.</p>
+                </div>
+                <div class="feature-card yellow">
+                    <div class="feature-icon yellow">&#128203;</div>
+                    <h3 class="feature-title">Feuilles de presence</h3>
+                    <p class="feature-desc">Generez une feuille de presence mensuelle complete par enfant avec tous les totaux deja calcules. Fini les tableaux Excel compliques.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="comment">
+        <div class="section-container">
+            <span class="section-label">Comment ca marche</span>
+            <h2 class="section-title" style="text-align:center">Pret en 4 etapes simples</h2>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Creez votre espace</h4>
+                    <p class="step-desc">Ouvrez l'application, definissez votre mot de passe et configurez vos tarifs horaires en quelques secondes.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Ajoutez les enfants</h4>
+                    <p class="step-desc">Creez un profil pour chaque enfant avec leur mensualisation de base et leur photo.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Saisissez les presences</h4>
+                    <p class="step-desc">Chaque jour, entrez simplement l'heure d'arrivee et de depart. Tout le reste est calcule pour vous.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Consultez vos totaux</h4>
+                    <p class="step-desc">En fin de mois, consultez le recapitulatif complet par enfant et le cumul de vos revenus du mois.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section section-alt" id="avis">
+        <div class="section-container">
+            <span class="section-label">Temoignages</span>
+            <h2 class="section-title" style="text-align:center">Ce qu'elles en disent</h2>
+            <p class="section-desc" style="text-align:center; margin: 0 auto 60px;">Des nounous qui ont transforme leur gestion administrative avec Nounou Pro.</p>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"Avant, je passais deux heures en fin de mois a tout calculer sur Excel. Maintenant, j'ai tout en temps reel. Je ne saurais plus me passer de Nounou Pro !"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar green">&#128105;</div>
+                        <div>
+                            <div class="author-name">Marie-Claire L.</div>
+                            <div class="author-role">Assistante maternelle, Lyon - 3 enfants accueillis</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"Super simple a prendre en main ! En 5 minutes j'avais configure mes tarifs et ajoute mes enfants. Le calcul des indemnites d'entretien automatique m'a particulierement bluffee."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar pink">&#128105;</div>
+                        <div>
+                            <div class="author-name">Sophie B.</div>
+                            <div class="author-role">Assistante maternelle, Bordeaux - 2 enfants accueillis</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"J'adore pouvoir voir le cumul global de tous les enfants. Ca me permet de savoir exactement ce que je vais percevoir dans le mois. Tres professionnel et tres joli !"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar yellow">&#128105;</div>
+                        <div>
+                            <div class="author-name">Isabelle M.</div>
+                            <div class="author-role">Assistante maternelle, Nantes - 4 enfants accueillis</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section" id="tarifs">
+        <div class="section-container">
+            <span class="section-label">Tarifs</span>
+            <h2 class="section-title" style="text-align:center">Simple, transparent, abordable</h2>
+            <p class="section-desc" style="text-align:center; margin: 0 auto 60px;">Choisissez la formule qui correspond a votre activite.</p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-plan">Decouverte</div>
+                    <div class="pricing-price"><sup></sup>Gratuit</div>
+                    <div class="pricing-period">Pour toujours</div>
+                    <ul class="pricing-features">
+                        <li><div class="check-icon">&#10003;</div> Jusqu'a 2 enfants</li>
+                        <li><div class="check-icon">&#10003;</div> Suivi des presences</li>
+                        <li><div class="check-icon">&#10003;</div> Calcul automatique</li>
+                        <li><div class="check-icon disabled">&#10003;</div> <span style="color:#ccc">Profils avec photos</span></li>
+                        <li><div class="check-icon disabled">&#10003;</div> <span style="color:#ccc">Cumul multi-enfants</span></li>
+                    </ul>
+                    <a href="app.html" class="btn-pricing outline">Commencer gratuitement</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Le plus populaire</div>
+                    <div class="pricing-plan">Pro</div>
+                    <div class="pricing-price"><sup>EUR</sup>4<small style="font-size:1.5rem">,99</small></div>
+                    <div class="pricing-period">par mois</div>
+                    <ul class="pricing-features">
+                        <li><div class="check-icon">&#10003;</div> Enfants illimites</li>
+                        <li><div class="check-icon">&#10003;</div> Suivi des presences</li>
+                        <li><div class="check-icon">&#10003;</div> Calcul automatique</li>
+                        <li><div class="check-icon">&#10003;</div> Profils avec photos</li>
+                        <li><div class="check-icon">&#10003;</div> Cumul multi-enfants</li>
+                    </ul>
+                    <a href="app.html" class="btn-pricing solid">Demarrer l'essai</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-plan">Annuel</div>
+                    <div class="pricing-price"><sup>EUR</sup>39<small style="font-size:1.5rem">,99</small></div>
+                    <div class="pricing-period">par an — economisez 20%</div>
+                    <ul class="pricing-features">
+                        <li><div class="check-icon">&#10003;</div> Tout du plan Pro</li>
+                        <li><div class="check-icon">&#10003;</div> 2 mois offerts</li>
+                        <li><div class="check-icon">&#10003;</div> Support prioritaire</li>
+                        <li><div class="check-icon">&#10003;</div> Nouvelles fonctions en avant-premiere</li>
+                        <li><div class="check-icon">&#10003;</div> Sauvegarde cloud</li>
+                    </ul>
+                    <a href="app.html" class="btn-pricing outline">Choisir l'annuel</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section-alt">
+        <div class="section-container">
+            <span class="section-label" style="text-align:center; display:block">FAQ</span>
+            <h2 class="section-title" style="text-align:center; margin-bottom:48px">Questions frequentes</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Les calculs sont-ils conformes a la legislation ?
+                        <span class="faq-arrow">&#8964;</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Oui, Nounou Pro integre les regles de la convention collective nationale des assistants maternels : calcul des indemnites d'entretien (minimum legal et coefficient horaire), distinction heures normales / heures supplementaires, frais de repas configurables.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Mes donnees sont-elles en securite ?
+                        <span class="faq-arrow">&#8964;</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Toutes vos donnees sont stockees localement sur votre appareil. Aucune information personnelle n'est envoyee sur nos serveurs. L'acces a l'application est protege par un mot de passe que vous definissez vous-meme.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Combien d'enfants puis-je gerer ?
+                        <span class="faq-arrow">&#8964;</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Avec la version gratuite, vous pouvez gerer jusqu'a 2 enfants. Le plan Pro et Annuel permet un nombre illimite d'enfants, chacun avec son propre profil, ses donnees de presence et sa mensualisation.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Fonctionne-t-elle sur mobile ?
+                        <span class="faq-arrow">&#8964;</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Oui, Nounou Pro est entierement responsive et s'adapte a tous les ecrans : smartphone, tablette et ordinateur. Vous pouvez l'utiliser partout, a tout moment.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        Puis-je personaliser les tarifs horaires ?
+                        <span class="faq-arrow">&#8964;</span>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Absolument. Vous configurez vos propres tarifs : taux horaire normal, taux horaire supplementaire, frais de repas, et mensualisation independante par enfant. Tout est modifiable a tout moment dans les parametres.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <span class="cta-emoji">&#127968;</span>
+            <h2 class="cta-title">Prete a prendre soin<br>de votre activite ?</h2>
+            <p class="cta-desc">Rejoignez les centaines de nounous qui ont deja simplifie leur gestion administrative. Demarrez gratuitement, sans carte bancaire.</p>
+            <div class="cta-actions">
+                <a href="app.html" class="btn-cta-primary">Essayer Nounou Pro gratuitement</a>
+                <a href="#tarifs" class="btn-cta-secondary">Voir les tarifs</a>
+            </div>
+            <p class="cta-note">Gratuit pour 2 enfants · Aucune carte requise · Pret en 5 minutes</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">Nounou Pro</div>
+        <p style="font-size:0.88rem; margin-bottom:4px;">L'application de gestion pour assistantes maternelles agreees.</p>
+        <div class="footer-links">
+            <a href="#fonctionnalites">Fonctionnalites</a>
+            <a href="#tarifs">Tarifs</a>
+            <a href="#avis">Avis</a>
+            <a href="app.html">Acceder a l'app</a>
+        </div>
+        <p class="footer-copy">&copy; 2026 Nounou Pro. Tous droits reserves.</p>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function toggleFaq(el) {
+            const item = el.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        }
+    </script>
+
+</body>
+</html>
