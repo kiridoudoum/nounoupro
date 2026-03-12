@@ -242,7 +242,7 @@ if (FIREBASE_CONFIGURED) {
             if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
             await loadUserData();
             await loadSettings();
-            showPage('children');
+            showPage('home');
         } else {
             currentUser = null;
             childrenList = [];
@@ -334,14 +334,19 @@ window.showPage = function(pageId) {
         p.classList.remove('active');
         p.classList.add('hidden');
     });
-    if (pageId !== 'children') {
-        const page = document.getElementById(`${pageId}-page`);
-        if (page) {
-            page.classList.add('active');
-            page.classList.remove('hidden');
-        }
+    const page = document.getElementById(`${pageId}-page`);
+    if (page) {
+        page.classList.add('active');
+        page.classList.remove('hidden');
     }
-    renderChildrenCards();
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    const activeBtn = document.getElementById(`nav-btn-${pageId}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    if (pageId === 'home') {
+        renderChildrenCards();
+        renderDashboardSummaries();
+    }
     if (pageId === 'settings') {
         loadSettings();
         updateSettingsChildFields();
@@ -370,6 +375,73 @@ function renderChildrenCards() {
         `;
         container.appendChild(card);
     });
+}
+
+function renderDashboardSummaries() {
+    const container = document.getElementById('dashboard-summaries');
+    if (!container) return;
+    container.innerHTML = '';
+    if (childrenList.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-weight:600;margin-top:12px;">Aucun enfant pour l\'instant. Ajoutez votre premier enfant !</p>';
+        return;
+    }
+    let globalBase = 0, globalFrais = 0, globalTotal = 0;
+    childrenList.forEach(child => {
+        const cache = childTotalsCache[child.id] || {};
+        const base = parseFloat(child.baseMonthlySalary) || 0;
+        const frais = parseFloat(cache.totalFrais) || 0;
+        const total = parseFloat(cache.totalMonthly) || 0;
+        globalBase += base;
+        globalFrais += frais;
+        globalTotal += total;
+        const card = document.createElement('div');
+        card.className = 'dashboard-child-summary';
+        card.innerHTML = `
+            <div class="dcs-header">
+                <img src="${child.photoUrl || defaultPhotoUrl}" class="dcs-photo">
+                <span class="dcs-name">${child.name}</span>
+            </div>
+            <div class="dcs-figures">
+                <div class="dcs-figure">
+                    <span class="dcs-label">Mensualisation</span>
+                    <span class="dcs-value">${base.toFixed(2)} €</span>
+                </div>
+                <div class="dcs-figure">
+                    <span class="dcs-label">Frais réels</span>
+                    <span class="dcs-value">${frais.toFixed(2)} €</span>
+                </div>
+                <div class="dcs-figure highlight">
+                    <span class="dcs-label">Total facture</span>
+                    <span class="dcs-value">${total.toFixed(2)} €</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+    if (childrenList.length > 1) {
+        const globalCard = document.createElement('div');
+        globalCard.className = 'dashboard-child-summary global';
+        globalCard.innerHTML = `
+            <div class="dcs-header">
+                <span class="dcs-name">Cumul — tous les enfants</span>
+            </div>
+            <div class="dcs-figures">
+                <div class="dcs-figure">
+                    <span class="dcs-label">Mensualisation</span>
+                    <span class="dcs-value">${globalBase.toFixed(2)} €</span>
+                </div>
+                <div class="dcs-figure">
+                    <span class="dcs-label">Frais réels</span>
+                    <span class="dcs-value">${globalFrais.toFixed(2)} €</span>
+                </div>
+                <div class="dcs-figure highlight">
+                    <span class="dcs-label">Total cumulé</span>
+                    <span class="dcs-value">${globalTotal.toFixed(2)} €</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(globalCard);
+    }
 }
 
 window.selectChild = async function(id) {
@@ -409,7 +481,7 @@ window.deleteChild = async function(childId) {
         if (activeChildId) await loadAttendance(activeChildId);
         else tableBody.innerHTML = '';
     }
-    showPage('children');
+    showPage('home');
 };
 
 window.openChildSettings = function(childId) {

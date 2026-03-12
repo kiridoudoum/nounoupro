@@ -359,9 +359,9 @@
             </div>
 
             <nav class="sidebar-nav">
-                <button class="sidebar-btn active" id="nav-btn-children" onclick="addChild()">+ Ajouter un enfant</button>
-                <button class="sidebar-btn" id="nav-btn-attendance" onclick="showPage('attendance')">Calendrier</button>
-                <button class="sidebar-btn" id="nav-btn-settings" onclick="showPage('settings')">Paramètres</button>
+                <button class="sidebar-btn active" id="nav-btn-home" onclick="showPage('home')">🏠 Accueil</button>
+                <button class="sidebar-btn" id="nav-btn-attendance" onclick="showPage('attendance')">📅 Calendrier</button>
+                <button class="sidebar-btn" id="nav-btn-settings" onclick="showPage('settings')">⚙️ Paramètres</button>
             </nav>
 
             <button class="sidebar-logout" onclick="logout()">Déconnexion</button>
@@ -370,31 +370,17 @@
         <!-- CONTENU PRINCIPAL -->
         <div class="app-content">
 
-            <!-- ENFANTS : toujours visible en haut -->
-            <div id="children-bar">
-                <div id="children-cards-container" class="children-grid"></div>
-            </div>
+            <!-- PAGE ACCUEIL / TABLEAU DE BORD -->
+            <section id="home-page" class="page active">
+                <header class="page-header">
+                    <h2>Tableau de bord</h2>
+                    <button class="action-button" onclick="addChild()">+ Ajouter un enfant</button>
+                </header>
 
-            <!-- RÉSUMÉ DU MOIS (visible quand aucune page active) -->
-            <div id="summary-bar">
-                <div class="summary-card">
-                    <div class="summary-card-title">Résumé du mois — enfant actif</div>
-                    <div class="key-figures">
-                        <div class="figure-box">
-                            <h3>Mensualisation</h3>
-                            <p id="home-baseSalary" class="figure-value">0.00 €</p>
-                        </div>
-                        <div class="figure-box">
-                            <h3>Frais réels</h3>
-                            <p id="home-totalFrais" class="figure-value">0.00 €</p>
-                        </div>
-                        <div class="figure-box highlight">
-                            <h3>Total facture</h3>
-                            <p id="home-totalMonthly" class="figure-value">0.00 €</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div id="children-cards-container" class="children-grid"></div>
+
+                <div id="dashboard-summaries" class="dashboard-summaries"></div>
+            </section>
 
             <section id="attendance-page" class="page hidden">
                 <header class="page-header">
