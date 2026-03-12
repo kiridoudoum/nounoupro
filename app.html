@@ -347,122 +347,149 @@
         </div>
     </div>
 
-    <!-- APP -->
-    <nav class="navbar">
-        <span class="logo">Nounou Pro</span>
-        <div class="nav-links">
-            <div id="logged-in-nav" class="hidden">
-                <span id="nav-user-email"></span>
-                <button class="nav-button" onclick="showPage('attendance')">Présences</button>
-                <button class="nav-button logout" onclick="logout()">Déconnexion</button>
+    <!-- APP LAYOUT -->
+    <div id="app-layout" class="hidden">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">Nounou Pro</div>
+
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar" id="sidebar-avatar">N</div>
+                <div class="sidebar-email" id="nav-user-email"></div>
             </div>
-        </div>
-    </nav>
-    
-    <div class="main-content">
 
-        <!-- ENFANTS : toujours visible -->
-        <div id="children-bar">
-            <div class="children-bar-header">
-                <h2>Mes enfants</h2>
-                <button class="action-button" onclick="addChild()">+ Ajouter un enfant</button>
+            <nav class="sidebar-nav">
+                <button class="sidebar-btn active" id="nav-btn-children" onclick="addChild()">+ Ajouter un enfant</button>
+                <button class="sidebar-btn" id="nav-btn-attendance" onclick="showPage('attendance')">Calendrier</button>
+                <button class="sidebar-btn" id="nav-btn-settings" onclick="showPage('settings')">Paramètres</button>
+            </nav>
+
+            <button class="sidebar-logout" onclick="logout()">Déconnexion</button>
+        </aside>
+
+        <!-- CONTENU PRINCIPAL -->
+        <div class="app-content">
+
+            <!-- ENFANTS : toujours visible en haut -->
+            <div id="children-bar">
+                <div id="children-cards-container" class="children-grid"></div>
             </div>
-            <div id="children-cards-container" class="children-grid"></div>
-        </div>
 
-        <section id="attendance-page" class="page hidden">
-            <header class="page-header">
-                <h2 id="attendance-title">Feuille de Présence</h2>
-                <button class="action-button" onclick="addRow()">+ Ajouter une ligne</button>
-            </header>
-
-            <div class="table-wrapper">
-                <table id="attendanceTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Arrivée</th>
-                            <th>Départ</th>
-                            <th>Total heures</th>
-                            <th>H. sup (h)</th>
-                            <th>Indem. entr.</th>
-                            <th>Frais repas</th>
-                            <th>Total journée</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="3">Totaux du mois</td>
-                            <td id="footer-totalHours">0h00</td>
-                            <td id="footer-totalOvertime">0h00</td>
-                            <td id="footer-totalIndemnity">0.00 €</td>
-                            <td id="footer-totalMeals">0.00 €</td>
-                            <td id="footer-totalMonthly">0.00 €</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <div style="display:none;" id="footer-baseSalary"></div>
-        </section>
-
-        <section id="settings-page" class="page hidden">
-            <header class="page-header">
-                <h2>Paramètres</h2>
-            </header>
-
-            <div class="settings-page-grid">
-                <div class="settings-group">
-                    <h3>Enfant : <span id="child-name-settings">...</span></h3>
-                    <div class="settings-form">
-                        <p class="note">⚠️ Ces paramètres s'appliquent uniquement à l'enfant sélectionné.</p>
-
-                        <div class="photo-uploader">
-                            <img id="photo-preview" src="https://via.placeholder.com/100?text=👶" alt="Photo">
-                            <label for="setting-child-photo-url">URL de la photo</label>
-                            <input type="text" id="setting-child-photo-url" oninput="updatePhotoPreview()" placeholder="https://...">
-                            <p class="note">Collez l'URL d'une image en ligne.</p>
+            <!-- RÉSUMÉ DU MOIS (visible quand aucune page active) -->
+            <div id="summary-bar">
+                <div class="summary-card">
+                    <div class="summary-card-title">Résumé du mois — enfant actif</div>
+                    <div class="key-figures">
+                        <div class="figure-box">
+                            <h3>Mensualisation</h3>
+                            <p id="home-baseSalary" class="figure-value">0.00 €</p>
                         </div>
-
-                        <label for="setting-base-salary">Salaire mensuel de base (€)</label>
-                        <input type="number" id="setting-base-salary" step="0.01" value="0.00">
-
-                        <button class="action-button" onclick="updateChildBaseSalary()">Sauvegarder</button>
-                        <p id="settings-message-child" class="message"></p>
-                        <div id="delete-child-container" style="margin-top: 16px;"></div>
-                    </div>
-                </div>
-
-                <div class="settings-group">
-                    <h3>Tarifs globaux</h3>
-                    <div class="settings-form">
-                        <label for="setting-hourly-rate">Taux horaire normal (€/h)</label>
-                        <input type="number" id="setting-hourly-rate" step="0.01" value="4.50">
-
-                        <label for="setting-overtime-hourly-rate">Taux horaire supplémentaire (€/h)</label>
-                        <input type="number" id="setting-overtime-hourly-rate" step="0.01" value="5.62">
-
-                        <label for="setting-meal-rate">Frais de repas (€)</label>
-                        <input type="number" id="setting-meal-rate" step="0.01" value="3.00">
-
-                        <p class="note">L'indemnité d'entretien est fixée par la convention collective.</p>
-
-                        <button class="action-button" onclick="saveGlobalSettings()">Sauvegarder les tarifs</button>
-                        <p id="settings-message-global" class="message"></p>
-
-                        <hr style="margin: 24px 0; border: 0; border-top: 1px solid var(--border);">
-
-                        <label>Mot de passe</label>
-                        <p class="note">Un email de réinitialisation vous sera envoyé à votre adresse.</p>
-                        <button class="action-button" onclick="sendPasswordReset()">Envoyer le lien</button>
-                        <p id="password-message" class="message"></p>
+                        <div class="figure-box">
+                            <h3>Frais réels</h3>
+                            <p id="home-totalFrais" class="figure-value">0.00 €</p>
+                        </div>
+                        <div class="figure-box highlight">
+                            <h3>Total facture</h3>
+                            <p id="home-totalMonthly" class="figure-value">0.00 €</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-        
+
+            <section id="attendance-page" class="page hidden">
+                <header class="page-header">
+                    <h2 id="attendance-title">Feuille de Présence</h2>
+                    <button class="action-button" onclick="addRow()">+ Ajouter une ligne</button>
+                </header>
+
+                <div class="table-wrapper">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Arrivée</th>
+                                <th>Départ</th>
+                                <th>Total heures</th>
+                                <th>H. sup (h)</th>
+                                <th>Indem. entr.</th>
+                                <th>Frais repas</th>
+                                <th>Total journée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="3">Totaux du mois</td>
+                                <td id="footer-totalHours">0h00</td>
+                                <td id="footer-totalOvertime">0h00</td>
+                                <td id="footer-totalIndemnity">0.00 €</td>
+                                <td id="footer-totalMeals">0.00 €</td>
+                                <td id="footer-totalMonthly">0.00 €</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div style="display:none;" id="footer-baseSalary"></div>
+            </section>
+
+            <section id="settings-page" class="page hidden">
+                <header class="page-header">
+                    <h2>Paramètres</h2>
+                </header>
+
+                <div class="settings-page-grid">
+                    <div class="settings-group">
+                        <h3>Enfant : <span id="child-name-settings">...</span></h3>
+                        <div class="settings-form">
+                            <p class="note">⚠️ Ces paramètres s'appliquent uniquement à l'enfant sélectionné.</p>
+
+                            <div class="photo-uploader">
+                                <img id="photo-preview" src="https://via.placeholder.com/100?text=👶" alt="Photo">
+                                <label for="setting-child-photo-url">URL de la photo</label>
+                                <input type="text" id="setting-child-photo-url" oninput="updatePhotoPreview()" placeholder="https://...">
+                                <p class="note">Collez l'URL d'une image en ligne.</p>
+                            </div>
+
+                            <label for="setting-base-salary">Salaire mensuel de base (€)</label>
+                            <input type="number" id="setting-base-salary" step="0.01" value="0.00">
+
+                            <button class="action-button" onclick="updateChildBaseSalary()">Sauvegarder</button>
+                            <p id="settings-message-child" class="message"></p>
+                            <div id="delete-child-container" style="margin-top: 16px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Tarifs globaux</h3>
+                        <div class="settings-form">
+                            <label for="setting-hourly-rate">Taux horaire normal (€/h)</label>
+                            <input type="number" id="setting-hourly-rate" step="0.01" value="4.50">
+
+                            <label for="setting-overtime-hourly-rate">Taux horaire supplémentaire (€/h)</label>
+                            <input type="number" id="setting-overtime-hourly-rate" step="0.01" value="5.62">
+
+                            <label for="setting-meal-rate">Frais de repas (€)</label>
+                            <input type="number" id="setting-meal-rate" step="0.01" value="3.00">
+
+                            <p class="note">L'indemnité d'entretien est fixée par la convention collective.</p>
+
+                            <button class="action-button" onclick="saveGlobalSettings()">Sauvegarder les tarifs</button>
+                            <p id="settings-message-global" class="message"></p>
+
+                            <hr style="margin: 24px 0; border: 0; border-top: 1px solid var(--border);">
+
+                            <label>Mot de passe</label>
+                            <p class="note">Un email de réinitialisation vous sera envoyé à votre adresse.</p>
+                            <button class="action-button" onclick="sendPasswordReset()">Envoyer le lien</button>
+                            <p id="password-message" class="message"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
     </div>
 
     <!-- Firebase SDK -->

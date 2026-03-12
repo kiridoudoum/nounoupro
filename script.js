@@ -236,8 +236,10 @@ if (FIREBASE_CONFIGURED) {
         if (user) {
             currentUser = user;
             document.getElementById('auth-overlay').classList.add('hidden');
-            document.getElementById('logged-in-nav').classList.remove('hidden');
+            document.getElementById('app-layout').classList.remove('hidden');
             document.getElementById('nav-user-email').textContent = user.email;
+            const avatarEl = document.getElementById('sidebar-avatar');
+            if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
             await loadUserData();
             await loadSettings();
             showPage('children');
@@ -246,7 +248,7 @@ if (FIREBASE_CONFIGURED) {
             childrenList = [];
             activeChildId = null;
             document.getElementById('auth-overlay').classList.remove('hidden');
-            document.getElementById('logged-in-nav').classList.add('hidden');
+            document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('nav-user-email').textContent = '';
             setLoading('login-btn', false, 'Se connecter');
             setLoading('register-btn', false, 'Créer mon compte');
