@@ -116,6 +116,26 @@ body {
     padding: 32px 24px;
 }
 
+/* ===== BARRE ENFANTS PERMANENTE ===== */
+#children-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 0;
+}
+
+.children-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.children-bar-header h2 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--text);
+}
+
 /* ===== PAGES ===== */
 .page { display: none; }
 .page.active { display: block; }

@@ -353,7 +353,6 @@
         <div class="nav-links">
             <div id="logged-in-nav" class="hidden">
                 <span id="nav-user-email"></span>
-                <button class="nav-button" onclick="showPage('children')">Enfants</button>
                 <button class="nav-button" onclick="showPage('attendance')">Présences</button>
                 <button class="nav-button logout" onclick="logout()">Déconnexion</button>
             </div>
@@ -362,59 +361,18 @@
     
     <div class="main-content">
 
-        <section id="children-page" class="page active">
-            <header class="page-header">
+        <!-- ENFANTS : toujours visible -->
+        <div id="children-bar">
+            <div class="children-bar-header">
                 <h2>Mes enfants</h2>
                 <button class="action-button" onclick="addChild()">+ Ajouter un enfant</button>
-            </header>
-
-            <div id="children-cards-container" class="children-grid"></div>
-
-            <div class="summaries-grid">
-                <div class="summary-card">
-                    <div class="summary-card-title">Résumé du mois — enfant actif</div>
-                    <div class="key-figures">
-                        <div class="figure-box">
-                            <h3>Mensualisation</h3>
-                            <p id="home-baseSalary" class="figure-value">0.00 €</p>
-                        </div>
-                        <div class="figure-box">
-                            <h3>Frais réels</h3>
-                            <p id="home-totalFrais" class="figure-value">0.00 €</p>
-                        </div>
-                        <div class="figure-box highlight">
-                            <h3>Total facture</h3>
-                            <p id="home-totalMonthly" class="figure-value">0.00 €</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="summary-card global">
-                    <div class="summary-card-title">📊 Cumul général — tous les enfants</div>
-                    <div class="key-figures">
-                        <div class="figure-box global-figure">
-                            <h3>Mensualisation</h3>
-                            <p id="global-baseSalary" class="figure-value">0.00 €</p>
-                        </div>
-                        <div class="figure-box global-figure">
-                            <h3>Frais réels</h3>
-                            <p id="global-totalFrais" class="figure-value">0.00 €</p>
-                        </div>
-                        <div class="figure-box global-figure-highlight">
-                            <h3>Total cumulé</h3>
-                            <p id="global-totalMonthly" class="figure-value">0.00 €</p>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </section>
-        
+            <div id="children-cards-container" class="children-grid"></div>
+        </div>
+
         <section id="attendance-page" class="page hidden">
             <header class="page-header">
-                <div class="attendance-header-info">
-                    <button class="back-btn" onclick="showPage('children')">← Retour</button>
-                    <h2 id="attendance-title">Feuille de Présence</h2>
-                </div>
+                <h2 id="attendance-title">Feuille de Présence</h2>
                 <button class="action-button" onclick="addRow()">+ Ajouter une ligne</button>
             </header>
 

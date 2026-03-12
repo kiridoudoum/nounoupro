@@ -332,16 +332,14 @@ window.showPage = function(pageId) {
         p.classList.remove('active');
         p.classList.add('hidden');
     });
-    const page = document.getElementById(`${pageId}-page`);
-    if (page) {
-        page.classList.add('active');
-        page.classList.remove('hidden');
+    if (pageId !== 'children') {
+        const page = document.getElementById(`${pageId}-page`);
+        if (page) {
+            page.classList.add('active');
+            page.classList.remove('hidden');
+        }
     }
-    if (pageId === 'children') {
-        renderChildrenCards();
-        updateMonthlyTotals();
-        updateGlobalSummary();
-    }
+    renderChildrenCards();
     if (pageId === 'settings') {
         loadSettings();
         updateSettingsChildFields();
