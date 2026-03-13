@@ -402,9 +402,13 @@
 
                 <nav class="sidebar-nav">
                     <button class="sidebar-btn active" id="nav-btn-home" onclick="showPage('home')">ACCUEIL</button>
-                    <button class="sidebar-btn" id="nav-btn-attendance" onclick="showPage('attendance')">CALENDRIER</button>
-                    <button class="sidebar-btn" id="nav-btn-settings" onclick="showPage('settings')">FONCTIONNALITÉ</button>
-                    <button class="sidebar-btn" style="background:#efefef; color:#666; margin-top:8px; font-size:0.75rem;" onclick="addChild()">+ AJOUTER ENFANT</button>
+                    <button class="sidebar-btn" id="nav-btn-attendance"
+                        onclick="showPage('attendance')">CALENDRIER</button>
+                    <button class="sidebar-btn" id="nav-btn-settings"
+                        onclick="showPage('settings')">FONCTIONNALITÉ</button>
+                    <button class="sidebar-btn"
+                        style="background:#efefef; color:#666; margin-top:8px; font-size:0.75rem;"
+                        onclick="addChild()">+ AJOUTER ENFANT</button>
                 </nav>
 
                 <div class="sidebar-logout" onclick="logout()">Déconnexion</div>
@@ -417,7 +421,7 @@
             <!-- PAGE ACCUEIL / TABLEAU DE BORD -->
             <section id="home-page" class="page active">
                 <div id="children-cards-container" class="children-grid"></div>
-                
+
                 <div class="home-actions" style="margin-bottom: 32px;">
                     <button class="action-button" onclick="addChild()">+ AJOUTER UN ENFANT</button>
                 </div>
@@ -434,12 +438,14 @@
                 </div>
             </section>
 
-            <section id="attendance-page" class="page hidden">
+            <!-- PAGE DÉTAIL ENFANT (accessible via clic sur photo) -->
+            <section id="child-detail-page" class="page hidden">
                 <div class="attendance-container">
                     <!-- 1. HEADER PROFIL -->
                     <div class="attendance-card profile-header-card">
                         <div class="ph-left">
-                            <img id="attendance-child-photo" src="https://via.placeholder.com/100?text=👶" alt="Photo" class="ph-avatar">
+                            <img id="attendance-child-photo" src="https://via.placeholder.com/100?text=👶" alt="Photo"
+                                class="ph-avatar">
                             <div class="ph-info">
                                 <h2 id="attendance-child-name">...</h2>
                                 <div class="ph-age" id="attendance-child-age">-- ANS</div>
@@ -492,39 +498,20 @@
                         </div>
                     </div>
 
-                    <!-- 4. FEUILLE DE CALCUL -->
+                    <!-- 4. FEUILLE DE CALCUL (résumé du mois) -->
                     <div class="attendance-card billing-card">
-                        <h3 class="card-title">FEUILLE DE CALCUL</h3>
-                        <div class="billing-content">
-                            <div class="billing-placeholder">
-                                ON A NOS LIGNE AVEC ENTRÉ SORTI ...
+                        <div class="billing-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                            <h3 class="card-title">FEUILLE DE CALCUL</h3>
+                            <button class="action-button-sm" onclick="showPage('attendance')" style="font-size:0.75rem; padding:6px 14px;">Voir le tableau →</button>
+                        </div>
+                        <div class="billing-summary-row" style="display:flex; gap:12px; flex-wrap:wrap;">
+                            <div class="billing-stat" style="background:#f7f7f7; border-radius:12px; padding:16px 22px; flex:1; min-width:120px; text-align:center;">
+                                <div style="font-size:0.72rem; color:#999; font-weight:700; text-transform:uppercase; margin-bottom:6px;">Heures ce mois</div>
+                                <div id="detail-total-hours" style="font-size:1.4rem; font-weight:900; color:#333;">—</div>
                             </div>
-                            <!-- Existing table wrapped for compatibility -->
-                            <div class="table-wrapper mini-table">
-                                <div class="table-actions-top">
-                                    <button class="action-button-sm" onclick="addRow()">+ Ajouter une ligne</button>
-                                </div>
-                                <table id="attendanceTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Arrivée</th>
-                                            <th>Départ</th>
-                                            <th class="hide-mobile">H. sup</th>
-                                            <th class="hide-mobile">Frais</th>
-                                            <th>Total</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                    <tfoot>
-                                        <tr class="total-row">
-                                            <td colspan="3">Totaux habituels...</td>
-                                            <td colspan="3" id="footer-totalMonthly" style="font-weight: 800; text-align: right;">0.00 €</td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <div class="billing-stat" style="background:#f7f7f7; border-radius:12px; padding:16px 22px; flex:1; min-width:120px; text-align:center;">
+                                <div style="font-size:0.72rem; color:#999; font-weight:700; text-transform:uppercase; margin-bottom:6px;">Total du mois</div>
+                                <div id="detail-total-salary" style="font-size:1.4rem; font-weight:900; color:#e07b6b;">—</div>
                             </div>
                         </div>
                     </div>
@@ -554,11 +541,21 @@
                                     <span>17:00</span><span>18:00</span>
                                 </div>
                                 <div class="cal-columns" id="calendar-columns">
-                                    <div class="cal-col"><div class="cal-bar" style="top: 8%; height: 75%;"></div></div>
-                                    <div class="cal-col"><div class="cal-bar" style="top: 3%; height: 60%;"></div></div>
-                                    <div class="cal-col"><div class="cal-bar" style="top: 3%; height: 60%;"></div></div>
-                                    <div class="cal-col active"><div class="cal-bar" style="top: 3%; height: 60%;"></div></div>
-                                    <div class="cal-col"><div class="cal-bar" style="top: 3%; height: 80%;"></div></div>
+                                    <div class="cal-col">
+                                        <div class="cal-bar" style="top: 8%; height: 75%;"></div>
+                                    </div>
+                                    <div class="cal-col">
+                                        <div class="cal-bar" style="top: 3%; height: 60%;"></div>
+                                    </div>
+                                    <div class="cal-col">
+                                        <div class="cal-bar" style="top: 3%; height: 60%;"></div>
+                                    </div>
+                                    <div class="cal-col active">
+                                        <div class="cal-bar" style="top: 3%; height: 60%;"></div>
+                                    </div>
+                                    <div class="cal-col">
+                                        <div class="cal-bar" style="top: 3%; height: 80%;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -569,6 +566,42 @@
                 <div style="display:none;" id="footer-totalIndemnity"></div>
                 <div style="display:none;" id="footer-totalMeals"></div>
                 <div style="display:none;" id="footer-baseSalary"></div>
+            </section>
+
+            <!-- PAGE CALENDRIER (Tableau seul, accessible via sidebar) -->
+            <section id="attendance-page" class="page hidden">
+                <header class="page-header">
+                    <h2 style="font-size:1.3rem; font-weight:800;">Feuille de Présence &mdash; <span id="attendance-page-child-name" style="color:#e07b6b;">...</span></h2>
+                    <button class="action-button" onclick="addRow()">+ Ajouter une ligne</button>
+                </header>
+
+                <div class="table-wrapper">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Arrivée</th>
+                                <th>Départ</th>
+                                <th>H. rég</th>
+                                <th>H. sup</th>
+                                <th>Frais</th>
+                                <th>Total</th>
+                                <th class="actions-col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="3">Totaux du mois</td>
+                                <td id="footer-totalHours-att">0h00</td>
+                                <td id="footer-totalOvertime-att">0h00</td>
+                                <td id="footer-totalIndemnity-att">0.00 €</td>
+                                <td id="footer-totalMeals-att">0.00 €</td>
+                                <td colspan="2" id="footer-totalMonthly-att" style="text-align: right; font-weight: 800;">0.00 €</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </section>
 
             <section id="settings-page" class="page hidden">

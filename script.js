@@ -235,21 +235,21 @@ if (FIREBASE_CONFIGURED) {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
-            
+
             // 1. Reveal layout and show Home immediately
             document.getElementById('auth-overlay').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
             document.getElementById('nav-user-email').textContent = user.email;
             const avatarEl = document.getElementById('sidebar-avatar');
             if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
-            
+
             // Show page 'home' right away
             showPage('home');
 
             // 2. Load data in background and refresh if still on home
             await loadUserData();
             await loadSettings();
-            
+
             // If the user hasn't switched away, refresh the dashboard with loaded data
             const homeBtn = document.getElementById('nav-btn-home');
             if (homeBtn && homeBtn.classList.contains('active')) {
@@ -394,7 +394,7 @@ function renderDashboardSummaries() {
     const container = document.getElementById('dashboard-summaries');
     if (!container) return;
     container.innerHTML = '';
-    
+
     if (childrenList.length === 0) {
         container.innerHTML = `
             <div style="text-align:center; padding: 40px; background: var(--card); border-radius: var(--radius); border: 1px dashed var(--border); margin-top: 20px;">
@@ -412,7 +412,7 @@ function renderDashboardSummaries() {
         const base = parseFloat(child.baseMonthlySalary) || 0;
         const frais = parseFloat(cache.totalFrais) || 0;
         const total = base + frais;
-        
+
         const card = document.createElement('div');
         card.className = 'dashboard-child-summary';
         card.style.display = 'flex';
@@ -450,24 +450,38 @@ window.selectChild = async function (id, stayOnPage = false) {
     activeChildId = id;
     const child = childrenList.find(c => c.id === id);
     if (child) {
-        // Update new header elements
+        // Update child-detail-page header
         const nameEl = document.getElementById('attendance-child-name');
         const ageEl = document.getElementById('attendance-child-age');
         const photoEl = document.getElementById('attendance-child-photo');
-        
+        // Update attendance-page title
+        const attNameEl = document.getElementById('attendance-page-child-name');
+
         if (nameEl) nameEl.textContent = child.name;
         if (ageEl) ageEl.textContent = `${calculateAge(child.birthdate)} ANS`;
         if (photoEl) photoEl.src = child.photoUrl || defaultPhotoUrl;
+        if (attNameEl) attNameEl.textContent = child.name;
 
         await loadAttendance(id);
         renderChildrenCards();
         updateSettingsChildFields();
-        
+
         // Render visual calendar
         renderVisualCalendar();
 
+        // Update billing summary in child-detail-page
+        const cache = childTotalsCache[id] || { totalFrais: 0, totalMonthly: 0, totalHours: 0 };
+        const hoursEl = document.getElementById('detail-total-hours');
+        const salaryEl = document.getElementById('detail-total-salary');
+        if (hoursEl) hoursEl.textContent = cache.totalHours || '—';
+        if (salaryEl) {
+            const base = parseFloat(child.baseMonthlySalary) || 0;
+            const total = base + (parseFloat(cache.totalFrais) || 0);
+            salaryEl.textContent = total.toFixed(2) + ' €';
+        }
+
         if (!stayOnPage) {
-            showPage('attendance');
+            showPage('child-detail');
         } else {
             renderDashboardSummaries();
         }
@@ -489,7 +503,7 @@ function calculateAge(birthdate) {
 function renderVisualCalendar() {
     const columns = document.getElementById('calendar-columns');
     if (!columns) return;
-    
+
     // Clear existing bars
     const colDivs = columns.querySelectorAll('.cal-col');
     colDivs.forEach(col => {
@@ -500,27 +514,27 @@ function renderVisualCalendar() {
     // Mockup bars for current week (simplified for now)
     // In a real implementation, we would query the current week's attendance rows
     const rows = Array.from(tableBody.querySelectorAll('tr'));
-    
+
     // For demonstration, we'll map the first 5 rows of the table to the 5 columns
     rows.slice(0, 5).forEach((row, idx) => {
         if (idx >= colDivs.length) return;
-        
+
         const timeIn = row.querySelector('.time-in')?.value;
         const timeOut = row.querySelector('.time-out')?.value;
-        
+
         if (timeIn && timeOut && timeIn !== '00:00') {
             const bar = colDivs[idx].querySelector('.cal-bar');
             if (bar) {
                 const startMins = timeToMins(timeIn);
                 const endMins = timeToMins(timeOut);
-                
+
                 // 07:00 is 0%, 18:00 is 100%
                 const totalMins = (18 - 7) * 60;
                 const offsetMins = 7 * 60;
-                
+
                 const top = ((startMins - offsetMins) / totalMins) * 100;
                 const height = ((endMins - startMins) / totalMins) * 100;
-                
+
                 bar.style.top = `${Math.max(0, top)}%`;
                 bar.style.height = `${Math.max(1, height)}%`;
                 bar.style.display = 'block';
@@ -540,7 +554,7 @@ window.addChild = async function () {
     const salaryPrompt = prompt("Entrez le salaire mensuel de base (€) pour cet enfant (ex: 550.00) :");
     const salary = parseFloat(salaryPrompt) || 0.00;
     const birthdate = prompt("Entrez sa date de naissance (AAAA-MM-JJ) :") || "2024-01-01";
-    
+
     // UI Feedback for all buttons
     const btns = document.querySelectorAll('button[onclick="addChild()"]');
     const originalLabels = Array.from(btns).map(b => b.innerHTML);
@@ -553,11 +567,11 @@ window.addChild = async function () {
         const newId = Date.now().toString();
         const newChild = { name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
         await saveChild({ id: newId, ...newChild });
-        
+
         // Refresh everything from DB to avoid duplication and ensure consistency
         await loadUserData();
         activeChildId = newId;
-        
+
         // Stay on home/dashboard to show the new card
         showPage('home');
     } catch (err) {
