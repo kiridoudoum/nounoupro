@@ -561,40 +561,56 @@ function timeToMins(t) {
     return h * 60 + m;
 }
 
-window.addChild = async function () {
-    const name = prompt("Entrez le prénom du nouvel enfant :");
-    if (!name) return;
-    const salaryPrompt = prompt("Entrez le salaire mensuel de base (€) pour cet enfant (ex: 550.00) :");
-    const salary = parseFloat(salaryPrompt) || 0.00;
-    const birthdate = prompt("Entrez sa date de naissance (AAAA-MM-JJ) :") || "2024-01-01";
+window.addChild = function () {
+    const modal = document.getElementById('add-child-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.getElementById('add-child-form').reset();
+    }
+};
 
-    // UI Feedback for all buttons
-    const btns = document.querySelectorAll('button[onclick="addChild()"]');
-    const originalLabels = Array.from(btns).map(b => b.innerHTML);
-    btns.forEach(b => {
-        b.disabled = true;
-        b.textContent = '...';
-    });
+window.closeAddChildModal = function () {
+    const modal = document.getElementById('add-child-modal');
+    if (modal) modal.classList.add('hidden');
+};
+
+window.handleChildSubmit = async function (e) {
+    e.preventDefault();
+    const name = document.getElementById('new-child-name').value.trim();
+    const birthdate = document.getElementById('new-child-birthdate').value;
+    const salary = parseFloat(document.getElementById('new-child-salary').value) || 0;
+
+    if (!name) return;
+
+    const submitBtn = document.getElementById('add-child-submit-btn');
+    const originalLabel = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="material-icons rotating">sync</span> Enregistrement...';
 
     try {
         const newId = Date.now().toString();
         const newChild = { name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
         await saveChild({ id: newId, ...newChild });
 
-        // Refresh everything from DB to avoid duplication and ensure consistency
+        // Refresh everything from DB
         await loadUserData();
         activeChildId = newId;
 
-        // Stay on home/dashboard to show the new card
-        showPage('home');
+        // Success state
+        submitBtn.innerHTML = '<span class="material-icons">check</span> Enregistré !';
+        
+        setTimeout(() => {
+            closeAddChildModal();
+            showPage('home');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalLabel;
+        }, 800);
+
     } catch (err) {
         console.error("Error adding child:", err);
         alert("Erreur lors de l'ajout de l'enfant.");
-    } finally {
-        btns.forEach((b, i) => {
-            b.disabled = false;
-            b.innerHTML = originalLabels[i];
-        });
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
     }
 };
 

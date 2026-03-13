@@ -663,6 +663,38 @@
         </div>
     </div>
 
+    <!-- MODALE AJOUT ENFANT -->
+    <div id="add-child-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>+ Ajouter un enfant</h3>
+                <button class="modal-close" onclick="closeAddChildModal()">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="add-child-form" onsubmit="handleChildSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="new-child-name">Prénom de l'enfant</label>
+                        <input type="text" id="new-child-name" placeholder="Ex: Lucas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-child-birthdate">Date de naissance</label>
+                        <input type="date" id="new-child-birthdate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-child-salary">Salaire mensuel de base (€)</label>
+                        <input type="number" id="new-child-salary" step="0.01" placeholder="Ex: 550.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeAddChildModal()">Annuler</button>
+                    <button type="submit" id="add-child-submit-btn" class="btn-save">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script type="module" src="script.js"></script>
 </body>
