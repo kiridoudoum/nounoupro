@@ -450,10 +450,22 @@ window.selectChild = async function (id, stayOnPage = false) {
     activeChildId = id;
     const child = childrenList.find(c => c.id === id);
     if (child) {
-        document.getElementById('attendance-title').textContent = `Feuille de Présence de ${child.name}`;
+        // Update new header elements
+        const nameEl = document.getElementById('attendance-child-name');
+        const ageEl = document.getElementById('attendance-child-age');
+        const photoEl = document.getElementById('attendance-child-photo');
+        
+        if (nameEl) nameEl.textContent = child.name;
+        if (ageEl) ageEl.textContent = `${calculateAge(child.birthdate)} ANS`;
+        if (photoEl) photoEl.src = child.photoUrl || defaultPhotoUrl;
+
         await loadAttendance(id);
         renderChildrenCards();
         updateSettingsChildFields();
+        
+        // Render visual calendar
+        renderVisualCalendar();
+
         if (!stayOnPage) {
             showPage('attendance');
         } else {
@@ -461,6 +473,66 @@ window.selectChild = async function (id, stayOnPage = false) {
         }
     }
 };
+
+function calculateAge(birthdate) {
+    if (!birthdate) return "--";
+    const birth = new Date(birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+function renderVisualCalendar() {
+    const columns = document.getElementById('calendar-columns');
+    if (!columns) return;
+    
+    // Clear existing bars
+    const colDivs = columns.querySelectorAll('.cal-col');
+    colDivs.forEach(col => {
+        const bar = col.querySelector('.cal-bar');
+        if (bar) bar.style.display = 'none';
+    });
+
+    // Mockup bars for current week (simplified for now)
+    // In a real implementation, we would query the current week's attendance rows
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    
+    // For demonstration, we'll map the first 5 rows of the table to the 5 columns
+    rows.slice(0, 5).forEach((row, idx) => {
+        if (idx >= colDivs.length) return;
+        
+        const timeIn = row.querySelector('.time-in')?.value;
+        const timeOut = row.querySelector('.time-out')?.value;
+        
+        if (timeIn && timeOut && timeIn !== '00:00') {
+            const bar = colDivs[idx].querySelector('.cal-bar');
+            if (bar) {
+                const startMins = timeToMins(timeIn);
+                const endMins = timeToMins(timeOut);
+                
+                // 07:00 is 0%, 18:00 is 100%
+                const totalMins = (18 - 7) * 60;
+                const offsetMins = 7 * 60;
+                
+                const top = ((startMins - offsetMins) / totalMins) * 100;
+                const height = ((endMins - startMins) / totalMins) * 100;
+                
+                bar.style.top = `${Math.max(0, top)}%`;
+                bar.style.height = `${Math.max(1, height)}%`;
+                bar.style.display = 'block';
+            }
+        }
+    });
+}
+
+function timeToMins(t) {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+}
 
 window.addChild = async function () {
     const name = prompt("Entrez le prénom du nouvel enfant :");
@@ -611,6 +683,7 @@ function updateRowFromInput(inputElement) {
         mealCost: row.querySelector('.meal-cost').value,
     };
     saveAttendanceRow(activeChildId, row.dataset.rowId, rowData);
+    renderVisualCalendar();
 }
 
 window.deleteRow = async function (button) {
