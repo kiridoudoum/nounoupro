@@ -242,7 +242,7 @@ if (FIREBASE_CONFIGURED) {
             if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
             await loadUserData();
             await loadSettings();
-            showPage('home');
+            showPage('home'); // Ensure home is default
         } else {
             currentUser = null;
             childrenList = [];
@@ -380,7 +380,12 @@ function renderDashboardSummaries() {
     container.innerHTML = '';
     
     if (childrenList.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted);font-weight:600;margin-top:12px;">Aucun enfant pour l\'instant. Ajoutez votre premier enfant !</p>';
+        container.innerHTML = `
+            <div style="text-align:center; padding: 40px; background: var(--card); border-radius: var(--radius); border: 1px dashed var(--border); margin-top: 20px;">
+                <p style="color:var(--text-muted); font-weight:600; margin-bottom: 20px;">Aucun enfant pour l'instant. Commencez par en ajouter un !</p>
+                <button class="action-button" onclick="addChild()" style="padding: 12px 24px;">+ AJOUTER MON PREMIER ENFANT</button>
+            </div>
+        `;
         return;
     }
 
@@ -446,11 +451,29 @@ window.addChild = async function () {
     const salaryPrompt = prompt("Entrez le salaire mensuel de base (€) pour cet enfant (ex: 550.00) :");
     const salary = parseFloat(salaryPrompt) || 0.00;
     const birthdate = prompt("Entrez sa date de naissance (AAAA-MM-JJ) :") || "2024-01-01";
-    const newId = Date.now().toString();
-    const newChild = { id: newId, name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
-    childrenList.push(newChild);
-    await saveChild(newChild);
-    await selectChild(newId);
+    
+    // UI Feedback
+    const btn = document.querySelector('button[onclick="addChild()"]');
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+    try {
+        const newId = Date.now().toString();
+        const newChild = { name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
+        await saveChild({ id: newId, ...newChild });
+        
+        // Refresh everything from DB to avoid duplication and ensure consistency
+        await loadUserData();
+        activeChildId = newId;
+        
+        // Stay on home/dashboard to show the new card
+        showPage('home');
+    } catch (err) {
+        console.error("Error adding child:", err);
+        alert("Erreur lors de l'ajout de l'enfant.");
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = originalText; }
+    }
 };
 
 window.deleteChild = async function (childId) {
