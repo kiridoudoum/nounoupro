@@ -57,8 +57,25 @@ let RATES = {
 let childrenList = [];
 let activeChildId = null;
 let currentUser = null;
-const tableBody = document.querySelector('#attendanceTable tbody');
 const defaultPhotoUrl = "https://via.placeholder.com/100?text=👶";
+// Dynamic getter so we always get a valid reference, even when the table starts hidden
+function getTableBody() {
+    return document.querySelector('#attendanceTable tbody');
+}
+// Backward-compat proxy so existing code using `tableBody.xxx` still works
+const tableBody = new Proxy({}, {
+    get(_, prop) {
+        const tb = getTableBody();
+        if (!tb) return typeof [][ prop] === 'function' ? () => {} : undefined;
+        const val = tb[prop];
+        return typeof val === 'function' ? val.bind(tb) : val;
+    },
+    set(_, prop, value) {
+        const tb = getTableBody();
+        if (tb) tb[prop] = value;
+        return true;
+    }
+});
 
 // ============================================================
 // AUTH UI
