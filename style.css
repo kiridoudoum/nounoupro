@@ -1274,3 +1274,12 @@ input[type="time"].data-input {
         display: none;
     }
 }
+/* Animation de rotation */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.rotating {
+    animation: rotate 1.5s linear infinite;
+    display: inline-block;
+}

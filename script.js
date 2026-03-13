@@ -307,8 +307,20 @@ async function loadUserData() {
 }
 
 async function saveChild(child) {
+    if (!currentUser) throw new Error("Utilisateur non connecté. Veuillez vous reconnecter.");
     const { id, ...data } = child;
-    await setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data);
+    console.log("Saving child to Firebase...", id, data);
+    
+    // Timeout of 10s for Firebase
+    const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (10s)")), 10000)
+    );
+
+    await Promise.race([
+        setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data),
+        timeoutPromise
+    ]);
+    console.log("Child saved successfully!");
 }
 
 async function deleteChildFromDB(childId) {
@@ -583,16 +595,20 @@ window.handleChildSubmit = async function (e) {
     if (!name) return;
 
     const submitBtn = document.getElementById('add-child-submit-btn');
+    if (!submitBtn) return;
     const originalLabel = submitBtn.innerHTML;
+    
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="material-icons rotating">sync</span> Enregistrement...';
 
     try {
         const newId = Date.now().toString();
         const newChild = { name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
+        
         await saveChild({ id: newId, ...newChild });
 
         // Refresh everything from DB
+        submitBtn.innerHTML = '<span class="material-icons rotating">sync</span> Actualisation...';
         await loadUserData();
         activeChildId = newId;
 
@@ -608,7 +624,7 @@ window.handleChildSubmit = async function (e) {
 
     } catch (err) {
         console.error("Error adding child:", err);
-        alert("Erreur lors de l'ajout de l'enfant.");
+        alert("Erreur : " + err.message);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalLabel;
     }
@@ -881,12 +897,19 @@ async function initializeGlobalCache() {
 function updateGlobalSummary() {
     let globalBase = 0, globalFrais = 0;
     childrenList.forEach(c => {
-        globalBase += c.baseMonthlySalary || 0;
-        globalFrais += childTotalsCache[c.id] || 0;
+        globalBase += parseFloat(c.baseMonthlySalary || 0);
+        const stats = childTotalsCache[c.id];
+        if (stats && typeof stats.totalFrais === 'number') {
+            globalFrais += stats.totalFrais;
+        }
     });
-    document.getElementById('global-baseSalary').textContent = globalBase.toFixed(2) + ' €';
-    document.getElementById('global-totalFrais').textContent = globalFrais.toFixed(2) + ' €';
-    document.getElementById('global-totalMonthly').textContent = (globalBase + globalFrais).toFixed(2) + ' €';
+    const baseEl = document.getElementById('global-baseSalary');
+    const fraisEl = document.getElementById('global-totalFrais');
+    const totalEl = document.getElementById('global-totalMonthly');
+    
+    if (baseEl) baseEl.textContent = globalBase.toFixed(2) + ' €';
+    if (fraisEl) fraisEl.textContent = globalFrais.toFixed(2) + ' €';
+    if (totalEl) totalEl.textContent = (globalBase + globalFrais).toFixed(2) + ' €';
 }
 
 // ============================================================
