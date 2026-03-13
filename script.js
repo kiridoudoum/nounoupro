@@ -511,11 +511,13 @@ function renderVisualCalendar() {
         if (bar) bar.style.display = 'none';
     });
 
-    // Mockup bars for current week (simplified for now)
-    // In a real implementation, we would query the current week's attendance rows
-    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    // Safely get attendance rows from the table (which may be in the attendance-page)
+    const table = document.getElementById('attendanceTable');
+    const tbody = table ? table.querySelector('tbody') : null;
+    if (!tbody) return;
+    const rows = Array.from(tbody.querySelectorAll('tr'));
 
-    // For demonstration, we'll map the first 5 rows of the table to the 5 columns
+    // Map the first 5 rows of the table to the 5 calendar columns
     rows.slice(0, 5).forEach((row, idx) => {
         if (idx >= colDivs.length) return;
 
