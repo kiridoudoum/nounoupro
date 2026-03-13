@@ -298,6 +298,9 @@ async function loadUserData() {
         activeChildId = childrenList[0].id;
         await loadAttendance(activeChildId);
     }
+
+    renderChildrenCards();
+    renderDashboardSummaries();
 }
 
 async function saveChild(child) {
@@ -405,17 +408,14 @@ function renderDashboardSummaries() {
     let globalBase = 0, globalFrais = 0, globalTotal = 0;
 
     childrenList.forEach(child => {
-        const cache = childTotalsCache[child.id] || {};
+        const cache = childTotalsCache[child.id] || { totalFrais: 0, totalMonthly: 0 };
         const base = parseFloat(child.baseMonthlySalary) || 0;
         const frais = parseFloat(cache.totalFrais) || 0;
-        const total = parseFloat(cache.totalMonthly) || 0;
+        const total = base + frais;
         
-        globalBase += base;
-        globalFrais += frais;
-        globalTotal += total;
-
         const card = document.createElement('div');
         card.className = 'dashboard-child-summary';
+        card.style.display = 'flex';
         card.innerHTML = `
             <h3 class="dcs-name">${child.name}</h3>
             <div class="dcs-figures">
@@ -427,9 +427,9 @@ function renderDashboardSummaries() {
                     <span class="dcs-label">Frais Réel</span>
                     <span class="dcs-value">${frais.toFixed(2)}€</span>
                 </div>
-                <div class="dcs-figure highlight">
-                    <span class="dcs-label">Total Facture</span>
-                    <span class="dcs-value">${total.toFixed(2)}€</span>
+                <div class="dcs-figure highlight" style="background: #d4f895 !important;">
+                    <span class="dcs-label" style="color: #1a1a2e !important; font-weight: 800;">Total Facture</span>
+                    <span class="dcs-value" style="color: #1a1a2e !important; font-weight: 900;">${total.toFixed(2)}€</span>
                 </div>
             </div>
         `;
@@ -457,7 +457,7 @@ window.selectChild = async function (id, stayOnPage = false) {
         if (!stayOnPage) {
             showPage('attendance');
         } else {
-            renderDashboardSummaries(); // Refresh dashboard if staying
+            renderDashboardSummaries();
         }
     }
 };
@@ -698,7 +698,10 @@ function updateMonthlyTotals() {
     const frais = totalInd + totalMeals + (totalOT * RATES.OVERTIME_HOURLY);
     const total = base + frais;
 
-    childTotalsCache[activeChildId] = frais;
+    childTotalsCache[activeChildId] = {
+        totalFrais: frais,
+        totalMonthly: total
+    };
 
     document.getElementById('footer-totalHours').textContent = `${Math.floor(totalH)}h${String(Math.round((totalH % 1) * 60)).padStart(2, '0')}`;
     document.getElementById('footer-totalOvertime').textContent = `${Math.floor(totalOT)}h${String(Math.round((totalOT % 1) * 60)).padStart(2, '0')}`;
@@ -721,15 +724,23 @@ let childTotalsCache = {};
 async function initializeGlobalCache() {
     childTotalsCache = {};
     for (const child of childrenList) {
-        const rows = await loadAttendanceFromDB(child.id);
-        let frais = 0;
-        rows.forEach(row => {
-            const h = calculateDuration(row.timeIn, row.timeOut);
-            const ot = parseFloat(row.overtime) || 0;
-            const m = h < RATES.MAINTENANCE_THRESHOLD ? RATES.MAINTENANCE_MINIMUM : h * RATES.MAINTENANCE_COEFF;
-            frais += (ot * RATES.OVERTIME_HOURLY) + (h > 0 ? m : 0) + (parseFloat(row.mealCost) || 0);
-        });
-        childTotalsCache[child.id] = frais;
+        try {
+            const rows = await loadAttendanceFromDB(child.id);
+            let frais = 0;
+            rows.forEach(row => {
+                const h = calculateDuration(row.timeIn, row.timeOut);
+                const ot = parseFloat(row.overtime) || 0;
+                const m = h < RATES.MAINTENANCE_THRESHOLD ? RATES.MAINTENANCE_MINIMUM : h * RATES.MAINTENANCE_COEFF;
+                frais += (ot * RATES.OVERTIME_HOURLY) + (h > 0 ? m : 0) + (parseFloat(row.mealCost) || 0);
+            });
+            childTotalsCache[child.id] = {
+                totalFrais: frais,
+                totalMonthly: (child.baseMonthlySalary || 0) + frais
+            };
+        } catch (err) {
+            console.error(`Error initializing cache for ${child.name}:`, err);
+            childTotalsCache[child.id] = { totalFrais: 0, totalMonthly: child.baseMonthlySalary || 0 };
+        }
     }
 }
 
