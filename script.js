@@ -378,15 +378,16 @@ function renderChildrenCards() {
     if (!container) return;
     container.innerHTML = '';
     childrenList.forEach(child => {
-        const card = document.createElement('div');
-        card.className = 'child-card' + (child.id === activeChildId ? ' active' : '');
-        card.setAttribute('onclick', `selectChild('${child.id}')`);
-        card.innerHTML = `
-            <div class="child-photo-container">
-                <img src="${child.photoUrl || defaultPhotoUrl}" alt="Photo de ${child.name}" class="child-photo-img">
-            </div>
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'child-photo-btn' + (child.id === activeChildId ? ' active' : '');
+        btn.title = child.name;
+        btn.onclick = () => selectChild(child.id);
+        btn.innerHTML = `
+            <img src="${child.photoUrl || defaultPhotoUrl}" alt="Photo de ${child.name}" class="child-photo-img">
+            <span class="child-photo-name">${child.name}</span>
         `;
-        container.appendChild(card);
+        container.appendChild(btn);
     });
 }
 

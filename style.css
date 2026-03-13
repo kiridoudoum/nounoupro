@@ -253,6 +253,55 @@ body {
     object-fit: cover;
 }
 
+/* ===== BOUTON PHOTO ENFANT ===== */
+.child-photo-btn {
+    background: var(--card);
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 130px;
+    font-family: inherit;
+}
+
+.child-photo-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    border-color: var(--green-mid);
+}
+
+.child-photo-btn.active {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 4px rgba(129, 199, 132, 0.2);
+}
+
+.child-photo-btn .child-photo-img {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid var(--green-light);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+    display: block;
+}
+
+.child-photo-name {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 110px;
+}
+
 .child-name {
     font-weight: 800;
     font-size: 0.95rem;
