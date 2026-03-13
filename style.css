@@ -42,10 +42,17 @@ body {
     display: none !important;
 }
 
-/* ===== APP LAYOUT ===== */
-#app-layout {
+/* ===== APP/* Main App Layout */
+.app-layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.home-actions {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
 }
 
 /* ===== SIDEBAR ===== */

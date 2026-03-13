@@ -469,10 +469,13 @@ window.addChild = async function () {
     const salary = parseFloat(salaryPrompt) || 0.00;
     const birthdate = prompt("Entrez sa date de naissance (AAAA-MM-JJ) :") || "2024-01-01";
     
-    // UI Feedback
-    const btn = document.querySelector('button[onclick="addChild()"]');
-    const originalText = btn ? btn.innerHTML : '';
-    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    // UI Feedback for all buttons
+    const btns = document.querySelectorAll('button[onclick="addChild()"]');
+    const originalLabels = Array.from(btns).map(b => b.innerHTML);
+    btns.forEach(b => {
+        b.disabled = true;
+        b.textContent = '...';
+    });
 
     try {
         const newId = Date.now().toString();
@@ -489,7 +492,10 @@ window.addChild = async function () {
         console.error("Error adding child:", err);
         alert("Erreur lors de l'ajout de l'enfant.");
     } finally {
-        if (btn) { btn.disabled = false; btn.innerHTML = originalText; }
+        btns.forEach((b, i) => {
+            b.disabled = false;
+            b.innerHTML = originalLabels[i];
+        });
     }
 };
 
