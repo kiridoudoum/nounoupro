@@ -57,25 +57,11 @@ let RATES = {
 let childrenList = [];
 let activeChildId = null;
 let currentUser = null;
-const defaultPhotoUrl = "https://via.placeholder.com/100?text=👶";
-// Dynamic getter so we always get a valid reference, even when the table starts hidden
+// Dynamic getter to avoid null references when parts of the UI are hidden
 function getTableBody() {
     return document.querySelector('#attendanceTable tbody');
 }
-// Backward-compat proxy so existing code using `tableBody.xxx` still works
-const tableBody = new Proxy({}, {
-    get(_, prop) {
-        const tb = getTableBody();
-        if (!tb) return typeof [][ prop] === 'function' ? () => {} : undefined;
-        const val = tb[prop];
-        return typeof val === 'function' ? val.bind(tb) : val;
-    },
-    set(_, prop, value) {
-        const tb = getTableBody();
-        if (tb) tb[prop] = value;
-        return true;
-    }
-});
+const defaultPhotoUrl = "https://via.placeholder.com/100?text=👶";
 
 // ============================================================
 // AUTH UI
@@ -480,12 +466,21 @@ window.selectChild = async function (id, stayOnPage = false) {
         if (photoEl) photoEl.src = child.photoUrl || defaultPhotoUrl;
         if (attNameEl) attNameEl.textContent = child.name;
 
-        await loadAttendance(id);
+        try {
+            await loadAttendance(id);
+        } catch (err) {
+            console.warn("Failed to load attendance data, but proceeding with navigation:", err);
+        }
+
         renderChildrenCards();
         updateSettingsChildFields();
 
         // Render visual calendar
-        renderVisualCalendar();
+        try {
+            renderVisualCalendar();
+        } catch (err) {
+            console.error("Error rendering visual calendar:", err);
+        }
 
         // Update billing summary in child-detail-page
         const cache = childTotalsCache[id] || { totalFrais: 0, totalMonthly: 0, totalHours: 0 };
@@ -615,7 +610,10 @@ window.deleteChild = async function (childId) {
     if (activeChildId === childId) {
         activeChildId = childrenList.length > 0 ? childrenList[0].id : null;
         if (activeChildId) await loadAttendance(activeChildId);
-        else tableBody.innerHTML = '';
+        else {
+            const tb = getTableBody();
+            if (tb) tb.innerHTML = '';
+        }
     }
     showPage('home');
 };
@@ -632,15 +630,20 @@ window.openChildSettings = function (childId) {
 
 async function loadAttendance(childId) {
     const rows = await loadAttendanceFromDB(childId);
-    tableBody.innerHTML = '';
-    rows.forEach(data => createRow(data, false));
+    const tb = getTableBody();
+    if (tb) {
+        tb.innerHTML = '';
+        rows.forEach(data => createRow(data, false));
+    }
     updateMonthlyTotals();
 }
 
 async function saveAttendance() {
     if (!activeChildId) return;
     const rows = [];
-    tableBody.querySelectorAll('tr').forEach(row => {
+    const tb = getTableBody();
+    if (!tb) return;
+    tb.querySelectorAll('tr').forEach(row => {
         rows.push({
             rowId: row.dataset.rowId,
             date: row.querySelector('.date-field').value,
@@ -662,7 +665,9 @@ async function saveAttendance() {
 }
 
 function createRow(data = {}, shouldSave = true) {
-    const newRow = tableBody.insertRow();
+    const tb = getTableBody();
+    if (!tb) return;
+    const newRow = tb.insertRow();
     const rowId = data.rowId || Date.now().toString();
     newRow.dataset.rowId = rowId;
     newRow.dataset.hours = 0;
@@ -800,7 +805,9 @@ function updateMonthlyTotals() {
     }
 
     let totalH = 0, totalOT = 0, totalInd = 0, totalMeals = 0;
-    tableBody.querySelectorAll('tr').forEach(row => {
+    const tb = getTableBody();
+    if (!tb) return;
+    tb.querySelectorAll('tr').forEach(row => {
         totalH += parseFloat(row.dataset.hours || 0);
         totalOT += parseFloat(row.dataset.overtime || 0);
         totalInd += parseFloat(row.dataset.indemnity || 0);
@@ -937,7 +944,8 @@ window.saveGlobalSettings = async function () {
 
     await saveSettings({ hourly: RATES.HOURLY, overtime: RATES.OVERTIME_HOURLY, meal: RATES.MEAL });
 
-    tableBody.querySelectorAll('tr').forEach(row => updateRowCalculations(row));
+    const tb = getTableBody();
+    if (tb) tb.querySelectorAll('tr').forEach(row => updateRowCalculations(row));
     await initializeGlobalCache();
     updateGlobalSummary();
 
