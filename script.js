@@ -13,7 +13,7 @@ import {
     sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-    getFirestore,
+    initializeFirestore,
     doc,
     getDoc,
     setDoc,
@@ -38,7 +38,10 @@ let app, auth, db;
 if (FIREBASE_CONFIGURED) {
     app = initializeApp(FIREBASE_CONFIG);
     auth = getAuth(app);
-    db = getFirestore(app);
+    // Use Long Polling to bypass potential networking hangs/CORS in some environments
+    db = initializeFirestore(app, {
+        experimentalForceLongPolling: true
+    });
     document.getElementById('config-banner').classList.remove('show');
 }
 
@@ -61,7 +64,7 @@ let currentUser = null;
 function getTableBody() {
     return document.querySelector('#attendanceTable tbody');
 }
-const defaultPhotoUrl = "https://via.placeholder.com/100?text=👶";
+const defaultPhotoUrl = "https://ui-avatars.com/api/?name=Enfant&background=81c784&color=fff";
 
 // ============================================================
 // AUTH UI
