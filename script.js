@@ -23,12 +23,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDv1vUolUzIpvZMxOyGa0lVLpYDV0yTb74",
-  authDomain: "nounoupro-ac374.firebaseapp.com",
-  projectId: "nounoupro-ac374",
-  storageBucket: "nounoupro-ac374.firebasestorage.app",
-  messagingSenderId: "245286343426",
-  appId: "1:245286343426:web:ef7f5a0256f260cfcd281b"
+    apiKey: "AIzaSyDv1vUolUzIpvZMxOyGa0lVLpYDV0yTb74",
+    authDomain: "nounoupro-ac374.firebaseapp.com",
+    projectId: "nounoupro-ac374",
+    storageBucket: "nounoupro-ac374.firebasestorage.app",
+    messagingSenderId: "245286343426",
+    appId: "1:245286343426:web:ef7f5a0256f260cfcd281b"
 };
 
 const FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "VOTRE_API_KEY";
@@ -64,7 +64,7 @@ const defaultPhotoUrl = "https://via.placeholder.com/100?text=👶";
 // AUTH UI
 // ============================================================
 
-window.switchTab = function(tab) {
+window.switchTab = function (tab) {
     document.querySelectorAll('.auth-tab').forEach((t, i) => {
         t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
     });
@@ -74,7 +74,7 @@ window.switchTab = function(tab) {
     clearAuthMessages();
 };
 
-window.switchToReset = function() {
+window.switchToReset = function () {
     document.getElementById('login-form').classList.add('hidden');
     document.getElementById('register-form').classList.add('hidden');
     document.getElementById('reset-form').classList.remove('hidden');
@@ -125,7 +125,7 @@ function firebaseErrorMessage(code) {
 // AUTH HANDLERS
 // ============================================================
 
-window.handleLogin = async function(e) {
+window.handleLogin = async function (e) {
     e.preventDefault();
     clearAuthMessages();
 
@@ -146,7 +146,7 @@ window.handleLogin = async function(e) {
     }
 };
 
-window.handleRegister = async function(e) {
+window.handleRegister = async function (e) {
     e.preventDefault();
     clearAuthMessages();
 
@@ -174,7 +174,7 @@ window.handleRegister = async function(e) {
     }
 };
 
-window.handleReset = async function(e) {
+window.handleReset = async function (e) {
     e.preventDefault();
     clearAuthMessages();
 
@@ -194,12 +194,12 @@ window.handleReset = async function(e) {
     setLoading('reset-btn', false, 'Envoyer le lien');
 };
 
-window.logout = async function() {
+window.logout = async function () {
     if (!FIREBASE_CONFIGURED) return;
     await signOut(auth);
 };
 
-window.sendPasswordReset = async function() {
+window.sendPasswordReset = async function () {
     if (!currentUser) return;
     const msg = document.getElementById('password-message');
     try {
@@ -213,7 +213,7 @@ window.sendPasswordReset = async function() {
     setTimeout(() => { msg.textContent = ''; }, 4000);
 };
 
-window.showConfigHelp = function() {
+window.showConfigHelp = function () {
     alert(
         "Pour activer les comptes Firebase :\n\n" +
         "1. Allez sur https://console.firebase.google.com\n" +
@@ -329,7 +329,7 @@ async function loadSettingsFromDB() {
 // NAVIGATION
 // ============================================================
 
-window.showPage = function(pageId) {
+window.showPage = function (pageId) {
     document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
         p.classList.add('hidden');
@@ -359,19 +359,16 @@ window.showPage = function(pageId) {
 
 function renderChildrenCards() {
     const container = document.getElementById('children-cards-container');
+    if (!container) return;
     container.innerHTML = '';
     childrenList.forEach(child => {
         const card = document.createElement('div');
         card.className = 'child-card' + (child.id === activeChildId ? ' active' : '');
         card.setAttribute('onclick', `selectChild('${child.id}')`);
-        const ageYears = new Date().getFullYear() - new Date(child.birthdate).getFullYear();
         card.innerHTML = `
             <div class="child-photo-container">
                 <img src="${child.photoUrl || defaultPhotoUrl}" alt="Photo de ${child.name}" class="child-photo-img">
             </div>
-            <p class="child-name">${child.name}</p>
-            <p class="child-info">${ageYears} ans</p>
-            <button class="settings-card-button" title="Paramètres" onclick="event.stopPropagation(); openChildSettings('${child.id}')">⚙️</button>
         `;
         container.appendChild(card);
     });
@@ -381,70 +378,57 @@ function renderDashboardSummaries() {
     const container = document.getElementById('dashboard-summaries');
     if (!container) return;
     container.innerHTML = '';
+    
     if (childrenList.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted);font-weight:600;margin-top:12px;">Aucun enfant pour l\'instant. Ajoutez votre premier enfant !</p>';
         return;
     }
+
     let globalBase = 0, globalFrais = 0, globalTotal = 0;
+
     childrenList.forEach(child => {
         const cache = childTotalsCache[child.id] || {};
         const base = parseFloat(child.baseMonthlySalary) || 0;
         const frais = parseFloat(cache.totalFrais) || 0;
         const total = parseFloat(cache.totalMonthly) || 0;
+        
         globalBase += base;
         globalFrais += frais;
         globalTotal += total;
+
         const card = document.createElement('div');
         card.className = 'dashboard-child-summary';
         card.innerHTML = `
-            <div class="dcs-header">
-                <img src="${child.photoUrl || defaultPhotoUrl}" class="dcs-photo">
-                <span class="dcs-name">${child.name}</span>
-            </div>
+            <h3 class="dcs-name">${child.name}</h3>
             <div class="dcs-figures">
                 <div class="dcs-figure">
                     <span class="dcs-label">Mensualisation</span>
-                    <span class="dcs-value">${base.toFixed(2)} €</span>
+                    <span class="dcs-value">${base.toFixed(2)}€</span>
                 </div>
                 <div class="dcs-figure">
-                    <span class="dcs-label">Frais réels</span>
-                    <span class="dcs-value">${frais.toFixed(2)} €</span>
+                    <span class="dcs-label">Frais Réel</span>
+                    <span class="dcs-value">${frais.toFixed(2)}€</span>
                 </div>
                 <div class="dcs-figure highlight">
-                    <span class="dcs-label">Total facture</span>
-                    <span class="dcs-value">${total.toFixed(2)} €</span>
+                    <span class="dcs-label">Total Facture</span>
+                    <span class="dcs-value">${total.toFixed(2)}€</span>
                 </div>
             </div>
         `;
         container.appendChild(card);
     });
-    if (childrenList.length > 1) {
-        const globalCard = document.createElement('div');
-        globalCard.className = 'dashboard-child-summary global';
-        globalCard.innerHTML = `
-            <div class="dcs-header">
-                <span class="dcs-name">Cumul — tous les enfants</span>
-            </div>
-            <div class="dcs-figures">
-                <div class="dcs-figure">
-                    <span class="dcs-label">Mensualisation</span>
-                    <span class="dcs-value">${globalBase.toFixed(2)} €</span>
-                </div>
-                <div class="dcs-figure">
-                    <span class="dcs-label">Frais réels</span>
-                    <span class="dcs-value">${globalFrais.toFixed(2)} €</span>
-                </div>
-                <div class="dcs-figure highlight">
-                    <span class="dcs-label">Total cumulé</span>
-                    <span class="dcs-value">${globalTotal.toFixed(2)} €</span>
-                </div>
-            </div>
-        `;
-        container.appendChild(globalCard);
-    }
+
+    // Update global boxes
+    const box1 = document.getElementById('global-box-1');
+    const box2 = document.getElementById('global-box-2');
+    const box3 = document.getElementById('global-box-3');
+
+    if (box1) box1.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:#888;">MENSUALISATION</span><span style="font-size:1.3rem; font-weight:900;">${globalBase.toFixed(2)}€</span></div>`;
+    if (box2) box2.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:#888;">FRAIS RÉEL</span><span style="font-size:1.3rem; font-weight:900;">${globalFrais.toFixed(2)}€</span></div>`;
+    if (box3) box3.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px; background:#d4f895; border-radius:12px;"><span style="font-size:0.7rem; font-weight:800; color:#1a1a2e;">TOTAL FACTURE</span><span style="font-size:1.3rem; font-weight:900;">${globalTotal.toFixed(2)}€</span></div>`;
 }
 
-window.selectChild = async function(id) {
+window.selectChild = async function (id) {
     activeChildId = id;
     const child = childrenList.find(c => c.id === id);
     if (child) {
@@ -456,7 +440,7 @@ window.selectChild = async function(id) {
     }
 };
 
-window.addChild = async function() {
+window.addChild = async function () {
     const name = prompt("Entrez le prénom du nouvel enfant :");
     if (!name) return;
     const salaryPrompt = prompt("Entrez le salaire mensuel de base (€) pour cet enfant (ex: 550.00) :");
@@ -469,7 +453,7 @@ window.addChild = async function() {
     await selectChild(newId);
 };
 
-window.deleteChild = async function(childId) {
+window.deleteChild = async function (childId) {
     const child = childrenList.find(c => c.id === childId);
     if (!child) return;
     if (!confirm(`Supprimer ${child.name} et TOUTES ses données ? Cette action est irréversible.`)) return;
@@ -484,7 +468,7 @@ window.deleteChild = async function(childId) {
     showPage('home');
 };
 
-window.openChildSettings = function(childId) {
+window.openChildSettings = function (childId) {
     activeChildId = childId;
     updateSettingsChildFields();
     showPage('settings');
@@ -583,7 +567,7 @@ function updateRowFromInput(inputElement) {
     saveAttendanceRow(activeChildId, row.dataset.rowId, rowData);
 }
 
-window.deleteRow = async function(button) {
+window.deleteRow = async function (button) {
     const row = button.closest('tr');
     const rowId = row.dataset.rowId;
     row.remove();
@@ -591,7 +575,7 @@ window.deleteRow = async function(button) {
     updateMonthlyTotals();
 };
 
-window.addRow = function() {
+window.addRow = function () {
     createRow({
         date: new Date().toISOString().split('T')[0],
         timeIn: '08:00',
@@ -601,7 +585,7 @@ window.addRow = function() {
     });
 };
 
-window.duplicateRow = function(button) {
+window.duplicateRow = function (button) {
     const row = button.closest('tr');
     const existingData = {
         date: row.querySelector('.date-field').value,
@@ -654,7 +638,7 @@ function updateRowCalculations(row) {
 function updateMonthlyTotals() {
     const child = childrenList.find(c => c.id === activeChildId);
     if (!child) {
-        ['footer-totalHours','footer-totalOvertime','footer-totalIndemnity','footer-totalMeals','footer-totalMonthly'].forEach(id => {
+        ['footer-totalHours', 'footer-totalOvertime', 'footer-totalIndemnity', 'footer-totalMeals', 'footer-totalMonthly'].forEach(id => {
             document.getElementById(id).textContent = id.includes('Hours') || id.includes('Overtime') ? '0h00' : '0.00 €';
         });
         updateHomeSummary(0, 0);
@@ -747,7 +731,7 @@ function updateSettingsChildFields() {
     }
 }
 
-window.updateChildBaseSalary = async function() {
+window.updateChildBaseSalary = async function () {
     const child = childrenList.find(c => c.id === activeChildId);
     const newBase = parseFloat(document.getElementById('setting-base-salary').value);
     const newPhoto = document.getElementById('setting-child-photo-url').value.trim();
@@ -764,7 +748,7 @@ window.updateChildBaseSalary = async function() {
     }
 };
 
-window.updatePhotoPreview = function() {
+window.updatePhotoPreview = function () {
     document.getElementById('photo-preview').src = document.getElementById('setting-child-photo-url').value.trim() || defaultPhotoUrl;
 };
 
@@ -778,7 +762,7 @@ async function loadSettings() {
     }
 }
 
-window.saveGlobalSettings = async function() {
+window.saveGlobalSettings = async function () {
     const hourly = parseFloat(document.getElementById('setting-hourly-rate').value);
     const overtime = parseFloat(document.getElementById('setting-overtime-hourly-rate').value);
     const meal = parseFloat(document.getElementById('setting-meal-rate').value);
