@@ -235,14 +235,27 @@ if (FIREBASE_CONFIGURED) {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
+            
+            // 1. Reveal layout and show Home immediately
             document.getElementById('auth-overlay').classList.add('hidden');
             document.getElementById('app-layout').classList.remove('hidden');
             document.getElementById('nav-user-email').textContent = user.email;
             const avatarEl = document.getElementById('sidebar-avatar');
             if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
+            
+            // Show page 'home' right away
+            showPage('home');
+
+            // 2. Load data in background and refresh if still on home
             await loadUserData();
             await loadSettings();
-            showPage('home'); // Ensure home is default
+            
+            // If the user hasn't switched away, refresh the dashboard with loaded data
+            const homeBtn = document.getElementById('nav-btn-home');
+            if (homeBtn && homeBtn.classList.contains('active')) {
+                renderChildrenCards();
+                renderDashboardSummaries();
+            }
         } else {
             currentUser = null;
             childrenList = [];
@@ -433,7 +446,7 @@ function renderDashboardSummaries() {
     if (box3) box3.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px; background:#d4f895; border-radius:12px;"><span style="font-size:0.7rem; font-weight:800; color:#1a1a2e;">TOTAL FACTURE</span><span style="font-size:1.3rem; font-weight:900;">${globalTotal.toFixed(2)}€</span></div>`;
 }
 
-window.selectChild = async function (id) {
+window.selectChild = async function (id, stayOnPage = false) {
     activeChildId = id;
     const child = childrenList.find(c => c.id === id);
     if (child) {
@@ -441,7 +454,11 @@ window.selectChild = async function (id) {
         await loadAttendance(id);
         renderChildrenCards();
         updateSettingsChildFields();
-        showPage('attendance');
+        if (!stayOnPage) {
+            showPage('attendance');
+        } else {
+            renderDashboardSummaries(); // Refresh dashboard if staying
+        }
     }
 };
 

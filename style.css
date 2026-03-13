@@ -147,7 +147,9 @@ body {
     color: #1a5e7a;
 }
 #nav-btn-home.active {
-    box-shadow: 0 4px 12px rgba(170, 224, 249, 0.4);
+    box-shadow: 0 6px 16px rgba(170, 224, 249, 0.5);
+    transform: translateY(-2px);
+    border: 2px solid white;
 }
 
 #nav-btn-attendance {
@@ -155,7 +157,9 @@ body {
     color: #1b5e20;
 }
 #nav-btn-attendance.active {
-    box-shadow: 0 4px 12px rgba(188, 246, 163, 0.4);
+    box-shadow: 0 6px 16px rgba(188, 246, 163, 0.5);
+    transform: translateY(-2px);
+    border: 2px solid white;
 }
 
 #nav-btn-settings {
@@ -163,7 +167,9 @@ body {
     color: #795548;
 }
 #nav-btn-settings.active {
-    box-shadow: 0 4px 12px rgba(255, 211, 176, 0.4);
+    box-shadow: 0 6px 16px rgba(255, 211, 176, 0.5);
+    transform: translateY(-2px);
+    border: 2px solid white;
 }
 
 .sidebar-logout {
