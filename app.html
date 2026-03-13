@@ -429,125 +429,42 @@
                 </div>
             </section>
 
-            <!-- PAGE PRÉSENCE / DÉTAIL ENFANT -->
             <section id="attendance-page" class="page hidden">
-                <!-- Header Enfant -->
-                <div class="attendance-header card">
-                    <div class="ah-profile">
-                        <img id="attendance-child-photo" src="" alt="Photo" class="ah-photo">
-                        <div class="ah-info">
-                            <h2 id="attendance-child-name">Nom de l'enfant</h2>
-                            <div class="ah-age" id="attendance-child-age">19 ANS</div>
-                            <div class="ah-desc">DESCRIPTION DE L'ENFANT</div>
-                        </div>
-                    </div>
-                    <div class="ah-docs">
-                        <div class="ah-docs-icon">
-                            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"/></svg>
-                        </div>
-                        <span>IMAGES ET DOCS</span>
-                    </div>
-                </div>
+                <header class="page-header">
+                    <h2 id="attendance-title">Feuille de Présence</h2>
+                    <button class="action-button" onclick="addRow()">+ Ajouter une ligne</button>
+                </header>
 
-                <!-- Aujourd'hui -->
-                <div class="attendance-section card">
-                    <div class="as-title">AUJOURD'HUI</div>
-                    <div class="as-content as-today">
-                        <div class="ast-item">
-                            <div class="ast-icon">🍴</div>
-                            <div class="ast-dots">
-                                <span class="dot active"></span>
-                                <span class="dot active"></span>
-                                <span class="dot"></span>
-                            </div>
-                        </div>
-                        <div class="as-divider"></div>
-                        <div class="ast-item">
-                            <div class="ast-icon">🛏️</div>
-                            <div class="ast-value">2H30 <span>▼</span></div>
-                        </div>
-                        <div class="as-divider"></div>
-                        <div class="ast-item">
-                            <div class="ast-icon">🚼</div>
-                            <div class="ast-value">X3</div>
-                        </div>
-                        <div class="as-divider"></div>
-                        <div class="ast-item">
-                            <div class="ast-icon">🧩</div>
-                            <div class="ast-value">DESSIN</div>
-                        </div>
-                    </div>
+                <div class="table-wrapper">
+                    <table id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Arrivée</th>
+                                <th>Départ</th>
+                                <th>Total heures</th>
+                                <th>H. sup (h)</th>
+                                <th>Indem. entr.</th>
+                                <th>Frais repas</th>
+                                <th>Total journée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="3">Totaux du mois</td>
+                                <td id="footer-totalHours">0h00</td>
+                                <td id="footer-totalOvertime">0h00</td>
+                                <td id="footer-totalIndemnity">0.00 €</td>
+                                <td id="footer-totalMeals">0.00 €</td>
+                                <td id="footer-totalMonthly">0.00 €</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-
-                <!-- Santé -->
-                <div class="attendance-section card">
-                    <div class="as-header-flex">
-                        <div class="as-title">SANTÉ</div>
-                        <button class="ah-btn-blue">AJOUTER UN TRAITEMENT</button>
-                    </div>
-                </div>
-
-                <!-- Feuille de Calcul -->
-                <div class="attendance-section card">
-                    <div class="as-title">FEUILLE DE CALCUL</div>
-                    <div class="calculation-minimal-box">
-                        ON A NOS LIGNE AVEC ENTRÉ SORTI ...
-                        <!-- Table will be injected or hidden here depending on level of detail needed -->
-                        <div class="table-wrapper mini-table hidden">
-                            <table id="attendanceTable">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Arrivée</th>
-                                        <th>Départ</th>
-                                        <th>Total</th>
-                                        <th>H. sup</th>
-                                        <th>Indem.</th>
-                                        <th>Repas</th>
-                                        <th>Total jour</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Calendrier Visuel -->
-                <div class="attendance-section card">
-                    <div class="as-header-flex">
-                        <div class="as-title">CALENDRIER</div>
-                        <div class="cal-nav">
-                            <button class="cal-nav-btn">❮</button>
-                            <span class="cal-current">AUJOURD'HUI</span>
-                            <button class="cal-nav-btn">❯</button>
-                        </div>
-                    </div>
-                    <div class="visual-calendar">
-                        <div class="vc-week-header">
-                            <div class="vc-day-label">LUN.9</div>
-                            <div class="vc-day-label">MAR.10</div>
-                            <div class="vc-day-label">MER.11</div>
-                            <div class="vc-day-label active">JEU.12</div>
-                            <div class="vc-day-label">VEN.13</div>
-                        </div>
-                        <div class="vc-grid">
-                            <div class="vc-time-col">
-                                <span>07:00</span><span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span>
-                                <span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span>
-                                <span>17:00</span><span>18:00</span>
-                            </div>
-                            <div class="vc-columns">
-                                <div class="vc-column"><div class="vc-bar" style="top: 10%; height: 80%;"></div></div>
-                                <div class="vc-column"><div class="vc-bar" style="top: 5%; height: 70%;"></div></div>
-                                <div class="vc-column"><div class="vc-bar" style="top: 5%; height: 70%;"></div></div>
-                                <div class="vc-column"><div class="vc-bar" style="top: 5%; height: 70%;"></div></div>
-                                <div class="vc-column"><div class="vc-bar" style="top: 5%; height: 90%;"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div style="display:none;" id="footer-baseSalary"></div>
             </section>
 
             <section id="settings-page" class="page hidden">

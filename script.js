@@ -450,51 +450,17 @@ window.selectChild = async function (id, stayOnPage = false) {
     activeChildId = id;
     const child = childrenList.find(c => c.id === id);
     if (child) {
-        // Populate new attendance header
-        const photoEl = document.getElementById('attendance-child-photo');
-        const nameEl = document.getElementById('attendance-child-name');
-        const ageEl = document.getElementById('attendance-child-age');
-        
-        if (photoEl) photoEl.src = child.photoUrl || defaultPhotoUrl;
-        if (nameEl) nameEl.textContent = child.name;
-        if (ageEl) {
-            const birth = new Date(child.birthdate);
-            const today = new Date();
-            let age = today.getFullYear() - birth.getFullYear();
-            const m = today.getMonth() - birth.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-                age--;
-            }
-            ageEl.textContent = `${age} ANS`;
-        }
-
+        document.getElementById('attendance-title').textContent = `Feuille de Présence de ${child.name}`;
         await loadAttendance(id);
         renderChildrenCards();
         updateSettingsChildFields();
-        
         if (!stayOnPage) {
             showPage('attendance');
         } else {
-            renderDashboardSummaries();
+            renderDashboardSummaries(); // Refresh dashboard if staying
         }
-        
-        // Render visual calendar bars
-        renderVisualCalendar(id);
     }
 };
-
-function renderVisualCalendar(childId) {
-    // Basic mock implementation for the visual calendar bars
-    // In a real app, this would map attendance hours to the vc-bar heights
-    const bars = document.querySelectorAll('.vc-bar');
-    bars.forEach((bar, index) => {
-        // Randomize heights for now to match mockup look
-        const randomHeight = 50 + Math.random() * 40;
-        const randomTop = 5 + Math.random() * 10;
-        bar.style.height = `${randomHeight}%`;
-        bar.style.top = `${randomTop}%`;
-    });
-}
 
 window.addChild = async function () {
     const name = prompt("Entrez le prénom du nouvel enfant :");

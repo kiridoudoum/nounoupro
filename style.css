@@ -349,257 +349,103 @@ body {
     color: white;
 }
 
-/* ===== ATTENDANCE PAGE (MOCKUP) ===== */
-.attendance-header {
+/* ===== DASHBOARD (MOCKUP STYLE) ===== */
+.dashboard-summaries {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.dashboard-child-summary {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.dcs-name {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+    margin-top: 0;
+}
+
+.dcs-figures {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dcs-figure {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px;
-    margin-bottom: 24px;
+    background: #efefef;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: none;
 }
 
-.ah-profile {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.ah-photo {
-    width: 100px;
-    height: 100px;
-    border-radius: 20px;
-    object-fit: cover;
-    box-shadow: var(--shadow-sm);
-}
-
-.ah-info h2 {
-    font-size: 1.8rem;
-    font-weight: 900;
-    margin: 0;
-    color: var(--text);
-}
-
-.ah-age {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--text);
-}
-
-.ah-desc {
+.dcs-label {
     font-size: 0.75rem;
     font-weight: 800;
-    color: var(--text-muted);
     text-transform: uppercase;
+    color: var(--text);
+    letter-spacing: 0.05em;
+}
+
+.dcs-value {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--text);
+}
+
+.dcs-figure.highlight {
+    background: #d4f895; /* Lime green from mockup */
     margin-top: 4px;
 }
 
-.ah-docs {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
-
-.ah-docs-icon {
-    width: 48px;
-    height: 48px;
-    border: 2px solid var(--text);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ah-docs span {
-    font-size: 0.7rem;
-    font-weight: 900;
+.dcs-figure.highlight .dcs-label,
+.dcs-figure.highlight .dcs-value {
     color: var(--text);
 }
 
-.attendance-section {
+/* Global totals section */
+.dashboard-global-card {
+    background: var(--card);
+    border-radius: var(--radius);
     padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-top: 32px;
+}
+
+.dgc-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     margin-bottom: 24px;
 }
 
-.as-title {
-    font-size: 1.4rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: var(--text);
-    margin-bottom: 20px;
-}
-
-.as-header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.as-content {
-    display: flex;
+.dgc-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-    align-items: center;
 }
 
-.as-today {
-    justify-content: space-between;
-}
-
-.ast-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.ast-icon {
-    font-size: 2rem;
-}
-
-.ast-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.ast-dots .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #e0e0e0;
-}
-
-.ast-dots .dot.active {
-    background: #a5d6a7;
-}
-
-.as-divider {
-    width: 1px;
-    height: 40px;
-    background: var(--border);
-}
-
-.ast-value {
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: var(--text);
-}
-
-.ast-value span {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-left: 4px;
-}
-
-.ah-btn-blue {
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 800;
-    font-size: 0.8rem;
-    cursor: pointer;
-    text-transform: uppercase;
-}
-
-.calculation-minimal-box {
-    border: 3px solid #e0e0e0;
+.dgc-box {
+    background: #efefef;
     border-radius: 12px;
-    padding: 40px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--text);
-    text-transform: uppercase;
-}
-
-/* Visual Calendar */
-.cal-nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #f5f5f5;
-    padding: 4px 12px;
-    border-radius: 20px;
-}
-
-.cal-nav-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: var(--text-muted);
-}
-
-.cal-current {
-    font-size: 0.8rem;
-    font-weight: 900;
-    color: var(--text);
-}
-
-.visual-calendar {
-    margin-top: 20px;
-}
-
-.vc-week-header {
-    display: grid;
-    grid-template-columns: 80px repeat(5, 1fr);
-    margin-bottom: 20px;
-}
-
-.vc-day-label {
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--text);
-    padding-bottom: 8px;
-}
-
-.vc-day-label.active {
-    color: white;
-    background: #f48fb1;
-    border-radius: 20px;
-    padding: 4px 12px;
-    display: inline-block;
-    align-self: center;
-    justify-self: center;
-}
-
-.vc-grid {
-    display: flex;
-    position: relative;
-    height: 400px;
-}
-
-.vc-time-col {
-    width: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 700;
-}
-
-.vc-columns {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    background-image: linear-gradient(#f0f0f0 1px, transparent 1px);
-    background-size: 100% calc(100% / 11);
-}
-
-.vc-column {
-    position: relative;
-    border-left: 1px solid #f0f0f0;
-}
-
-.vc-bar {
-    position: absolute;
-    width: 85%;
-    left: 7.5%;
-    background: #ff7675; /* Salmon color from mockup */
-    border-radius: 8px;
+    height: 100px;
 }
 
 .dcs-figure.highlight .dcs-label {
