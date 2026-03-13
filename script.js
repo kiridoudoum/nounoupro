@@ -466,38 +466,36 @@ window.selectChild = async function (id, stayOnPage = false) {
         if (photoEl) photoEl.src = child.photoUrl || defaultPhotoUrl;
         if (attNameEl) attNameEl.textContent = child.name;
 
-        try {
-            await loadAttendance(id);
-        } catch (err) {
-            console.warn("Failed to load attendance data, but proceeding with navigation:", err);
-        }
-
-        renderChildrenCards();
-        updateSettingsChildFields();
-
-        // Render visual calendar
-        try {
-            renderVisualCalendar();
-        } catch (err) {
-            console.error("Error rendering visual calendar:", err);
-        }
-
-        // Update billing summary in child-detail-page
-        const cache = childTotalsCache[id] || { totalFrais: 0, totalMonthly: 0, totalHours: 0 };
-        const hoursEl = document.getElementById('detail-total-hours');
-        const salaryEl = document.getElementById('detail-total-salary');
-        if (hoursEl) hoursEl.textContent = cache.totalHours || '—';
-        if (salaryEl) {
-            const base = parseFloat(child.baseMonthlySalary) || 0;
-            const total = base + (parseFloat(cache.totalFrais) || 0);
-            salaryEl.textContent = total.toFixed(2) + ' €';
-        }
-
         if (!stayOnPage) {
             showPage('child-detail');
-        } else {
-            renderDashboardSummaries();
         }
+
+        // Load data in background to keep UI snappy
+        const loadProcess = async () => {
+            try {
+                await loadAttendance(id);
+                renderChildrenCards();
+                updateSettingsChildFields();
+                renderVisualCalendar();
+
+                // Update billing summary in child-detail-page
+                const cache = childTotalsCache[id] || { totalFrais: 0, totalMonthly: 0, totalHours: 0 };
+                const hoursEl = document.getElementById('detail-total-hours');
+                const salaryEl = document.getElementById('detail-total-salary');
+                if (hoursEl) hoursEl.textContent = cache.totalHours || '—';
+                if (salaryEl) {
+                    const base = parseFloat(child.baseMonthlySalary) || 0;
+                    const total = base + (parseFloat(cache.totalFrais) || 0);
+                    salaryEl.textContent = total.toFixed(2) + ' €';
+                }
+                
+                if (stayOnPage) renderDashboardSummaries();
+            } catch (err) {
+                console.error("Error loading child data in background:", err);
+            }
+        };
+
+        loadProcess();
     }
 };
 
