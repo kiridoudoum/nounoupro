@@ -1283,3 +1283,9 @@ input[type="time"].data-input {
     animation: rotate 1.5s linear infinite;
     display: inline-block;
 }
+
+/* Utilitaires pour l'intégration du tableau */
+.full-width-card {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+}
