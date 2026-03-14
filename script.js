@@ -39,8 +39,10 @@ if (FIREBASE_CONFIGURED) {
     app = initializeApp(FIREBASE_CONFIG);
     auth = getAuth(app);
     // Use Long Polling to bypass potential networking hangs/CORS in some environments
+    // useFetchStreams: false is often required for reliable long-polling in restrictive networks
     db = initializeFirestore(app, {
-        experimentalForceLongPolling: true
+        experimentalForceLongPolling: true,
+        useFetchStreams: false
     });
     document.getElementById('config-banner').classList.remove('show');
 }
@@ -312,18 +314,25 @@ async function loadUserData() {
 async function saveChild(child) {
     if (!currentUser) throw new Error("Utilisateur non connecté. Veuillez vous reconnecter.");
     const { id, ...data } = child;
-    console.log("Saving child to Firebase...", id, data);
+    console.log(`[Firebase] Tentative de sauvegarde de l'enfant: ${data.name} (ID: ${id})`);
     
-    // Timeout of 10s for Firebase
+    // Timeout extended to 30s for Firebase
     const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (10s)")), 10000)
+        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (30s). Vérifiez votre connexion internet.")), 30000)
     );
 
-    await Promise.race([
-        setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data),
-        timeoutPromise
-    ]);
-    console.log("Child saved successfully!");
+    const start = Date.now();
+    try {
+        await Promise.race([
+            setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data),
+            timeoutPromise
+        ]);
+        const duration = ((Date.now() - start) / 1000).toFixed(1);
+        console.log(`[Firebase] Sauvegarde réussie en ${duration}s !`);
+    } catch (err) {
+        console.error("[Firebase] Échec de la sauvegarde:", err);
+        throw err;
+    }
 }
 
 async function deleteChildFromDB(childId) {
