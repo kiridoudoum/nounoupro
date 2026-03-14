@@ -14,6 +14,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
     initializeFirestore,
+    onSnapshotsInSync,
     doc,
     getDoc,
     setDoc,
@@ -42,6 +43,12 @@ if (FIREBASE_CONFIGURED) {
         experimentalForceLongPolling: true,
         useFetchStreams: false
     });
+
+    // Diagnostique : Savoir si le SDK est en train de se synchroniser
+    onSnapshotsInSync(db, () => {
+        console.log("[Firebase] SDK synchronisé avec le serveur (Snapshots in sync).");
+    });
+
     document.getElementById('config-banner').classList.remove('show');
 }
 
@@ -314,10 +321,10 @@ async function saveChild(child) {
     const { id, ...data } = child;
     console.log(`[Firebase] Sauvegarde de l'enfant: ${data.name} (ID: ${id})...`);
     
-    // Timeout logic to prevent eternal hang
+    // Timeout logic to prevent eternal hang - increased to 30s
     const savePromise = setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data);
     const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (15s)")), 15000)
+        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (30s). Vérifiez votre connexion internet.")), 30000)
     );
 
     try {
