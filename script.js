@@ -13,7 +13,7 @@ import {
     sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-    initializeFirestore,
+    getFirestore,
     doc,
     getDoc,
     setDoc,
@@ -38,12 +38,7 @@ let app, auth, db;
 if (FIREBASE_CONFIGURED) {
     app = initializeApp(FIREBASE_CONFIG);
     auth = getAuth(app);
-    // Use Long Polling to bypass potential networking hangs/CORS in some environments
-    // useFetchStreams: false is often required for reliable long-polling in restrictive networks
-    db = initializeFirestore(app, {
-        experimentalForceLongPolling: true,
-        useFetchStreams: false
-    });
+    db = getFirestore(app);
     document.getElementById('config-banner').classList.remove('show');
 }
 
@@ -314,23 +309,13 @@ async function loadUserData() {
 async function saveChild(child) {
     if (!currentUser) throw new Error("Utilisateur non connecté. Veuillez vous reconnecter.");
     const { id, ...data } = child;
-    console.log(`[Firebase] Tentative de sauvegarde de l'enfant: ${data.name} (ID: ${id})`);
+    console.log(`[Firebase] Sauvegarde de l'enfant: ${data.name} (ID: ${id})...`);
     
-    // Timeout extended to 30s for Firebase
-    const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (30s). Vérifiez votre connexion internet.")), 30000)
-    );
-
-    const start = Date.now();
     try {
-        await Promise.race([
-            setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data),
-            timeoutPromise
-        ]);
-        const duration = ((Date.now() - start) / 1000).toFixed(1);
-        console.log(`[Firebase] Sauvegarde réussie en ${duration}s !`);
+        await setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data);
+        console.log(`[Firebase] Enfant ${data.name} sauvegardé avec succès !`);
     } catch (err) {
-        console.error("[Firebase] Échec de la sauvegarde:", err);
+        console.error(`[Firebase] Erreur lors de la sauvegarde de ${data.name}:`, err);
         throw err;
     }
 }
@@ -615,27 +600,32 @@ window.handleChildSubmit = async function (e) {
 
     try {
         const newId = Date.now().toString();
-        const newChild = { name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
+        const newChild = { id: newId, name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
         
-        await saveChild({ id: newId, ...newChild });
-
-        // Refresh everything from DB
-        submitBtn.innerHTML = '<span class="material-icons rotating">sync</span> Actualisation...';
-        await loadUserData();
+        // --- OPTIMISTIC UPDATE ---
+        // We add it to the local list immediately so the user sees it
+        childrenList.push(newChild);
         activeChildId = newId;
-
-        // Success state
-        submitBtn.innerHTML = '<span class="material-icons">check</span> Enregistré !';
+        renderChildrenCards();
+        renderDashboardSummaries();
         
-        setTimeout(() => {
-            closeAddChildModal();
-            showPage('home');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalLabel;
-        }, 800);
+        // Close modal and show home immediately to provide instant feedback
+        closeAddChildModal();
+        showPage('home');
+
+        // Background save
+        saveChild(newChild).then(async () => {
+            // Success in background: you could add a small visual indicator here if you want
+            console.log("Optimistic save confirmed by server.");
+            // Optional: refresh data to be 100% sure sync is perfect
+            await loadUserData(); 
+        }).catch(err => {
+            console.error("Optimistic save failed:", err);
+            alert("Attention : L'enfant a été ajouté localement mais la sauvegarde sur le serveur a échoué. Vérifiez votre connexion.");
+        });
 
     } catch (err) {
-        console.error("Error adding child:", err);
+        console.error("Error in handleChildSubmit:", err);
         alert("Erreur : " + err.message);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalLabel;
