@@ -13,7 +13,7 @@ import {
     sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-    getFirestore,
+    initializeFirestore,
     doc,
     getDoc,
     setDoc,
@@ -38,7 +38,10 @@ let app, auth, db;
 if (FIREBASE_CONFIGURED) {
     app = initializeApp(FIREBASE_CONFIG);
     auth = getAuth(app);
-    db = getFirestore(app);
+    db = initializeFirestore(app, {
+        experimentalForceLongPolling: true,
+        useFetchStreams: false
+    });
     document.getElementById('config-banner').classList.remove('show');
 }
 
@@ -311,8 +314,14 @@ async function saveChild(child) {
     const { id, ...data } = child;
     console.log(`[Firebase] Sauvegarde de l'enfant: ${data.name} (ID: ${id})...`);
     
+    // Timeout logic to prevent eternal hang
+    const savePromise = setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data);
+    const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (15s)")), 15000)
+    );
+
     try {
-        await setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data);
+        await Promise.race([savePromise, timeoutPromise]);
         console.log(`[Firebase] Enfant ${data.name} sauvegardé avec succès !`);
     } catch (err) {
         console.error(`[Firebase] Erreur lors de la sauvegarde de ${data.name}:`, err);
