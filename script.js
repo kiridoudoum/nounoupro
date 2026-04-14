@@ -609,32 +609,19 @@ window.handleChildSubmit = async function (e) {
     try {
         const newId = Date.now().toString();
         const newChild = { id: newId, name, birthdate, baseMonthlySalary: salary, photoUrl: defaultPhotoUrl };
-        
-        // --- OPTIMISTIC UPDATE ---
-        // We add it to the local list immediately so the user sees it
+
+        await saveChild(newChild);
+
         childrenList.push(newChild);
         activeChildId = newId;
         renderChildrenCards();
         renderDashboardSummaries();
-        
-        // Close modal and show home immediately to provide instant feedback
         closeAddChildModal();
         showPage('home');
 
-        // Background save
-        saveChild(newChild).then(async () => {
-            // Success in background: you could add a small visual indicator here if you want
-            console.log("Optimistic save confirmed by server.");
-            // Optional: refresh data to be 100% sure sync is perfect
-            await loadUserData(); 
-        }).catch(err => {
-            console.error("Optimistic save failed:", err);
-            alert("Attention : L'enfant a été ajouté localement mais la sauvegarde sur le serveur a échoué. Vérifiez votre connexion.");
-        });
-
     } catch (err) {
         console.error("Error in handleChildSubmit:", err);
-        alert("Erreur : " + err.message);
+        alert("Erreur lors de la sauvegarde : " + err.message);
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalLabel;
     }
@@ -836,8 +823,11 @@ function updateRowCalculations(row) {
 function updateMonthlyTotals() {
     const child = childrenList.find(c => c.id === activeChildId);
     if (!child) {
-        ['footer-totalHours', 'footer-totalOvertime', 'footer-totalIndemnity', 'footer-totalMeals', 'footer-totalMonthly'].forEach(id => {
-            document.getElementById(id).textContent = id.includes('Hours') || id.includes('Overtime') ? '0h00' : '0.00 €';
+        const resetIds = ['footer-totalHours', 'footer-totalOvertime', 'footer-totalIndemnity', 'footer-totalMeals', 'footer-totalMonthly',
+                          'footer-totalHours-att', 'footer-totalOvertime-att', 'footer-totalIndemnity-att', 'footer-totalMeals-att', 'footer-totalMonthly-att'];
+        resetIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = id.includes('Hours') || id.includes('Overtime') ? '0h00' : '0.00 €';
         });
         updateHomeSummary(0, 0);
         updateGlobalSummary();
@@ -863,20 +853,44 @@ function updateMonthlyTotals() {
         totalMonthly: total
     };
 
-    document.getElementById('footer-totalHours').textContent = `${Math.floor(totalH)}h${String(Math.round((totalH % 1) * 60)).padStart(2, '0')}`;
-    document.getElementById('footer-totalOvertime').textContent = `${Math.floor(totalOT)}h${String(Math.round((totalOT % 1) * 60)).padStart(2, '0')}`;
-    document.getElementById('footer-totalIndemnity').textContent = totalInd.toFixed(2) + ' €';
-    document.getElementById('footer-totalMeals').textContent = totalMeals.toFixed(2) + ' €';
-    document.getElementById('footer-totalMonthly').textContent = total.toFixed(2) + ' €';
+    const hoursStr = `${Math.floor(totalH)}h${String(Math.round((totalH % 1) * 60)).padStart(2, '0')}`;
+    const overtimeStr = `${Math.floor(totalOT)}h${String(Math.round((totalOT % 1) * 60)).padStart(2, '0')}`;
+
+    // Mise à jour des div cachées (compatibilité)
+    const elH = document.getElementById('footer-totalHours');
+    const elOT = document.getElementById('footer-totalOvertime');
+    const elInd = document.getElementById('footer-totalIndemnity');
+    const elM = document.getElementById('footer-totalMeals');
+    const elTot = document.getElementById('footer-totalMonthly');
+    if (elH) elH.textContent = hoursStr;
+    if (elOT) elOT.textContent = overtimeStr;
+    if (elInd) elInd.textContent = totalInd.toFixed(2) + ' €';
+    if (elM) elM.textContent = totalMeals.toFixed(2) + ' €';
+    if (elTot) elTot.textContent = total.toFixed(2) + ' €';
+
+    // Mise à jour du footer du tableau visible
+    const elHAtt = document.getElementById('footer-totalHours-att');
+    const elOTAtt = document.getElementById('footer-totalOvertime-att');
+    const elIndAtt = document.getElementById('footer-totalIndemnity-att');
+    const elMAtt = document.getElementById('footer-totalMeals-att');
+    const elTotAtt = document.getElementById('footer-totalMonthly-att');
+    if (elHAtt) elHAtt.textContent = hoursStr;
+    if (elOTAtt) elOTAtt.textContent = overtimeStr;
+    if (elIndAtt) elIndAtt.textContent = totalInd.toFixed(2) + ' €';
+    if (elMAtt) elMAtt.textContent = totalMeals.toFixed(2) + ' €';
+    if (elTotAtt) elTotAtt.textContent = total.toFixed(2) + ' €';
 
     updateHomeSummary(base, frais);
     updateGlobalSummary();
 }
 
 function updateHomeSummary(base, frais) {
-    document.getElementById('home-baseSalary').textContent = base.toFixed(2) + ' €';
-    document.getElementById('home-totalFrais').textContent = frais.toFixed(2) + ' €';
-    document.getElementById('home-totalMonthly').textContent = (base + frais).toFixed(2) + ' €';
+    const baseEl = document.getElementById('home-baseSalary');
+    const fraisEl = document.getElementById('home-totalFrais');
+    const totalEl = document.getElementById('home-totalMonthly');
+    if (baseEl) baseEl.textContent = base.toFixed(2) + ' €';
+    if (fraisEl) fraisEl.textContent = frais.toFixed(2) + ' €';
+    if (totalEl) totalEl.textContent = (base + frais).toFixed(2) + ' €';
 }
 
 let childTotalsCache = {};
