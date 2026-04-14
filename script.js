@@ -58,6 +58,9 @@ let RATES = {
 let childrenList = [];
 let activeChildId = null;
 let currentUser = null;
+let calendarWeekOffset = 0;
+let calendarModalDate = null;
+let calendarModalRowId = null;
 // Dynamic getter to avoid null references when parts of the UI are hidden
 function getTableBody() {
     return document.querySelector('#attendanceTable tbody');
@@ -519,50 +522,180 @@ function calculateAge(birthdate) {
     return age;
 }
 
+function getWeekDays(offset) {
+    const today = new Date();
+    const dow = today.getDay();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (dow === 0 ? 6 : dow - 1) + offset * 7);
+    const days = [];
+    for (let i = 0; i < 5; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        days.push(d);
+    }
+    return days;
+}
+
 function renderVisualCalendar() {
     const columns = document.getElementById('calendar-columns');
     if (!columns) return;
 
-    // Clear existing bars
-    const colDivs = columns.querySelectorAll('.cal-col');
-    colDivs.forEach(col => {
-        const bar = col.querySelector('.cal-bar');
-        if (bar) bar.style.display = 'none';
-    });
+    const days = getWeekDays(calendarWeekOffset);
+    const todayStr = new Date().toISOString().split('T')[0];
+    const dayNames = ['LUN', 'MAR', 'MER', 'JEU', 'VEN'];
 
-    // Safely get attendance rows from the table (which may be in the attendance-page)
+    // Build attendance map from DOM table
     const table = document.getElementById('attendanceTable');
     const tbody = table ? table.querySelector('tbody') : null;
-    if (!tbody) return;
-    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const attendanceMap = {};
+    if (tbody) {
+        tbody.querySelectorAll('tr').forEach(row => {
+            const date = row.querySelector('.date-field')?.value;
+            if (date) {
+                attendanceMap[date] = {
+                    timeIn: row.querySelector('.time-in')?.value || '08:00',
+                    timeOut: row.querySelector('.time-out')?.value || '17:00',
+                    overtime: row.querySelector('.overtime-hours')?.value || '0',
+                    mealCost: row.querySelector('.meal-cost')?.value || RATES.MEAL.toFixed(2),
+                    rowId: row.dataset.rowId
+                };
+            }
+        });
+    }
 
-    // Map the first 5 rows of the table to the 5 calendar columns
-    rows.slice(0, 5).forEach((row, idx) => {
-        if (idx >= colDivs.length) return;
+    // Update day labels
+    days.forEach((d, i) => {
+        const dateStr = d.toISOString().split('T')[0];
+        const dayEl = document.getElementById(`cal-day-${i}`);
+        if (dayEl) {
+            dayEl.textContent = `${dayNames[i]}.${d.getDate()}`;
+            dayEl.classList.toggle('active', dateStr === todayStr);
+        }
+    });
 
-        const timeIn = row.querySelector('.time-in')?.value;
-        const timeOut = row.querySelector('.time-out')?.value;
+    // Update nav label
+    const calCurrent = document.querySelector('.cal-current');
+    if (calCurrent) {
+        if (calendarWeekOffset === 0) {
+            calCurrent.textContent = "AUJOURD'HUI";
+        } else {
+            const s = days[0], e = days[4];
+            calCurrent.textContent = `${s.getDate()}/${s.getMonth() + 1} - ${e.getDate()}/${e.getMonth() + 1}`;
+        }
+    }
 
-        if (timeIn && timeOut && timeIn !== '00:00') {
-            const bar = colDivs[idx].querySelector('.cal-bar');
-            if (bar) {
-                const startMins = timeToMins(timeIn);
-                const endMins = timeToMins(timeOut);
+    // Update bars
+    days.forEach((d, i) => {
+        const dateStr = d.toISOString().split('T')[0];
+        const col = document.getElementById(`cal-col-${i}`);
+        if (!col) return;
+        col.dataset.date = dateStr;
+        col.classList.toggle('active', dateStr === todayStr);
 
-                // 07:00 is 0%, 18:00 is 100%
+        const bar = col.querySelector('.cal-bar');
+        const data = attendanceMap[dateStr];
+        if (bar) {
+            if (data) {
+                const startMins = timeToMins(data.timeIn);
+                const endMins = timeToMins(data.timeOut);
                 const totalMins = (18 - 7) * 60;
                 const offsetMins = 7 * 60;
-
-                const top = ((startMins - offsetMins) / totalMins) * 100;
-                const height = ((endMins - startMins) / totalMins) * 100;
-
-                bar.style.top = `${Math.max(0, top)}%`;
-                bar.style.height = `${Math.max(1, height)}%`;
+                bar.style.top = `${Math.max(0, ((startMins - offsetMins) / totalMins) * 100)}%`;
+                bar.style.height = `${Math.max(2, ((endMins - startMins) / totalMins) * 100)}%`;
                 bar.style.display = 'block';
+            } else {
+                bar.style.display = 'none';
             }
         }
     });
 }
+
+window.calendarPrev = function () { calendarWeekOffset--; renderVisualCalendar(); };
+window.calendarNext = function () { calendarWeekOffset++; renderVisualCalendar(); };
+window.calendarGoToday = function () { calendarWeekOffset = 0; renderVisualCalendar(); };
+
+window.openDayModal = function (dateStr) {
+    if (!activeChildId || !dateStr) return;
+    calendarModalDate = dateStr;
+    calendarModalRowId = null;
+
+    // Chercher données existantes dans le tableau
+    const table = document.getElementById('attendanceTable');
+    const tbody = table ? table.querySelector('tbody') : null;
+    let existing = null;
+    if (tbody) {
+        tbody.querySelectorAll('tr').forEach(row => {
+            if (row.querySelector('.date-field')?.value === dateStr) {
+                existing = {
+                    timeIn: row.querySelector('.time-in')?.value,
+                    timeOut: row.querySelector('.time-out')?.value,
+                    overtime: row.querySelector('.overtime-hours')?.value,
+                    mealCost: row.querySelector('.meal-cost')?.value,
+                };
+                calendarModalRowId = row.dataset.rowId;
+            }
+        });
+    }
+
+    const d = new Date(dateStr + 'T00:00:00');
+    const label = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('day-modal-date-label').textContent = label;
+    document.getElementById('day-modal-title').textContent = existing ? 'Modifier la présence' : 'Ajouter une présence';
+    document.getElementById('day-modal-time-in').value = existing?.timeIn || '08:00';
+    document.getElementById('day-modal-time-out').value = existing?.timeOut || '17:00';
+    document.getElementById('day-modal-meal').value = existing?.mealCost || RATES.MEAL.toFixed(2);
+    document.getElementById('day-modal-overtime').value = existing?.overtime || '0';
+    document.getElementById('day-modal-delete-btn').style.display = existing ? 'block' : 'none';
+
+    document.getElementById('day-presence-modal').classList.remove('hidden');
+};
+
+window.closeDayModal = function () {
+    document.getElementById('day-presence-modal').classList.add('hidden');
+    calendarModalDate = null;
+    calendarModalRowId = null;
+};
+
+window.saveDayPresence = async function () {
+    if (!calendarModalDate || !activeChildId) return;
+
+    const timeIn = document.getElementById('day-modal-time-in').value;
+    const timeOut = document.getElementById('day-modal-time-out').value;
+    const mealCost = document.getElementById('day-modal-meal').value;
+    const overtime = document.getElementById('day-modal-overtime').value;
+
+    const rowId = calendarModalRowId || Date.now().toString();
+    const btn = document.getElementById('day-modal-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement...';
+
+    try {
+        await saveAttendanceRow(activeChildId, rowId, {
+            date: calendarModalDate,
+            timeIn,
+            timeOut,
+            overtime,
+            mealCost,
+        });
+        await loadAttendance(activeChildId);
+        renderVisualCalendar();
+        closeDayModal();
+    } catch (err) {
+        alert('Erreur : ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Enregistrer';
+    }
+};
+
+window.deleteDayPresence = async function () {
+    if (!calendarModalRowId || !activeChildId) return;
+    if (!confirm('Supprimer la présence de ce jour ?')) return;
+    await deleteAttendanceRow(activeChildId, calendarModalRowId);
+    await loadAttendance(activeChildId);
+    renderVisualCalendar();
+    closeDayModal();
+};
 
 function timeToMins(t) {
     const [h, m] = t.split(':').map(Number);

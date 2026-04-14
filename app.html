@@ -538,18 +538,18 @@
                         <div class="calendar-header">
                             <h3 class="card-title">CALENDRIER</h3>
                             <div class="cal-nav">
-                                <span class="material-icons">chevron_left</span>
-                                <span class="cal-current">AUJOURD'HUI</span>
-                                <span class="material-icons">chevron_right</span>
+                                <span class="material-icons" onclick="calendarPrev()" style="cursor:pointer;">chevron_left</span>
+                                <span class="cal-current" onclick="calendarGoToday()" style="cursor:pointer;">AUJOURD'HUI</span>
+                                <span class="material-icons" onclick="calendarNext()" style="cursor:pointer;">chevron_right</span>
                             </div>
                         </div>
                         <div class="visual-calendar" id="visual-calendar">
                             <div class="cal-days-row">
-                                <div class="cal-day">LUN.9</div>
-                                <div class="cal-day">MAR.10</div>
-                                <div class="cal-day">MER.11</div>
-                                <div class="cal-day active">JEU.12</div>
-                                <div class="cal-day">VEN.13</div>
+                                <div class="cal-day" id="cal-day-0">LUN</div>
+                                <div class="cal-day" id="cal-day-1">MAR</div>
+                                <div class="cal-day" id="cal-day-2">MER</div>
+                                <div class="cal-day" id="cal-day-3">JEU</div>
+                                <div class="cal-day" id="cal-day-4">VEN</div>
                             </div>
                             <div class="cal-grid-container">
                                 <div class="cal-time-axis">
@@ -558,21 +558,11 @@
                                     <span>17:00</span><span>18:00</span>
                                 </div>
                                 <div class="cal-columns" id="calendar-columns">
-                                    <div class="cal-col">
-                                        <div class="cal-bar" style="top: 8%; height: 75%;"></div>
-                                    </div>
-                                    <div class="cal-col">
-                                        <div class="cal-bar" style="top: 3%; height: 60%;"></div>
-                                    </div>
-                                    <div class="cal-col">
-                                        <div class="cal-bar" style="top: 3%; height: 60%;"></div>
-                                    </div>
-                                    <div class="cal-col active">
-                                        <div class="cal-bar" style="top: 3%; height: 60%;"></div>
-                                    </div>
-                                    <div class="cal-col">
-                                        <div class="cal-bar" style="top: 3%; height: 80%;"></div>
-                                    </div>
+                                    <div class="cal-col" id="cal-col-0" onclick="openDayModal(this.dataset.date)" style="cursor:pointer;"><div class="cal-bar" style="display:none;"></div></div>
+                                    <div class="cal-col" id="cal-col-1" onclick="openDayModal(this.dataset.date)" style="cursor:pointer;"><div class="cal-bar" style="display:none;"></div></div>
+                                    <div class="cal-col" id="cal-col-2" onclick="openDayModal(this.dataset.date)" style="cursor:pointer;"><div class="cal-bar" style="display:none;"></div></div>
+                                    <div class="cal-col" id="cal-col-3" onclick="openDayModal(this.dataset.date)" style="cursor:pointer;"><div class="cal-bar" style="display:none;"></div></div>
+                                    <div class="cal-col" id="cal-col-4" onclick="openDayModal(this.dataset.date)" style="cursor:pointer;"><div class="cal-bar" style="display:none;"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -582,6 +572,7 @@
                 <div style="display:none;" id="footer-totalOvertime"></div>
                 <div style="display:none;" id="footer-totalIndemnity"></div>
                 <div style="display:none;" id="footer-totalMeals"></div>
+                <div style="display:none;" id="footer-totalMonthly"></div>
                 <div style="display:none;" id="footer-baseSalary"></div>
             </section>
 
@@ -642,6 +633,42 @@
                 </div>
             </section>
 
+        </div>
+    </div>
+
+    <!-- MODALE PRÉSENCE DU JOUR -->
+    <div id="day-presence-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="day-modal-title">Présence</h3>
+                <button class="modal-close" onclick="closeDayModal()">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="day-modal-date-label" style="font-weight:700; margin-bottom:16px; color:var(--primary);"></p>
+                <div class="form-group">
+                    <label>Heure d'arrivée</label>
+                    <input type="time" id="day-modal-time-in" value="08:00">
+                </div>
+                <div class="form-group">
+                    <label>Heure de départ</label>
+                    <input type="time" id="day-modal-time-out" value="17:00">
+                </div>
+                <div class="form-group">
+                    <label>Repas (€)</label>
+                    <input type="number" id="day-modal-meal" step="0.01" min="0" value="3.00">
+                </div>
+                <div class="form-group">
+                    <label>Heures supplémentaires</label>
+                    <input type="number" id="day-modal-overtime" step="0.01" min="0" value="0">
+                </div>
+            </div>
+            <div class="modal-footer" style="gap:8px;">
+                <button id="day-modal-delete-btn" class="btn-cancel" onclick="deleteDayPresence()" style="display:none; background:#fee2e2; color:#dc2626;">Supprimer</button>
+                <button type="button" class="btn-cancel" onclick="closeDayModal()">Annuler</button>
+                <button id="day-modal-save-btn" class="btn-save" onclick="saveDayPresence()">Enregistrer</button>
+            </div>
         </div>
     </div>
 
