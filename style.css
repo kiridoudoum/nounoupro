@@ -42,8 +42,7 @@ body {
 /* ===== APP LAYOUT ===== */
 .app-layout {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
 .home-actions {
@@ -180,6 +179,7 @@ body {
     flex: 1;
     padding: 36px 40px;
     min-height: 100vh;
+    overflow-y: auto;
 }
 
 /* ===== BARRE ENFANTS ===== */
