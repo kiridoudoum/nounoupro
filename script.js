@@ -61,6 +61,8 @@ let currentUser = null;
 let calendarWeekOffset = 0;
 let calendarModalDate = null;
 let calendarModalRowId = null;
+let todayData = { meals: 0, napMinutes: 0, diapers: 0, activity: '' };
+let napPickerTemp = 0; // minutes en cours d'édition dans la modale sieste
 // Dynamic getter to avoid null references when parts of the UI are hidden
 function getTableBody() {
     return document.querySelector('#attendanceTable tbody');
@@ -354,6 +356,123 @@ async function loadAttendanceFromDB(childId) {
     return rows;
 }
 
+// ============================================================
+// DONNÉES JOURNALIÈRES (repas / sieste / couches / activité)
+// ============================================================
+
+function getTodayStr() {
+    return new Date().toISOString().split('T')[0];
+}
+
+async function loadDailyData(childId) {
+    if (!currentUser || !childId) return;
+    const snap = await getDoc(doc(db, 'users', currentUser.uid, 'daily_' + childId, getTodayStr()));
+    todayData = snap.exists()
+        ? { meals: 0, napMinutes: 0, diapers: 0, activity: '', ...snap.data() }
+        : { meals: 0, napMinutes: 0, diapers: 0, activity: '' };
+    renderTodayCard();
+}
+
+async function saveDailyData() {
+    if (!currentUser || !activeChildId) return;
+    await setDoc(doc(db, 'users', currentUser.uid, 'daily_' + activeChildId, getTodayStr()), todayData);
+}
+
+function renderTodayCard() {
+    // Repas
+    for (let i = 0; i < 3; i++) {
+        const dot = document.getElementById(`meal-dot-${i}`);
+        if (dot) dot.classList.toggle('active', i < todayData.meals);
+    }
+    // Sieste
+    const napLabel = document.getElementById('nap-label');
+    if (napLabel) {
+        if (todayData.napMinutes > 0) {
+            const h = Math.floor(todayData.napMinutes / 60);
+            const m = todayData.napMinutes % 60;
+            napLabel.textContent = h > 0 ? `${h}H${String(m).padStart(2, '0')}` : `${m}MIN`;
+        } else {
+            napLabel.textContent = '--';
+        }
+    }
+    // Couches
+    const diaperLabel = document.getElementById('diaper-label');
+    if (diaperLabel) diaperLabel.textContent = `X${todayData.diapers}`;
+    // Activité
+    const activityEl = document.getElementById('activity-display');
+    if (activityEl && activityEl.tagName !== 'INPUT') {
+        activityEl.textContent = todayData.activity || 'ACTIVITÉ';
+    }
+}
+
+window.setMeals = function (n) {
+    // Clic sur le même dot actif → réinitialise à 0
+    todayData.meals = todayData.meals === n ? 0 : n;
+    renderTodayCard();
+    saveDailyData();
+};
+
+window.adjustDiapers = function (delta) {
+    todayData.diapers = Math.max(0, todayData.diapers + delta);
+    renderTodayCard();
+    saveDailyData();
+};
+
+window.openNapPicker = function () {
+    napPickerTemp = todayData.napMinutes;
+    updateNapModal();
+    document.getElementById('nap-picker-modal').classList.remove('hidden');
+};
+
+window.closeNapPicker = function () {
+    document.getElementById('nap-picker-modal').classList.add('hidden');
+};
+
+window.adjustNapTemp = function (delta) {
+    napPickerTemp = Math.max(0, napPickerTemp + delta);
+    updateNapModal();
+};
+
+function updateNapModal() {
+    document.getElementById('nap-modal-hours').textContent = Math.floor(napPickerTemp / 60);
+    document.getElementById('nap-modal-mins').textContent = String(napPickerTemp % 60).padStart(2, '0');
+}
+
+window.saveNap = async function () {
+    todayData.napMinutes = napPickerTemp;
+    renderTodayCard();
+    await saveDailyData();
+    closeNapPicker();
+};
+
+window.editActivity = function () {
+    const el = document.getElementById('activity-display');
+    if (!el || el.tagName === 'INPUT') return;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = todayData.activity || '';
+    input.placeholder = 'Ex: Dessin, Lecture…';
+    input.className = 'activity-text';
+    input.style.cssText = 'border:none;border-bottom:2px solid var(--primary);outline:none;background:transparent;width:80px;font-weight:800;font-size:0.9rem;';
+    input.maxLength = 20;
+    el.replaceWith(input);
+    input.focus();
+    input.select();
+    const save = async () => {
+        todayData.activity = input.value.trim().toUpperCase();
+        const div = document.createElement('div');
+        div.className = 'activity-text';
+        div.id = 'activity-display';
+        div.style.cursor = 'pointer';
+        div.onclick = editActivity;
+        div.textContent = todayData.activity || 'ACTIVITÉ';
+        input.replaceWith(div);
+        await saveDailyData();
+    };
+    input.addEventListener('blur', save);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); });
+};
+
 async function saveSettings(data) {
     await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'rates'), data);
 }
@@ -493,6 +612,7 @@ window.selectChild = async function (id, stayOnPage = false) {
         const loadProcess = async () => {
             try {
                 await loadAttendance(id);
+                await loadDailyData(id);
                 renderChildrenCards();
                 updateSettingsChildFields();
                 renderVisualCalendar();

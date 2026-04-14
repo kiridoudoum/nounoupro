@@ -464,26 +464,33 @@
                         <div class="today-grid">
                             <div class="today-item">
                                 <span class="material-icons today-icon">restaurant</span>
-                                <div class="meal-dots">
-                                    <span class="dot active"></span>
-                                    <span class="dot active"></span>
-                                    <span class="dot"></span>
+                                <div class="meal-dots" id="meal-dots">
+                                    <span class="dot" id="meal-dot-0" onclick="setMeals(1)" title="1 repas"></span>
+                                    <span class="dot" id="meal-dot-1" onclick="setMeals(2)" title="2 repas"></span>
+                                    <span class="dot" id="meal-dot-2" onclick="setMeals(3)" title="3 repas"></span>
                                 </div>
                             </div>
                             <div class="divider-v"></div>
                             <div class="today-item">
                                 <span class="material-icons today-icon">hotel</span>
-                                <div class="nap-time">2H30 <span class="chevron material-icons">expand_more</span></div>
+                                <div class="nap-time" id="nap-display" onclick="openNapPicker()" style="cursor:pointer;">
+                                    <span id="nap-label">--</span>
+                                    <span class="chevron material-icons">expand_more</span>
+                                </div>
                             </div>
                             <div class="divider-v"></div>
                             <div class="today-item">
                                 <span class="material-icons today-icon">child_care</span>
-                                <div class="diaper-count">X3</div>
+                                <div class="diaper-count">
+                                    <button class="counter-btn" onclick="adjustDiapers(-1)">−</button>
+                                    <span id="diaper-label">0</span>
+                                    <button class="counter-btn" onclick="adjustDiapers(1)">+</button>
+                                </div>
                             </div>
                             <div class="divider-v"></div>
                             <div class="today-item">
                                 <span class="material-icons today-icon">extension</span>
-                                <div class="activity-text">DESSIN</div>
+                                <div class="activity-text" id="activity-display" onclick="editActivity()" style="cursor:pointer;">ACTIVITÉ</div>
                             </div>
                         </div>
                     </div>
@@ -633,6 +640,37 @@
                 </div>
             </section>
 
+        </div>
+    </div>
+
+    <!-- MODALE SIESTE -->
+    <div id="nap-picker-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width:300px;">
+            <div class="modal-header">
+                <h3>Durée de sieste</h3>
+                <button class="modal-close" onclick="closeNapPicker()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="modal-body" style="text-align:center; padding:28px 16px;">
+                <div style="display:flex; gap:24px; justify-content:center; align-items:center;">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+                        <span style="font-size:0.7rem;font-weight:800;color:var(--text-muted);letter-spacing:1px;">HEURES</span>
+                        <button onclick="adjustNapTemp(60)" class="counter-btn counter-btn-lg">+</button>
+                        <span id="nap-modal-hours" style="font-size:2.2rem;font-weight:900;min-width:40px;text-align:center;">0</span>
+                        <button onclick="adjustNapTemp(-60)" class="counter-btn counter-btn-lg">−</button>
+                    </div>
+                    <span style="font-size:2rem;font-weight:300;margin-top:8px;">:</span>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+                        <span style="font-size:0.7rem;font-weight:800;color:var(--text-muted);letter-spacing:1px;">MINUTES</span>
+                        <button onclick="adjustNapTemp(15)" class="counter-btn counter-btn-lg">+</button>
+                        <span id="nap-modal-mins" style="font-size:2.2rem;font-weight:900;min-width:40px;text-align:center;">00</span>
+                        <button onclick="adjustNapTemp(-15)" class="counter-btn counter-btn-lg">−</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeNapPicker()">Annuler</button>
+                <button class="btn-save" onclick="saveNap()">Enregistrer</button>
+            </div>
         </div>
     </div>
 
