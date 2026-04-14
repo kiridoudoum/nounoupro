@@ -483,6 +483,106 @@ window.editActivity = function () {
     input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); });
 };
 
+// ============================================================
+// TRAITEMENTS MÉDICAUX
+// ============================================================
+
+let treatmentModalId = null;
+let treatmentFreq = 1;
+
+async function loadTreatments(childId) {
+    const list = document.getElementById('treatments-list');
+    if (!list || !currentUser) return;
+    list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;padding:8px 0;">Chargement...</p>';
+    const snap = await getDocs(collection(db, 'users', currentUser.uid, 'treatments_' + childId));
+    const treatments = [];
+    snap.forEach(d => treatments.push({ id: d.id, ...d.data() }));
+    renderTreatments(treatments);
+}
+
+function renderTreatments(treatments) {
+    const list = document.getElementById('treatments-list');
+    if (!list) return;
+    if (treatments.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;padding:8px 0;">Aucun traitement en cours.</p>';
+        return;
+    }
+    list.innerHTML = treatments.map(t => `
+        <div class="treatment-row" onclick="editTreatment('${t.id}','${(t.medication||'').replace(/'/g,"\\'")}','${(t.reason||'').replace(/'/g,"\\'")}',${t.frequency||1})">
+            <span class="treatment-reason">${t.reason || '—'}</span>
+            <div class="treatment-divider"></div>
+            <span class="material-icons treatment-icon">medication</span>
+            <span class="treatment-name">${t.medication}</span>
+            <div class="treatment-divider"></div>
+            <span class="treatment-freq">X${t.frequency || 1} PAR JOUR</span>
+        </div>
+    `).join('');
+}
+
+window.openTreatmentModal = function () {
+    treatmentModalId = null;
+    treatmentFreq = 1;
+    document.getElementById('treatment-medication').value = '';
+    document.getElementById('treatment-reason').value = '';
+    document.getElementById('treatment-freq-display').textContent = '1';
+    document.getElementById('treatment-modal-title').textContent = 'Ajouter un traitement';
+    document.getElementById('treatment-delete-btn').style.display = 'none';
+    document.getElementById('treatment-modal').classList.remove('hidden');
+};
+
+window.editTreatment = function (id, medication, reason, frequency) {
+    treatmentModalId = id;
+    treatmentFreq = frequency || 1;
+    document.getElementById('treatment-medication').value = medication;
+    document.getElementById('treatment-reason').value = reason;
+    document.getElementById('treatment-freq-display').textContent = treatmentFreq;
+    document.getElementById('treatment-modal-title').textContent = 'Modifier le traitement';
+    document.getElementById('treatment-delete-btn').style.display = 'block';
+    document.getElementById('treatment-modal').classList.remove('hidden');
+};
+
+window.closeTreatmentModal = function () {
+    document.getElementById('treatment-modal').classList.add('hidden');
+    treatmentModalId = null;
+};
+
+window.adjustTreatmentFreq = function (delta) {
+    treatmentFreq = Math.max(1, Math.min(10, treatmentFreq + delta));
+    document.getElementById('treatment-freq-display').textContent = treatmentFreq;
+};
+
+window.saveTreatment = async function () {
+    const medication = document.getElementById('treatment-medication').value.trim();
+    if (!medication || !activeChildId || !currentUser) return;
+    const reason = document.getElementById('treatment-reason').value.trim();
+    const btn = document.getElementById('treatment-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement...';
+    try {
+        const id = treatmentModalId || Date.now().toString();
+        await setDoc(doc(db, 'users', currentUser.uid, 'treatments_' + activeChildId, id), {
+            medication,
+            reason,
+            frequency: treatmentFreq,
+        });
+        await loadTreatments(activeChildId);
+        closeTreatmentModal();
+    } catch (err) {
+        alert('Erreur : ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Enregistrer';
+    }
+};
+
+window.deleteTreatment = async function () {
+    if (!treatmentModalId || !activeChildId || !currentUser) return;
+    if (!confirm('Supprimer ce traitement ?')) return;
+    await deleteDoc(doc(db, 'users', currentUser.uid, 'treatments_' + activeChildId, treatmentModalId));
+    await loadTreatments(activeChildId);
+    closeTreatmentModal();
+};
+
 async function saveSettings(data) {
     await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'rates'), data);
 }
@@ -623,6 +723,7 @@ window.selectChild = async function (id, stayOnPage = false) {
             try {
                 await loadAttendance(id);
                 await loadDailyData(id);
+                await loadTreatments(id);
                 renderChildrenCards();
                 updateSettingsChildFields();
                 renderVisualCalendar();

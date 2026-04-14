@@ -1719,3 +1719,64 @@ input[type="time"].data-input {
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== TRAITEMENTS ===== */
+.treatment-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 8px;
+    padding: 14px 12px;
+    margin: 0 -12px;
+}
+
+.treatment-row:hover {
+    background: var(--lime-light);
+}
+
+.treatment-row:last-child {
+    border-bottom: none;
+}
+
+.treatment-reason {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    flex: 1;
+}
+
+.treatment-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.treatment-icon {
+    font-size: 20px;
+    color: var(--text-muted);
+}
+
+.treatment-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    flex: 1;
+}
+
+.treatment-freq {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--dark);
+    background: var(--lime);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}

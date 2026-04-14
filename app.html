@@ -540,8 +540,9 @@
                     <div class="detail-card">
                         <div class="health-header">
                             <h3 class="card-title">SANTÉ</h3>
-                            <button class="health-add-btn">AJOUTER UN TRAITEMENT</button>
+                            <button class="health-add-btn" onclick="openTreatmentModal()">AJOUTER UN TRAITEMENT</button>
                         </div>
+                        <div id="treatments-list"></div>
                     </div>
 
                     <!-- PRESENCE TABLE CARD -->
@@ -686,6 +687,41 @@
                 </div>
             </section>
 
+        </div>
+    </div>
+
+
+    <!-- MODALE TRAITEMENT -->
+    <div id="treatment-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="treatment-modal-title">Ajouter un traitement</h3>
+                <button class="modal-close" onclick="closeTreatmentModal()"><span class="material-icons">close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nom du médicament</label>
+                    <input type="text" id="treatment-medication" placeholder="Ex: Paracétamol" required>
+                </div>
+                <div class="form-group">
+                    <label>Raison / Symptôme</label>
+                    <input type="text" id="treatment-reason" placeholder="Ex: Fièvre et douleur">
+                </div>
+                <div class="form-group">
+                    <label>Nombre de fois par jour</label>
+                    <div style="display:flex; align-items:center; gap:16px; margin-top:4px;">
+                        <button class="counter-btn counter-btn-lg" onclick="adjustTreatmentFreq(-1)">−</button>
+                        <span id="treatment-freq-display" style="font-size:2rem; font-weight:900; min-width:40px; text-align:center;">1</span>
+                        <button class="counter-btn counter-btn-lg" onclick="adjustTreatmentFreq(1)">+</button>
+                        <span style="font-size:0.9rem; font-weight:700; color:var(--text-muted);">fois par jour</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="gap:8px;">
+                <button id="treatment-delete-btn" class="btn-cancel" onclick="deleteTreatment()" style="display:none; background:#fee2e2; color:#dc2626;">Supprimer</button>
+                <button class="btn-cancel" onclick="closeTreatmentModal()">Annuler</button>
+                <button id="treatment-save-btn" class="btn-save" onclick="saveTreatment()">Enregistrer</button>
+            </div>
         </div>
     </div>
 
