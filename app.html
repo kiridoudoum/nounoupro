@@ -401,25 +401,45 @@
     </div>
 
     <!-- APP LAYOUT -->
-    <div id="app-layout" class="hidden">
+    <div id="app-layout" class="hidden app-layout">
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-card">
+                <!-- Logo area -->
+                <div class="sidebar-logo-area">
+                    <div class="sidebar-logo-badge">NP</div>
+                    <div class="sidebar-logo-wordmark">NOUNOU PRO</div>
+                </div>
+
+                <!-- Profile section -->
                 <div class="sidebar-profile">
                     <div class="sidebar-avatar" id="sidebar-avatar">👧</div>
                     <div class="sidebar-email" id="nav-user-email">nom d'utilisateur</div>
                 </div>
 
+                <!-- Nav buttons -->
                 <nav class="sidebar-nav">
-                    <button class="sidebar-btn active" id="nav-btn-home" onclick="showPage('home')">ACCUEIL</button>
-                    <button class="sidebar-btn" id="nav-btn-settings"
-                        onclick="showPage('settings')">FONCTIONNALITÉ</button>
-                    <button class="sidebar-btn"
-                        style="background:#efefef; color:#666; margin-top:8px; font-size:0.75rem;"
-                        onclick="addChild()">+ AJOUTER ENFANT</button>
+                    <button class="sidebar-btn active" id="nav-btn-home" onclick="showPage('home')">
+                        <span class="material-icons sidebar-btn-icon">home</span>
+                        ACCUEIL
+                    </button>
+                    <button class="sidebar-btn" id="nav-btn-settings" onclick="showPage('settings')">
+                        <span class="material-icons sidebar-btn-icon">settings</span>
+                        PARAMÈTRES
+                    </button>
+
+                    <!-- Add child button -->
+                    <button class="sidebar-add-child" onclick="addChild()">
+                        <span class="material-icons sidebar-btn-icon">add_circle</span>
+                        + AJOUTER ENFANT
+                    </button>
                 </nav>
 
-                <div class="sidebar-logout" onclick="logout()">Déconnexion</div>
+                <!-- Logout at very bottom -->
+                <div class="sidebar-logout" onclick="logout()">
+                    <span class="material-icons" style="font-size:16px; vertical-align:middle; margin-right:6px;">logout</span>
+                    Déconnexion
+                </div>
             </div>
         </aside>
 
@@ -428,39 +448,49 @@
 
             <!-- PAGE ACCUEIL / TABLEAU DE BORD -->
             <section id="home-page" class="page active">
+
+                <!-- Header row -->
+                <div class="home-header">
+                    <div>
+                        <h1 class="home-greeting">Bonjour 👋</h1>
+                        <div class="home-date" id="home-date"></div>
+                    </div>
+                    <button class="action-button" onclick="addChild()">
+                        <span class="material-icons" style="font-size:16px; vertical-align:middle; margin-right:4px;">add</span>
+                        AJOUTER UN ENFANT
+                    </button>
+                </div>
+
+                <!-- Children cards grid -->
                 <div id="children-cards-container" class="children-grid"></div>
 
-                <div class="home-actions" style="margin-bottom: 32px;">
-                    <button class="action-button" onclick="addChild()">+ AJOUTER UN ENFANT</button>
+                <!-- Global stats strip -->
+                <div class="global-strip">
+                    <div class="dgc-box dgc-box-lime" id="global-box-1"></div>
+                    <div class="dgc-box dgc-box-lime" id="global-box-2"></div>
+                    <div class="dgc-box dgc-box-lime" id="global-box-3"></div>
                 </div>
 
+                <!-- Per-child summaries -->
                 <div id="dashboard-summaries" class="dashboard-summaries"></div>
 
-                <div class="dashboard-global-card">
-                    <div class="dgc-title">TOTAL DES ENFANT</div>
-                    <div class="dgc-boxes">
-                        <div class="dgc-box" id="global-box-1"></div>
-                        <div class="dgc-box" id="global-box-2"></div>
-                        <div class="dgc-box" id="global-box-3"></div>
-                    </div>
-                </div>
             </section>
 
-            <!-- PAGE DÉTAIL ENFANT (accessible via clic sur photo) -->
+            <!-- PAGE DÉTAIL ENFANT -->
             <section id="child-detail-page" class="page hidden">
-                <div class="attendance-container">
-                    <!-- 1. HEADER PROFIL -->
-                    <div class="attendance-card profile-header-card">
-                        <div class="ph-left">
+                <div class="child-detail-layout">
+
+                    <!-- HERO CARD -->
+                    <div class="hero-card">
+                        <div class="hero-left">
                             <img id="attendance-child-photo" src="https://via.placeholder.com/100?text=👶" alt="Photo"
-                                class="ph-avatar">
-                            <div class="ph-info">
+                                class="hero-avatar">
+                            <div class="hero-info">
                                 <h2 id="attendance-child-name">...</h2>
-                                <div class="ph-age" id="attendance-child-age">-- ANS</div>
-                                <div class="ph-desc">DESCRIPTION DE L'ENFANT</div>
+                                <div class="hero-age" id="attendance-child-age">-- ANS</div>
                             </div>
                         </div>
-                        <button class=" ph-docs-btn">
+                        <button class="ph-docs-btn">
                             <div class="ph-docs-icon">
                                 <span class="material-icons">open_in_new</span>
                             </div>
@@ -468,58 +498,61 @@
                         </button>
                     </div>
 
-                    <!-- 2. AUJOURD'HUI -->
-                    <div class="attendance-card today-card">
-                        <h3 class="card-title">AUJOURD'HUI</h3>
-                        <div class="today-grid">
-                            <div class="today-item">
-                                <span class="material-icons today-icon">restaurant</span>
-                                <div class="meal-dots" id="meal-dots">
-                                    <span class="dot" id="meal-dot-0" onclick="setMeals(1)" title="1 repas"></span>
-                                    <span class="dot" id="meal-dot-1" onclick="setMeals(2)" title="2 repas"></span>
-                                    <span class="dot" id="meal-dot-2" onclick="setMeals(3)" title="3 repas"></span>
-                                </div>
+                    <!-- BENTO GRID -->
+                    <div class="today-bento">
+                        <!-- REPAS tile (lime-light bg) -->
+                        <div class="bento-tile bento-meals">
+                            <div class="bento-label">REPAS</div>
+                            <div class="meal-dots" id="meal-dots">
+                                <span class="dot" id="meal-dot-0" onclick="setMeals(1)" title="1 repas"></span>
+                                <span class="dot" id="meal-dot-1" onclick="setMeals(2)" title="2 repas"></span>
+                                <span class="dot" id="meal-dot-2" onclick="setMeals(3)" title="3 repas"></span>
                             </div>
-                            <div class="divider-v"></div>
-                            <div class="today-item">
-                                <span class="material-icons today-icon">hotel</span>
-                                <div class="nap-time" id="nap-display" onclick="openNapPicker()" style="cursor:pointer;">
-                                    <span id="nap-label">--</span>
-                                    <span class="chevron material-icons">expand_more</span>
-                                </div>
+                        </div>
+
+                        <!-- SIESTE tile (dark bg) -->
+                        <div class="bento-tile bento-nap">
+                            <div class="bento-label">SIESTE</div>
+                            <div id="nap-display" onclick="openNapPicker()" style="cursor:pointer;" class="bento-big">
+                                <span id="nap-label">--</span>
+                                <span class="material-icons" style="font-size:1.2rem; margin-left:6px; opacity:0.6;">expand_more</span>
                             </div>
-                            <div class="divider-v"></div>
-                            <div class="today-item">
-                                <span class="material-icons today-icon">child_care</span>
-                                <div class="diaper-count">
-                                    <button class="counter-btn" onclick="adjustDiapers(-1)">−</button>
-                                    <span id="diaper-label">0</span>
-                                    <button class="counter-btn" onclick="adjustDiapers(1)">+</button>
-                                </div>
+                        </div>
+
+                        <!-- COUCHES tile (lime-light bg) -->
+                        <div class="bento-tile bento-diapers">
+                            <div class="bento-label">COUCHES</div>
+                            <div class="bento-counter">
+                                <button class="counter-btn" onclick="adjustDiapers(-1)">−</button>
+                                <span id="diaper-label" class="bento-big">0</span>
+                                <button class="counter-btn" onclick="adjustDiapers(1)">+</button>
                             </div>
-                            <div class="divider-v"></div>
-                            <div class="today-item">
-                                <span class="material-icons today-icon">extension</span>
-                                <div class="activity-text" id="activity-display" onclick="editActivity()" style="cursor:pointer;">ACTIVITÉ</div>
-                            </div>
+                        </div>
+
+                        <!-- ACTIVITÉ tile (dark bg) -->
+                        <div class="bento-tile bento-activity">
+                            <div class="bento-label">ACTIVITÉ</div>
+                            <div id="activity-display" onclick="editActivity()" style="cursor:pointer;" class="bento-big">ACTIVITÉ</div>
                         </div>
                     </div>
 
-                    <!-- 3. SANTÉ -->
-                    <div class="attendance-card health-card">
+                    <!-- HEALTH CARD -->
+                    <div class="detail-card">
                         <div class="health-header">
                             <h3 class="card-title">SANTÉ</h3>
                             <button class="health-add-btn">AJOUTER UN TRAITEMENT</button>
                         </div>
                     </div>
 
-                    <!-- 4. FEUILLE DE CALCUL (TABLEAU INTÉGRÉ) -->
-                    <div class="attendance-card billing-card full-width-card" style="grid-column: 1 / -1;">
-                        <div class="billing-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                    <!-- PRESENCE TABLE CARD -->
+                    <div class="detail-card">
+                        <div class="billing-header">
                             <h3 class="card-title">FEUILLE DE PRÉSENCE</h3>
-                            <button class="action-button-sm" onclick="addRow()" style="font-size:0.75rem; padding:6px 14px;">+ Ajouter une ligne</button>
+                            <button class="btn-add-row" onclick="addRow()">
+                                <span class="material-icons" style="font-size:15px; vertical-align:middle; margin-right:3px;">add</span>
+                                + LIGNE
+                            </button>
                         </div>
-                        
                         <div class="table-wrapper">
                             <table id="attendanceTable">
                                 <thead>
@@ -550,8 +583,8 @@
                         </div>
                     </div>
 
-                    <!-- 5. CALENDRIER -->
-                    <div class="attendance-card calendar-card">
+                    <!-- CALENDAR CARD -->
+                    <div class="detail-card">
                         <div class="calendar-header">
                             <h3 class="card-title">CALENDRIER</h3>
                             <div class="cal-nav">
@@ -584,7 +617,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+
+                </div><!-- end child-detail-layout -->
+
+                <!-- Hidden footer totals required by JS -->
                 <div style="display:none;" id="footer-totalHours"></div>
                 <div style="display:none;" id="footer-totalOvertime"></div>
                 <div style="display:none;" id="footer-totalIndemnity"></div>
@@ -593,7 +629,7 @@
                 <div style="display:none;" id="footer-baseSalary"></div>
             </section>
 
-
+            <!-- PAGE PARAMÈTRES -->
             <section id="settings-page" class="page hidden">
                 <header class="page-header">
                     <h2>Paramètres</h2>

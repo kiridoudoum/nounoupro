@@ -252,6 +252,16 @@ if (FIREBASE_CONFIGURED) {
             const avatarEl = document.getElementById('sidebar-avatar');
             if (avatarEl) avatarEl.textContent = user.email.charAt(0).toUpperCase();
 
+            // Set today's date on home page
+            const homeDateEl = document.getElementById('home-date');
+            if (homeDateEl) {
+                const now = new Date();
+                const formatted = now.toLocaleDateString('fr-FR', {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+                homeDateEl.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+            }
+
             // Show page 'home' right away
             showPage('home');
 
