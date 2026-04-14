@@ -593,6 +593,114 @@ async function loadSettingsFromDB() {
 }
 
 // ============================================================
+// CALENDRIER GLOBAL (tous enfants)
+// ============================================================
+
+const CHILD_COLORS = ['#CEF17B', '#FFD166', '#FF6B6B', '#74C0FC', '#DA77F2', '#69DB7C'];
+const CHILD_TEXT_COLORS = ['#1C2B1A', '#5C3D00', '#5C0000', '#0C3A6B', '#4A1060', '#0A3A0A'];
+let globalCalOffset = 0;
+
+async function renderGlobalCalendar() {
+    const days = getWeekDays(globalCalOffset);
+    const todayStr = new Date().toISOString().split('T')[0];
+    const dayNames = ['LUN', 'MAR', 'MER', 'JEU', 'VEN'];
+
+    // Update nav label
+    const label = document.getElementById('global-cal-label');
+    if (label) {
+        if (globalCalOffset === 0) {
+            label.textContent = "AUJOURD'HUI";
+        } else {
+            const s = days[0], e = days[4];
+            label.textContent = `${s.getDate()}/${s.getMonth() + 1} - ${e.getDate()}/${e.getMonth() + 1}`;
+        }
+    }
+
+    // Update day headers
+    const daysContainer = document.getElementById('global-cal-days');
+    if (daysContainer) {
+        daysContainer.innerHTML = days.map((d, i) => {
+            const dateStr = d.toISOString().split('T')[0];
+            return `<div class="cal-day${dateStr === todayStr ? ' active' : ''}">${dayNames[i]}.${d.getDate()}</div>`;
+        }).join('');
+    }
+
+    // Load attendance for all children
+    const allData = {};
+    for (const child of childrenList) {
+        const rows = await loadAttendanceFromDB(child.id);
+        allData[child.id] = {};
+        rows.forEach(r => {
+            if (r.date) allData[child.id][r.date] = { timeIn: r.timeIn, timeOut: r.timeOut };
+        });
+    }
+
+    // Legend
+    const legend = document.getElementById('global-cal-legend');
+    if (legend) {
+        if (childrenList.length === 0) {
+            legend.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Aucun enfant. Ajoutez des enfants depuis l'accueil.</p>';
+        } else {
+            legend.innerHTML = childrenList.map((child, i) => `
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:${CHILD_COLORS[i % CHILD_COLORS.length]};"></div>
+                    <span>${child.name}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    // Render day columns
+    const columns = document.getElementById('global-cal-columns');
+    if (!columns) return;
+    columns.innerHTML = '';
+
+    days.forEach((d) => {
+        const dateStr = d.toISOString().split('T')[0];
+        const dayCol = document.createElement('div');
+        dayCol.className = 'global-day-col' + (dateStr === todayStr ? ' active' : '');
+
+        if (childrenList.length === 0) {
+            columns.appendChild(dayCol);
+            return;
+        }
+
+        childrenList.forEach((child, childIdx) => {
+            const data = allData[child.id]?.[dateStr];
+            const color = CHILD_COLORS[childIdx % CHILD_COLORS.length];
+            const subCol = document.createElement('div');
+            subCol.className = 'global-child-col';
+
+            if (data && data.timeIn && data.timeOut) {
+                const bar = document.createElement('div');
+                const startMins = timeToMins(data.timeIn);
+                const endMins = timeToMins(data.timeOut);
+                const totalMins = (18 - 7) * 60;
+                const offsetMins = 7 * 60;
+                bar.style.cssText = `
+                    position: absolute;
+                    left: 3px; right: 3px;
+                    top: ${Math.max(0, ((startMins - offsetMins) / totalMins) * 100)}%;
+                    height: ${Math.max(2, ((endMins - startMins) / totalMins) * 100)}%;
+                    background: ${color};
+                    border-radius: 8px;
+                    opacity: 0.9;
+                `;
+                bar.title = `${child.name} : ${data.timeIn} → ${data.timeOut}`;
+                subCol.appendChild(bar);
+            }
+            dayCol.appendChild(subCol);
+        });
+
+        columns.appendChild(dayCol);
+    });
+}
+
+window.globalCalPrev = function () { globalCalOffset--; renderGlobalCalendar(); };
+window.globalCalNext = function () { globalCalOffset++; renderGlobalCalendar(); };
+window.globalCalToday = function () { globalCalOffset = 0; renderGlobalCalendar(); };
+
+// ============================================================
 // NAVIGATION
 // ============================================================
 
@@ -613,6 +721,9 @@ window.showPage = function (pageId) {
     if (pageId === 'home') {
         renderChildrenCards();
         renderDashboardSummaries();
+    }
+    if (pageId === 'calendar-global') {
+        renderGlobalCalendar();
     }
     if (pageId === 'settings') {
         loadSettings();

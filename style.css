@@ -1780,3 +1780,104 @@ input[type="time"].data-input {
     border-radius: 20px;
     white-space: nowrap;
 }
+
+/* ===== CALENDRIER GLOBAL ===== */
+.global-cal-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 60px;
+}
+
+.global-cal-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.global-cal-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--text);
+}
+
+.global-cal-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.global-cal-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.legend-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+
+.global-cal-days-row {
+    display: flex;
+    margin-left: 50px;
+    padding: 16px 0 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.global-cal-grid {
+    display: flex;
+    height: 520px;
+    border-bottom: 1px solid var(--border);
+}
+
+.global-cal-columns {
+    flex: 1;
+    display: flex;
+    border-top: 1px solid var(--border);
+}
+
+.global-day-col {
+    flex: 1;
+    display: flex;
+    border-left: 1px solid var(--border);
+    transition: background 0.15s;
+}
+
+.global-day-col:last-child {
+    border-right: 1px solid var(--border);
+}
+
+.global-day-col.active {
+    background: rgba(206, 241, 123, 0.07);
+}
+
+.global-child-col {
+    flex: 1;
+    position: relative;
+    border-right: 1px solid rgba(223, 240, 188, 0.4);
+}
+
+.global-child-col:last-child {
+    border-right: none;
+}
