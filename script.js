@@ -13,8 +13,7 @@ import {
     sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-    initializeFirestore,
-    onSnapshotsInSync,
+    getFirestore,
     doc,
     getDoc,
     setDoc,
@@ -39,15 +38,7 @@ let app, auth, db;
 if (FIREBASE_CONFIGURED) {
     app = initializeApp(FIREBASE_CONFIG);
     auth = getAuth(app);
-    db = initializeFirestore(app, {
-        experimentalForceLongPolling: true,
-        useFetchStreams: false
-    });
-
-    // Diagnostique : Savoir si le SDK est en train de se synchroniser
-    onSnapshotsInSync(db, () => {
-        console.log("[Firebase] SDK synchronisé avec le serveur (Snapshots in sync).");
-    });
+    db = getFirestore(app);
 
     document.getElementById('config-banner').classList.remove('show');
 }
