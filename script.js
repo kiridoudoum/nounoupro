@@ -39,8 +39,8 @@ if (FIREBASE_CONFIGURED) {
     app = initializeApp(FIREBASE_CONFIG);
     auth = getAuth(app);
     db = getFirestore(app);
-
-    document.getElementById('config-banner').classList.remove('show');
+} else {
+    document.getElementById('config-banner').classList.add('show');
 }
 
 // ============================================================
