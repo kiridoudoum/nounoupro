@@ -334,7 +334,7 @@
             </div>
 
             <!-- CONNEXION -->
-            <form class="auth-form" id="login-form" onsubmit="handleLogin(event)">
+            <form class="auth-form" id="login-form">
                 <div id="login-error" class="auth-error"></div>
                 <div id="login-success" class="auth-success"></div>
 
@@ -358,7 +358,7 @@
             </form>
 
             <!-- INSCRIPTION -->
-            <form class="auth-form hidden" id="register-form" onsubmit="handleRegister(event)">
+            <form class="auth-form hidden" id="register-form">
                 <div id="register-error" class="auth-error"></div>
                 <div id="register-success" class="auth-success"></div>
 
@@ -384,7 +384,7 @@
             </form>
 
             <!-- RESET MOT DE PASSE -->
-            <form class="auth-form hidden" id="reset-form" onsubmit="handleReset(event)">
+            <form class="auth-form hidden" id="reset-form">
                 <div id="reset-error" class="auth-error"></div>
                 <div id="reset-success" class="auth-success"></div>
 
@@ -832,6 +832,72 @@
     </div>
 
     <!-- Firebase SDK -->
+    <!-- Script non-module : attache les formulaires auth IMMEDIATEMENT,
+         sans attendre le chargement du module Firebase -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('login-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (typeof window.handleLogin === 'function') {
+                    window.handleLogin(e);
+                } else {
+                    var btn = document.getElementById('login-btn');
+                    btn.textContent = 'Chargement...';
+                    btn.disabled = true;
+                    var t = setInterval(function () {
+                        if (typeof window.handleLogin === 'function') {
+                            clearInterval(t);
+                            btn.textContent = 'Se connecter';
+                            btn.disabled = false;
+                            window.handleLogin(e);
+                        }
+                    }, 200);
+                    setTimeout(function () {
+                        clearInterval(t);
+                        btn.textContent = 'Se connecter';
+                        btn.disabled = false;
+                        var err = document.getElementById('login-error');
+                        err.textContent = 'Erreur de chargement. Rechargez la page.';
+                        err.classList.add('show');
+                    }, 10000);
+                }
+            });
+
+            document.getElementById('register-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (typeof window.handleRegister === 'function') {
+                    window.handleRegister(e);
+                } else {
+                    var btn = document.getElementById('register-btn');
+                    btn.textContent = 'Chargement...';
+                    btn.disabled = true;
+                    var t = setInterval(function () {
+                        if (typeof window.handleRegister === 'function') {
+                            clearInterval(t);
+                            btn.textContent = 'Créer mon compte';
+                            btn.disabled = false;
+                            window.handleRegister(e);
+                        }
+                    }, 200);
+                    setTimeout(function () {
+                        clearInterval(t);
+                        btn.textContent = 'Créer mon compte';
+                        btn.disabled = false;
+                        var err = document.getElementById('register-error');
+                        err.textContent = 'Erreur de chargement. Rechargez la page.';
+                        err.classList.add('show');
+                    }, 10000);
+                }
+            });
+
+            document.getElementById('reset-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (typeof window.handleReset === 'function') {
+                    window.handleReset(e);
+                }
+            });
+        });
+    </script>
     <script type="module" src="script.js"></script>
 </body>
 
