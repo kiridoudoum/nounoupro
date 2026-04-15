@@ -801,8 +801,8 @@ function renderDashboardSummaries() {
     const box2 = document.getElementById('global-box-2');
     const box3 = document.getElementById('global-box-3');
 
-    if (box1) box1.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:#888;">MENSUALISATION</span><span style="font-size:1.3rem; font-weight:900;">${globalBase.toFixed(2)}€</span></div>`;
-    if (box2) box2.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:#888;">FRAIS RÉEL</span><span style="font-size:1.3rem; font-weight:900;">${globalFrais.toFixed(2)}€</span></div>`;
+    if (box1) box1.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:rgba(255,255,255,0.5);">MENSUALISATION</span><span style="font-size:1.3rem; font-weight:900; color:#fff;">${globalBase.toFixed(2)}€</span></div>`;
+    if (box2) box2.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:rgba(255,255,255,0.5);">FRAIS RÉEL</span><span style="font-size:1.3rem; font-weight:900; color:#fff;">${globalFrais.toFixed(2)}€</span></div>`;
     if (box3) box3.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px; background:#d4f895; border-radius:12px;"><span style="font-size:0.7rem; font-weight:800; color:#1a1a2e;">TOTAL FACTURE</span><span style="font-size:1.3rem; font-weight:900;">${globalTotal.toFixed(2)}€</span></div>`;
 }
 
