@@ -787,9 +787,9 @@ function renderDashboardSummaries() {
                     <span class="dcs-label">Frais Réel</span>
                     <span class="dcs-value">${frais.toFixed(2)}€</span>
                 </div>
-                <div class="dcs-figure highlight" style="background: #d4f895 !important;">
-                    <span class="dcs-label" style="color: #1a1a2e !important; font-weight: 800;">Total Facture</span>
-                    <span class="dcs-value" style="color: #1a1a2e !important; font-weight: 900;">${total.toFixed(2)}€</span>
+                <div class="dcs-figure highlight">
+                    <span class="dcs-label">Total Facture</span>
+                    <span class="dcs-value">${total.toFixed(2)}€</span>
                 </div>
             </div>
         `;
@@ -803,7 +803,7 @@ function renderDashboardSummaries() {
 
     if (box1) box1.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:rgba(255,255,255,0.5);">MENSUALISATION</span><span style="font-size:1.3rem; font-weight:900; color:#fff;">${globalBase.toFixed(2)}€</span></div>`;
     if (box2) box2.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px;"><span style="font-size:0.7rem; font-weight:800; color:rgba(255,255,255,0.5);">FRAIS RÉEL</span><span style="font-size:1.3rem; font-weight:900; color:#fff;">${globalFrais.toFixed(2)}€</span></div>`;
-    if (box3) box3.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px; background:#d4f895; border-radius:12px;"><span style="font-size:0.7rem; font-weight:800; color:#1a1a2e;">TOTAL FACTURE</span><span style="font-size:1.3rem; font-weight:900;">${globalTotal.toFixed(2)}€</span></div>`;
+    if (box3) box3.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:4px; background:#4361EE; border-radius:12px;"><span style="font-size:0.7rem; font-weight:800; color:rgba(255,255,255,0.65);">TOTAL FACTURE</span><span style="font-size:1.3rem; font-weight:900; color:#fff;">${globalTotal.toFixed(2)}€</span></div>`;
 }
 
 window.selectChild = async function (id, stayOnPage = false) {
