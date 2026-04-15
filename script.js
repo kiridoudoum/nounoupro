@@ -632,7 +632,7 @@ async function renderGlobalCalendar() {
     const legend = document.getElementById('global-cal-legend');
     if (legend) {
         if (childrenList.length === 0) {
-            legend.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Aucun enfant. Ajoutez des enfants depuis l'accueil.</p>';
+            legend.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Aucun enfant. Ajoutez des enfants depuis l\'accueil.</p>';
         } else {
             legend.innerHTML = childrenList.map((child, i) => `
                 <div class="legend-item">
