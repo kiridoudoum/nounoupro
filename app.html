@@ -637,6 +637,51 @@
                 <div style="display:none;" id="footer-baseSalary"></div>
             </section>
 
+            <!-- PAGE CALENDRIER GLOBAL -->
+            <section id="calendar-global-page" class="page hidden">
+                <div class="global-cal-layout">
+                    <!-- Barre du haut : titre + navigation -->
+                    <div class="global-cal-topbar">
+                        <div>
+                            <div class="global-cal-title">Calendrier</div>
+                            <div class="global-cal-subtitle">Horaires de tous les enfants</div>
+                        </div>
+                        <div class="calendar-nav">
+                            <span class="material-icons" onclick="globalCalPrev()" style="cursor:pointer;">chevron_left</span>
+                            <span id="global-cal-label" onclick="globalCalToday()" style="cursor:pointer; font-weight:800; font-size:0.9rem; min-width:100px; text-align:center;">AUJOURD'HUI</span>
+                            <span class="material-icons" onclick="globalCalNext()" style="cursor:pointer;">chevron_right</span>
+                        </div>
+                    </div>
+
+                    <!-- Légende enfants -->
+                    <div class="global-cal-legend" id="global-cal-legend"></div>
+
+                    <!-- En-têtes des jours -->
+                    <div class="global-cal-days-row" id="global-cal-days"></div>
+
+                    <!-- Grille horaire -->
+                    <div class="global-cal-grid">
+                        <!-- Heures à gauche -->
+                        <div class="cal-time-col">
+                            <div class="cal-time">07:00</div>
+                            <div class="cal-time">08:00</div>
+                            <div class="cal-time">09:00</div>
+                            <div class="cal-time">10:00</div>
+                            <div class="cal-time">11:00</div>
+                            <div class="cal-time">12:00</div>
+                            <div class="cal-time">13:00</div>
+                            <div class="cal-time">14:00</div>
+                            <div class="cal-time">15:00</div>
+                            <div class="cal-time">16:00</div>
+                            <div class="cal-time">17:00</div>
+                            <div class="cal-time">18:00</div>
+                        </div>
+                        <!-- Colonnes par jour -->
+                        <div class="global-cal-columns" id="global-cal-columns"></div>
+                    </div>
+                </div>
+            </section>
+
             <!-- PAGE PARAMÈTRES -->
             <section id="settings-page" class="page hidden">
                 <header class="page-header">
