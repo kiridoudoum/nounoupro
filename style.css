@@ -1882,3 +1882,76 @@ input[type="time"].data-input {
 .global-child-col:last-child {
     border-right: none;
 }
+
+/* ===== PERSONNALISATION ENFANT ===== */
+.emoji-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.emoji-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    font-size: 1.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.emoji-btn:hover {
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.emoji-btn.selected {
+    border-color: var(--color-primary);
+    background: rgba(206, 241, 123, 0.15);
+    box-shadow: 0 0 0 3px rgba(206, 241, 123, 0.3);
+}
+
+.color-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    outline: none;
+}
+
+.color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.color-swatch.selected {
+    border-color: white;
+    box-shadow: 0 0 0 3px var(--color-primary), 0 2px 8px rgba(0,0,0,0.3);
+    transform: scale(1.1);
+}
+
+/* ===== EMOJI AVATAR DANS LES CARTES ENFANTS ===== */
+.child-emoji-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}

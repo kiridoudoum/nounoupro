@@ -685,18 +685,53 @@
                         <div class="settings-form">
                             <p class="note">⚠️ Ces paramètres s'appliquent uniquement à l'enfant sélectionné.</p>
 
+                            <!-- PERSONNALISATION -->
+                            <label>Avatar</label>
+                            <div class="emoji-picker" id="child-emoji-picker">
+                                <button class="emoji-btn" onclick="selectEmoji('👶')">👶</button>
+                                <button class="emoji-btn" onclick="selectEmoji('👧')">👧</button>
+                                <button class="emoji-btn" onclick="selectEmoji('👦')">👦</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🧒')">🧒</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🎀')">🎀</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🌟')">🌟</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🦋')">🦋</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🐣')">🐣</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🌈')">🌈</button>
+                                <button class="emoji-btn" onclick="selectEmoji('⭐')">⭐</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🐻')">🐻</button>
+                                <button class="emoji-btn" onclick="selectEmoji('🐰')">🐰</button>
+                            </div>
+
+                            <label>Couleur (calendrier & profil)</label>
+                            <div class="color-picker" id="child-color-picker">
+                                <button class="color-swatch" data-color="#CEF17B" onclick="selectColor('#CEF17B')" style="background:#CEF17B;"></button>
+                                <button class="color-swatch" data-color="#FFD166" onclick="selectColor('#FFD166')" style="background:#FFD166;"></button>
+                                <button class="color-swatch" data-color="#FF6B6B" onclick="selectColor('#FF6B6B')" style="background:#FF6B6B;"></button>
+                                <button class="color-swatch" data-color="#74C0FC" onclick="selectColor('#74C0FC')" style="background:#74C0FC;"></button>
+                                <button class="color-swatch" data-color="#DA77F2" onclick="selectColor('#DA77F2')" style="background:#DA77F2;"></button>
+                                <button class="color-swatch" data-color="#FF9F40" onclick="selectColor('#FF9F40')" style="background:#FF9F40;"></button>
+                                <button class="color-swatch" data-color="#FF85A1" onclick="selectColor('#FF85A1')" style="background:#FF85A1;"></button>
+                                <button class="color-swatch" data-color="#51BBFE" onclick="selectColor('#51BBFE')" style="background:#51BBFE;"></button>
+                            </div>
+
+                            <button class="action-button" onclick="saveChildPersonalization()">Sauvegarder la personnalisation</button>
+                            <p id="settings-message-perso" class="message"></p>
+
+                            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border);">
+
+                            <!-- PHOTO URL (optionnelle) -->
                             <div class="photo-uploader">
                                 <img id="photo-preview" src="https://via.placeholder.com/100?text=👶" alt="Photo">
-                                <label for="setting-child-photo-url">URL de la photo</label>
+                                <label for="setting-child-photo-url">Photo (URL optionnelle)</label>
                                 <input type="text" id="setting-child-photo-url" oninput="updatePhotoPreview()"
                                     placeholder="https://...">
-                                <p class="note">Collez l'URL d'une image en ligne.</p>
+                                <p class="note">Collez l'URL d'une image pour remplacer l'emoji.</p>
                             </div>
 
                             <label for="setting-base-salary">Salaire mensuel de base (€)</label>
                             <input type="number" id="setting-base-salary" step="0.01" value="0.00">
 
-                            <button class="action-button" onclick="updateChildBaseSalary()">Sauvegarder</button>
+                            <button class="action-button" onclick="updateChildBaseSalary()">Sauvegarder le salaire</button>
                             <p id="settings-message-child" class="message"></p>
                             <div id="delete-child-container" style="margin-top: 16px;"></div>
                         </div>

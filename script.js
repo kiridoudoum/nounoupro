@@ -634,9 +634,9 @@ async function renderGlobalCalendar() {
         if (childrenList.length === 0) {
             legend.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Aucun enfant. Ajoutez des enfants depuis l\'accueil.</p>';
         } else {
-            legend.innerHTML = childrenList.map((child, i) => `
+            legend.innerHTML = childrenList.map((child) => `
                 <div class="legend-item">
-                    <div class="legend-dot" style="background:${CHILD_COLORS[i % CHILD_COLORS.length]};"></div>
+                    <div class="legend-dot" style="background:${getChildColor(child)};"></div>
                     <span>${child.name}</span>
                 </div>
             `).join('');
@@ -658,9 +658,9 @@ async function renderGlobalCalendar() {
             return;
         }
 
-        childrenList.forEach((child, childIdx) => {
+        childrenList.forEach((child) => {
             const data = allData[child.id]?.[dateStr];
-            const color = CHILD_COLORS[childIdx % CHILD_COLORS.length];
+            const color = getChildColor(child);
             const subCol = document.createElement('div');
             subCol.className = 'global-child-col';
 
@@ -738,10 +738,14 @@ function renderChildrenCards() {
         btn.className = 'child-photo-btn' + (child.id === activeChildId ? ' active' : '');
         btn.title = child.name;
         btn.onclick = () => selectChild(child.id);
-        btn.innerHTML = `
-            <img src="${child.photoUrl || defaultPhotoUrl}" alt="Photo de ${child.name}" class="child-photo-img">
-            <span class="child-photo-name">${child.name}</span>
-        `;
+        const hasRealPhoto = child.photoUrl && child.photoUrl !== defaultPhotoUrl;
+        const color = getChildColor(child);
+        const emoji = getChildEmoji(child);
+        btn.innerHTML = hasRealPhoto
+            ? `<img src="${child.photoUrl}" alt="Photo de ${child.name}" class="child-photo-img">
+               <span class="child-photo-name">${child.name}</span>`
+            : `<div class="child-emoji-avatar" style="background:${color}20; border:2px solid ${color};">${emoji}</div>
+               <span class="child-photo-name">${child.name}</span>`;
         container.appendChild(btn);
     });
 }
@@ -1399,6 +1403,16 @@ function updateGlobalSummary() {
 // PARAMETRES
 // ============================================================
 
+const DEFAULT_CHILD_COLOR = '#CEF17B';
+const DEFAULT_CHILD_EMOJI = '👶';
+
+function getChildColor(child) {
+    return child.color || DEFAULT_CHILD_COLOR;
+}
+function getChildEmoji(child) {
+    return child.emoji || DEFAULT_CHILD_EMOJI;
+}
+
 function updateSettingsChildFields() {
     const child = childrenList.find(c => c.id === activeChildId);
     const baseSalaryInput = document.getElementById('setting-base-salary');
@@ -1410,17 +1424,60 @@ function updateSettingsChildFields() {
     if (child) {
         baseSalaryInput.value = child.baseMonthlySalary.toFixed(2);
         childNameSpan.textContent = child.name;
-        photoUrlInput.value = child.photoUrl || defaultPhotoUrl;
+        photoUrlInput.value = child.photoUrl && child.photoUrl !== defaultPhotoUrl ? child.photoUrl : '';
         photoPreview.src = child.photoUrl || defaultPhotoUrl;
         deleteContainer.innerHTML = `<button class="action-button delete-button" onclick="deleteChild('${child.id}')">🗑️ Supprimer ${child.name}</button>`;
+
+        // Update emoji picker selection
+        document.querySelectorAll('.emoji-btn').forEach(btn => {
+            btn.classList.toggle('selected', btn.textContent === getChildEmoji(child));
+        });
+
+        // Update color picker selection
+        document.querySelectorAll('.color-swatch').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.color === getChildColor(child));
+        });
     } else {
         baseSalaryInput.value = '0.00';
         childNameSpan.textContent = 'Non sélectionné';
         photoUrlInput.value = '';
         photoPreview.src = defaultPhotoUrl;
         deleteContainer.innerHTML = '';
+        document.querySelectorAll('.emoji-btn, .color-swatch').forEach(b => b.classList.remove('selected'));
     }
 }
+
+window.selectEmoji = function (emoji) {
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent === emoji);
+    });
+};
+
+window.selectColor = function (color) {
+    document.querySelectorAll('.color-swatch').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.color === color);
+    });
+};
+
+window.saveChildPersonalization = async function () {
+    const child = childrenList.find(c => c.id === activeChildId);
+    if (!child) return;
+
+    const selectedEmoji = document.querySelector('.emoji-btn.selected');
+    const selectedColor = document.querySelector('.color-swatch.selected');
+
+    if (selectedEmoji) child.emoji = selectedEmoji.textContent.trim();
+    if (selectedColor) child.color = selectedColor.dataset.color;
+
+    await saveChild(child);
+    renderChildrenCards();
+    renderDashboardSummaries();
+
+    const msg = document.getElementById('settings-message-perso');
+    msg.textContent = '✓ Personnalisation sauvegardée !';
+    msg.style.color = 'var(--color-primary)';
+    setTimeout(() => { msg.textContent = ''; }, 3000);
+};
 
 window.updateChildBaseSalary = async function () {
     const child = childrenList.find(c => c.id === activeChildId);
