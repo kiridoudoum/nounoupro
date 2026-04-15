@@ -819,7 +819,7 @@ window.selectChild = async function (id, stayOnPage = false) {
 
         if (nameEl) nameEl.textContent = child.name;
         if (ageEl) ageEl.textContent = `${calculateAge(child.birthdate)} ANS`;
-        if (photoEl) photoEl.src = child.photoUrl || defaultPhotoUrl;
+        updateHeroAvatar(child);
         if (attNameEl) attNameEl.textContent = child.name;
 
         if (!stayOnPage) {
@@ -1498,6 +1498,81 @@ window.updateChildBaseSalary = async function () {
 
 window.updatePhotoPreview = function () {
     document.getElementById('photo-preview').src = document.getElementById('setting-child-photo-url').value.trim() || defaultPhotoUrl;
+};
+
+// ============================================================
+// PERSONNALISATION DEPUIS LA PAGE PROFIL
+// ============================================================
+
+function updateHeroAvatar(child) {
+    const wrap = document.getElementById('hero-avatar-wrap');
+    if (!wrap) return;
+    const hasRealPhoto = child.photoUrl && child.photoUrl !== defaultPhotoUrl;
+    const color = getChildColor(child);
+    const emoji = getChildEmoji(child);
+    const heroCard = document.getElementById('hero-card');
+    if (heroCard) heroCard.style.borderLeft = `4px solid ${color}`;
+    if (hasRealPhoto) {
+        wrap.innerHTML = `<img id="attendance-child-photo" src="${child.photoUrl}" alt="Photo" class="hero-avatar">`;
+    } else {
+        wrap.innerHTML = `<div class="hero-emoji-avatar" style="background:${color}25; border-color:${color};">${emoji}</div>`;
+    }
+}
+
+window.toggleProfileEdit = function () {
+    const card = document.getElementById('profile-edit-card');
+    const child = childrenList.find(c => c.id === activeChildId);
+    if (!child) return;
+    const isHidden = card.style.display === 'none';
+    card.style.display = isHidden ? 'block' : 'none';
+    if (isHidden) {
+        // Pré-remplir les pickers avec les valeurs actuelles
+        document.querySelectorAll('#profile-emoji-picker .emoji-btn').forEach(btn => {
+            btn.classList.toggle('selected', btn.textContent.trim() === getChildEmoji(child));
+        });
+        document.querySelectorAll('#profile-color-picker .color-swatch').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.color === getChildColor(child));
+        });
+        const photoInput = document.getElementById('profile-photo-url');
+        if (photoInput) photoInput.value = (child.photoUrl && child.photoUrl !== defaultPhotoUrl) ? child.photoUrl : '';
+    }
+};
+
+window.profileSelectEmoji = function (emoji) {
+    document.querySelectorAll('#profile-emoji-picker .emoji-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent.trim() === emoji);
+    });
+};
+
+window.profileSelectColor = function (color) {
+    document.querySelectorAll('#profile-color-picker .color-swatch').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.color === color);
+    });
+};
+
+window.saveProfilePersonalization = async function () {
+    const child = childrenList.find(c => c.id === activeChildId);
+    if (!child) return;
+
+    const selEmoji = document.querySelector('#profile-emoji-picker .emoji-btn.selected');
+    const selColor = document.querySelector('#profile-color-picker .color-swatch.selected');
+    const photoUrl = document.getElementById('profile-photo-url').value.trim();
+
+    if (selEmoji) child.emoji = selEmoji.textContent.trim();
+    if (selColor) child.color = selColor.dataset.color;
+    if (photoUrl) child.photoUrl = photoUrl;
+    else if (!photoUrl) child.photoUrl = defaultPhotoUrl;
+
+    await saveChild(child);
+    updateHeroAvatar(child);
+    renderChildrenCards();
+
+    const msg = document.getElementById('profile-perso-msg');
+    msg.textContent = '✓ Sauvegardé !';
+    setTimeout(() => {
+        msg.textContent = '';
+        document.getElementById('profile-edit-card').style.display = 'none';
+    }, 1500);
 };
 
 async function loadSettings() {

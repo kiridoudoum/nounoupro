@@ -488,21 +488,64 @@
                 <div class="child-detail-layout">
 
                     <!-- HERO CARD -->
-                    <div class="hero-card">
+                    <div class="hero-card" id="hero-card">
                         <div class="hero-left">
-                            <img id="attendance-child-photo" src="https://via.placeholder.com/100?text=👶" alt="Photo"
-                                class="hero-avatar">
+                            <div id="hero-avatar-wrap">
+                                <img id="attendance-child-photo" src="https://via.placeholder.com/100?text=👶" alt="Photo"
+                                    class="hero-avatar">
+                            </div>
                             <div class="hero-info">
                                 <h2 id="attendance-child-name">...</h2>
                                 <div class="hero-age" id="attendance-child-age">-- ANS</div>
                             </div>
                         </div>
-                        <button class="ph-docs-btn">
-                            <div class="ph-docs-icon">
-                                <span class="material-icons">open_in_new</span>
-                            </div>
-                            <span>IMAGES ET DOCS</span>
+                        <button class="hero-edit-btn" onclick="toggleProfileEdit()" title="Personnaliser">
+                            <span class="material-icons">tune</span>
                         </button>
+                    </div>
+
+                    <!-- CARTE PERSONNALISATION (cachée par défaut) -->
+                    <div class="detail-card" id="profile-edit-card" style="display:none;">
+                        <h3 class="card-title" style="margin-bottom:16px;">PERSONNALISATION</h3>
+                        <div class="profile-edit-grid">
+                            <div>
+                                <label class="perso-label">Avatar</label>
+                                <div class="emoji-picker" id="profile-emoji-picker">
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('👶')">👶</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('👧')">👧</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('👦')">👦</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🧒')">🧒</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🎀')">🎀</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🌟')">🌟</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🦋')">🦋</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🐣')">🐣</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🌈')">🌈</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('⭐')">⭐</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🐻')">🐻</button>
+                                    <button class="emoji-btn" onclick="profileSelectEmoji('🐰')">🐰</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="perso-label">Couleur</label>
+                                <div class="color-picker" id="profile-color-picker">
+                                    <button class="color-swatch" data-color="#CEF17B" onclick="profileSelectColor('#CEF17B')" style="background:#CEF17B;"></button>
+                                    <button class="color-swatch" data-color="#FFD166" onclick="profileSelectColor('#FFD166')" style="background:#FFD166;"></button>
+                                    <button class="color-swatch" data-color="#FF6B6B" onclick="profileSelectColor('#FF6B6B')" style="background:#FF6B6B;"></button>
+                                    <button class="color-swatch" data-color="#74C0FC" onclick="profileSelectColor('#74C0FC')" style="background:#74C0FC;"></button>
+                                    <button class="color-swatch" data-color="#DA77F2" onclick="profileSelectColor('#DA77F2')" style="background:#DA77F2;"></button>
+                                    <button class="color-swatch" data-color="#FF9F40" onclick="profileSelectColor('#FF9F40')" style="background:#FF9F40;"></button>
+                                    <button class="color-swatch" data-color="#FF85A1" onclick="profileSelectColor('#FF85A1')" style="background:#FF85A1;"></button>
+                                    <button class="color-swatch" data-color="#51BBFE" onclick="profileSelectColor('#51BBFE')" style="background:#51BBFE;"></button>
+                                </div>
+                                <label class="perso-label" style="margin-top:16px;">Photo (URL)</label>
+                                <input type="text" id="profile-photo-url" class="perso-input" placeholder="https://...">
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px; margin-top:16px; align-items:center;">
+                            <button class="action-button" onclick="saveProfilePersonalization()">Enregistrer</button>
+                            <button class="btn-cancel" onclick="toggleProfileEdit()">Annuler</button>
+                            <span id="profile-perso-msg" style="font-size:0.85rem; color:var(--color-primary); font-weight:700;"></span>
+                        </div>
                     </div>
 
                     <!-- BENTO GRID -->
