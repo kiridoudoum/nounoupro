@@ -240,6 +240,14 @@ window.showConfigHelp = function () {
 // ETAT AUTH - Connexion/Déconnexion
 // ============================================================
 
+// ============================================================
+// ATTACHER LES EVENT LISTENERS AUX FORMULAIRES AUTH
+// (fallback en plus des attributs onsubmit dans le HTML)
+// ============================================================
+document.getElementById('login-form')?.addEventListener('submit', (e) => window.handleLogin(e));
+document.getElementById('register-form')?.addEventListener('submit', (e) => window.handleRegister(e));
+document.getElementById('reset-form')?.addEventListener('submit', (e) => window.handleReset(e));
+
 if (FIREBASE_CONFIGURED) {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
