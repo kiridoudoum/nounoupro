@@ -2,25 +2,8 @@
 // CONFIGURATION FIREBASE
 // Remplacez les valeurs ci-dessous par celles de votre projet
 // Firebase : https://console.firebase.google.com
+// Les scripts Firebase compat sont chargés via app.html
 // ============================================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc,
-    collection,
-    getDocs,
-    deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const FIREBASE_CONFIG = {
     apiKey: "AIzaSyDv1vUolUzIpvZMxOyGa0lVLpYDV0yTb74",
@@ -33,12 +16,12 @@ const FIREBASE_CONFIG = {
 
 const FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "VOTRE_API_KEY";
 
-let app, auth, db;
+let auth, db;
 
 if (FIREBASE_CONFIGURED) {
-    app = initializeApp(FIREBASE_CONFIG);
-    auth = getAuth(app);
-    db = getFirestore(app);
+    firebase.initializeApp(FIREBASE_CONFIG);
+    auth = firebase.auth();
+    db = firebase.firestore();
 } else {
     document.getElementById('config-banner').classList.add('show');
 }
@@ -148,7 +131,7 @@ window.handleLogin = async function (e) {
 
     setLoading('login-btn', true, 'Se connecter');
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        await auth.signInWithEmailAndPassword(email, password);
     } catch (err) {
         showAuthError('login-error', firebaseErrorMessage(err.code));
         setLoading('login-btn', false, 'Se connecter');
@@ -175,7 +158,7 @@ window.handleRegister = async function (e) {
 
     setLoading('register-btn', true, 'Créer mon compte');
     try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await auth.createUserWithEmailAndPassword(email, password);
     } catch (err) {
         console.error('Register error:', err.code, err.message);
         showAuthError('register-error', firebaseErrorMessage(err.code) + ' (code: ' + err.code + ')');
@@ -195,7 +178,7 @@ window.handleReset = async function (e) {
     const email = document.getElementById('reset-email').value.trim();
     setLoading('reset-btn', true, 'Envoyer le lien');
     try {
-        await sendPasswordResetEmail(auth, email);
+        await auth.sendPasswordResetEmail(email);
         showAuthSuccess('reset-success', 'Email envoyé ! Vérifiez votre boîte mail.');
     } catch (err) {
         showAuthError('reset-error', firebaseErrorMessage(err.code));
@@ -205,14 +188,14 @@ window.handleReset = async function (e) {
 
 window.logout = async function () {
     if (!FIREBASE_CONFIGURED) return;
-    await signOut(auth);
+    await auth.signOut();
 };
 
 window.sendPasswordReset = async function () {
     if (!currentUser) return;
     const msg = document.getElementById('password-message');
     try {
-        await sendPasswordResetEmail(auth, currentUser.email);
+        await auth.sendPasswordResetEmail(currentUser.email);
         msg.textContent = 'Email de réinitialisation envoyé !';
         msg.style.color = 'var(--color-primary)';
     } catch {
@@ -241,7 +224,7 @@ window.showConfigHelp = function () {
 // ============================================================
 
 if (FIREBASE_CONFIGURED) {
-    onAuthStateChanged(auth, async (user) => {
+    auth.onAuthStateChanged(async (user) => {
         if (user) {
             currentUser = user;
 
@@ -293,16 +276,26 @@ if (FIREBASE_CONFIGURED) {
 // ============================================================
 
 function userRef(path) {
-    return doc(db, 'users', currentUser.uid, ...path.split('/'));
+    const parts = path.split('/');
+    let ref = db.collection('users').doc(currentUser.uid);
+    for (let i = 0; i < parts.length; i += 2) {
+        ref = ref.collection(parts[i]).doc(parts[i + 1] || 'data');
+    }
+    return ref;
 }
 
 function userCol(path) {
-    return collection(db, 'users', currentUser.uid, ...path.split('/'));
+    const parts = path.split('/');
+    let ref = db.collection('users').doc(currentUser.uid);
+    for (let i = 0; i < parts.length - 1; i += 2) {
+        ref = ref.collection(parts[i]).doc(parts[i + 1]);
+    }
+    return ref.collection(parts[parts.length - 1]);
 }
 
 async function loadUserData() {
     childrenList = [];
-    const snap = await getDocs(userCol('children'));
+    const snap = await userCol('children').get();
     snap.forEach(d => {
         childrenList.push({ id: d.id, ...d.data() });
     });
@@ -328,7 +321,7 @@ async function saveChild(child) {
     console.log(`[Firebase] Sauvegarde de l'enfant: ${data.name} (ID: ${id})...`);
     
     // Timeout logic to prevent eternal hang - increased to 30s
-    const savePromise = setDoc(doc(db, 'users', currentUser.uid, 'children', String(id)), data);
+    const savePromise = db.collection('users').doc(currentUser.uid).collection('children').doc(String(id)).set(data);
     const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error("Délai d'attente Firebase dépassé (30s). Vérifiez votre connexion internet.")), 30000)
     );
@@ -343,23 +336,23 @@ async function saveChild(child) {
 }
 
 async function deleteChildFromDB(childId) {
-    await deleteDoc(doc(db, 'users', currentUser.uid, 'children', String(childId)));
-    const attendanceSnap = await getDocs(userCol(`attendance_${childId}`));
+    await db.collection('users').doc(currentUser.uid).collection('children').doc(String(childId)).delete();
+    const attendanceSnap = await userCol(`attendance_${childId}`).get();
     for (const d of attendanceSnap.docs) {
-        await deleteDoc(d.ref);
+        await d.ref.delete();
     }
 }
 
 async function saveAttendanceRow(childId, rowId, data) {
-    await setDoc(doc(db, 'users', currentUser.uid, `attendance_${childId}`, String(rowId)), data);
+    await db.collection('users').doc(currentUser.uid).collection(`attendance_${childId}`).doc(String(rowId)).set(data);
 }
 
 async function deleteAttendanceRow(childId, rowId) {
-    await deleteDoc(doc(db, 'users', currentUser.uid, `attendance_${childId}`, String(rowId)));
+    await db.collection('users').doc(currentUser.uid).collection(`attendance_${childId}`).doc(String(rowId)).delete();
 }
 
 async function loadAttendanceFromDB(childId) {
-    const snap = await getDocs(userCol(`attendance_${childId}`));
+    const snap = await userCol(`attendance_${childId}`).get();
     const rows = [];
     snap.forEach(d => rows.push({ rowId: d.id, ...d.data() }));
     rows.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
@@ -376,8 +369,8 @@ function getTodayStr() {
 
 async function loadDailyData(childId) {
     if (!currentUser || !childId) return;
-    const snap = await getDoc(doc(db, 'users', currentUser.uid, 'daily_' + childId, getTodayStr()));
-    todayData = snap.exists()
+    const snap = await db.collection('users').doc(currentUser.uid).collection('daily_' + childId).doc(getTodayStr()).get();
+    todayData = snap.exists
         ? { meals: 0, napMinutes: 0, diapers: 0, activity: '', ...snap.data() }
         : { meals: 0, napMinutes: 0, diapers: 0, activity: '' };
     renderTodayCard();
@@ -385,7 +378,7 @@ async function loadDailyData(childId) {
 
 async function saveDailyData() {
     if (!currentUser || !activeChildId) return;
-    await setDoc(doc(db, 'users', currentUser.uid, 'daily_' + activeChildId, getTodayStr()), todayData);
+    await db.collection('users').doc(currentUser.uid).collection('daily_' + activeChildId).doc(getTodayStr()).set(todayData);
 }
 
 function renderTodayCard() {
@@ -494,7 +487,7 @@ async function loadTreatments(childId) {
     const list = document.getElementById('treatments-list');
     if (!list || !currentUser) return;
     list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;padding:8px 0;">Chargement...</p>';
-    const snap = await getDocs(collection(db, 'users', currentUser.uid, 'treatments_' + childId));
+    const snap = await db.collection('users').doc(currentUser.uid).collection('treatments_' + childId).get();
     const treatments = [];
     snap.forEach(d => treatments.push({ id: d.id, ...d.data() }));
     renderTreatments(treatments);
@@ -560,7 +553,7 @@ window.saveTreatment = async function () {
     btn.textContent = 'Enregistrement...';
     try {
         const id = treatmentModalId || Date.now().toString();
-        await setDoc(doc(db, 'users', currentUser.uid, 'treatments_' + activeChildId, id), {
+        await db.collection('users').doc(currentUser.uid).collection('treatments_' + activeChildId).doc(id).set({
             medication,
             reason,
             frequency: treatmentFreq,
@@ -578,18 +571,18 @@ window.saveTreatment = async function () {
 window.deleteTreatment = async function () {
     if (!treatmentModalId || !activeChildId || !currentUser) return;
     if (!confirm('Supprimer ce traitement ?')) return;
-    await deleteDoc(doc(db, 'users', currentUser.uid, 'treatments_' + activeChildId, treatmentModalId));
+    await db.collection('users').doc(currentUser.uid).collection('treatments_' + activeChildId).doc(treatmentModalId).delete();
     await loadTreatments(activeChildId);
     closeTreatmentModal();
 };
 
 async function saveSettings(data) {
-    await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'rates'), data);
+    await db.collection('users').doc(currentUser.uid).collection('settings').doc('rates').set(data);
 }
 
 async function loadSettingsFromDB() {
-    const snap = await getDoc(doc(db, 'users', currentUser.uid, 'settings', 'rates'));
-    return snap.exists() ? snap.data() : null;
+    const snap = await db.collection('users').doc(currentUser.uid).collection('settings').doc('rates').get();
+    return snap.exists ? snap.data() : null;
 }
 
 // ============================================================
