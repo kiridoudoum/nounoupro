@@ -13,7 +13,7 @@
         #auth-overlay {
             position: fixed;
             inset: 0;
-            background: #1C2B1A;
+            background: #1A1D3B;
             z-index: 9999;
             display: flex;
             align-items: flex-start;
@@ -28,14 +28,14 @@
         }
 
         .auth-card {
-            background: #2E4229;
+            background: #ffffff;
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 24px 64px rgba(26, 29, 59, 0.4);
             padding: 48px 44px;
             width: 100%;
             max-width: 420px;
             position: relative;
-            border: 1px solid rgba(206, 241, 123, 0.15);
+            border: 1px solid #E4E8F5;
             align-self: center;
         }
 
@@ -44,25 +44,45 @@
             margin-bottom: 8px;
         }
 
+        .auth-logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            background: #4361EE;
+            border-radius: 14px;
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
         .auth-logo-text {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 900;
-            color: #CEF17B;
+            color: #1A1D3B;
+            letter-spacing: 0.02em;
+        }
+
+        .auth-logo-text span {
+            color: #4361EE;
         }
 
         .auth-tagline {
             text-align: center;
-            color: rgba(206, 241, 123, 0.5);
-            font-size: 0.9rem;
-            margin-bottom: 36px;
+            color: #9197BD;
+            font-size: 0.88rem;
+            margin-bottom: 32px;
+            font-weight: 600;
         }
 
         .auth-tabs {
             display: flex;
-            background: rgba(0,0,0,0.2);
+            background: #F4F6FF;
             border-radius: 12px;
             padding: 4px;
             margin-bottom: 28px;
+            border: 1px solid #E4E8F5;
         }
 
         .auth-tab {
@@ -72,17 +92,18 @@
             border-radius: 9px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.92rem;
-            color: rgba(206, 241, 123, 0.45);
+            font-size: 0.88rem;
+            color: #9197BD;
             transition: all 0.2s;
             border: none;
             background: none;
+            font-family: 'Nunito', sans-serif;
         }
 
         .auth-tab.active {
-            background: #CEF17B;
-            color: #1C2B1A;
-            box-shadow: 0 2px 8px rgba(206, 241, 123, 0.4);
+            background: #4361EE;
+            color: white;
+            box-shadow: 0 3px 10px rgba(67, 97, 238, 0.35);
         }
 
         .auth-form {
@@ -102,51 +123,51 @@
         }
 
         .auth-label {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 700;
-            color: rgba(206, 241, 123, 0.6);
+            color: #535B8E;
         }
 
         .auth-input {
             padding: 12px 16px;
-            border: 2px solid rgba(206, 241, 123, 0.2);
-            border-radius: 10px;
+            border: 2px solid #E4E8F5;
+            border-radius: 11px;
             font-size: 0.95rem;
             font-family: 'Nunito', sans-serif;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
             outline: none;
-            background: rgba(0,0,0,0.2);
-            color: white;
+            background: #F4F6FF;
+            color: #1A1D3B;
         }
 
         .auth-input::placeholder {
-            color: rgba(255,255,255,0.25);
+            color: #B0B5D8;
         }
 
         .auth-input:focus {
-            border-color: #CEF17B;
-            background: rgba(0,0,0,0.3);
+            border-color: #4361EE;
+            background: white;
         }
 
         .auth-btn {
             padding: 14px;
             border: none;
-            border-radius: 10px;
-            background: #CEF17B;
-            color: #1C2B1A;
+            border-radius: 11px;
+            background: #4361EE;
+            color: white;
             font-size: 1rem;
             font-weight: 900;
             font-family: 'Nunito', sans-serif;
             cursor: pointer;
             margin-top: 6px;
             transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-            box-shadow: 0 6px 20px rgba(206, 241, 123, 0.4);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
         }
 
         .auth-btn:hover {
-            background: #A8D94F;
+            background: #3451D1;
             transform: translateY(-2px);
-            box-shadow: 0 10px 28px rgba(206, 241, 123, 0.5);
+            box-shadow: 0 10px 28px rgba(67, 97, 238, 0.5);
         }
 
         .auth-btn:disabled {
@@ -156,14 +177,14 @@
         }
 
         .auth-error {
-            background: rgba(229, 62, 62, 0.15);
-            color: #fc8181;
+            background: #FEF2F2;
+            color: #EF4444;
             border-radius: 8px;
             padding: 10px 14px;
             font-size: 0.85rem;
             font-weight: 600;
             display: none;
-            border: 1px solid rgba(229, 62, 62, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
         .auth-error.show {
@@ -171,14 +192,14 @@
         }
 
         .auth-success {
-            background: rgba(206, 241, 123, 0.15);
-            color: #CEF17B;
+            background: #ECFDF5;
+            color: #10B981;
             border-radius: 8px;
             padding: 10px 14px;
             font-size: 0.85rem;
             font-weight: 600;
             display: none;
-            border: 1px solid rgba(206, 241, 123, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.25);
         }
 
         .auth-success.show {
@@ -192,11 +213,11 @@
 
         .auth-forgot a {
             font-size: 0.82rem;
-            color: #CEF17B;
+            color: #4361EE;
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
-            opacity: 0.7;
+            opacity: 0.75;
         }
 
         .auth-forgot a:hover {
@@ -208,7 +229,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: rgba(206, 241, 123, 0.3);
+            color: #C5CADF;
             font-size: 0.8rem;
             margin: 4px 0;
         }
@@ -218,28 +239,29 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: rgba(206, 241, 123, 0.15);
+            background: #E4E8F5;
         }
 
         .auth-user-info {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(0,0,0,0.2);
+            background: #F4F6FF;
             border-radius: 10px;
             padding: 10px 14px;
             margin-bottom: 4px;
+            border: 1px solid #E4E8F5;
         }
 
         .auth-user-avatar {
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: #CEF17B;
+            background: #4361EE;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #1C2B1A;
+            color: white;
             font-weight: 900;
             font-size: 1rem;
             flex-shrink: 0;
@@ -247,7 +269,7 @@
 
         .auth-user-email {
             font-size: 0.88rem;
-            color: rgba(206, 241, 123, 0.7);
+            color: #535B8E;
             font-weight: 600;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -284,13 +306,13 @@
 
         /* Config banner */
         #config-banner {
-            background: #fff3e0;
-            border: 2px dashed #ff9800;
+            background: #FFF7ED;
+            border: 2px dashed #F59E0B;
             border-radius: 12px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             margin-bottom: 20px;
-            font-size: 0.88rem;
-            color: #e65100;
+            font-size: 0.86rem;
+            color: #B45309;
             font-weight: 700;
             display: none;
         }
@@ -300,15 +322,15 @@
         }
 
         #config-banner a {
-            color: #e65100;
+            color: #B45309;
             text-decoration: underline;
         }
 
         /* Navbar user email */
         #nav-user-email {
-            font-size: 0.82rem;
-            color: #888;
-            padding: 8px 10px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            padding: 0;
         }
     </style>
 </head>
@@ -319,9 +341,10 @@
     <div id="auth-overlay">
         <div class="auth-card">
             <div class="auth-logo">
-                <div class="auth-logo-text">Nounou Pro</div>
+                <div class="auth-logo-icon">👶</div>
+                <div class="auth-logo-text">Nounou <span>Pro</span></div>
             </div>
-            <p class="auth-tagline">Votre espace personnel de gestion</p>
+            <p class="auth-tagline">Votre espace professionnel de garde</p>
 
             <div id="config-banner">
                 ⚠️ Firebase non configuré. <a href="#" onclick="showConfigHelp()">Voir les instructions</a> pour activer
@@ -388,8 +411,7 @@
                 <div id="reset-error" class="auth-error"></div>
                 <div id="reset-success" class="auth-success"></div>
 
-                <p style="font-size:0.9rem; color:#666; margin:0">Entrez votre email pour recevoir un lien de
-                    réinitialisation.</p>
+                <p style="font-size:0.88rem; color:#9197BD; margin:0; font-weight:600;">Entrez votre email pour recevoir un lien de réinitialisation.</p>
 
                 <div class="auth-input-group">
                     <label class="auth-label">Adresse email</label>
@@ -397,7 +419,7 @@
                 </div>
 
                 <button type="submit" class="auth-btn" id="reset-btn">Envoyer le lien</button>
-                <button type="button" class="auth-btn" style="background: #f5f5f5; color:#555; box-shadow:none;"
+                <button type="button" class="auth-btn" style="background: #F4F6FF; color:#535B8E; box-shadow:none; border: 1.5px solid #E4E8F5;"
                     onclick="switchTab('login')">Retour</button>
             </form>
         </div>

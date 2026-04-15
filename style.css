@@ -1,27 +1,61 @@
+/* ============================================================
+   NOUNOU PRO — Design System 2026
+   Palette : Navy #1A1D3B | Blue #4361EE | Peach #F77F5E
+   ============================================================ */
+
 :root {
-    --lime: #CEF17B;
-    --lime-dark: #A8D94F;
-    --lime-light: #EEF9D0;
-    --dark: #1C2B1A;
-    --dark-mid: #2E4229;
-    --dark-light: #3D5537;
-    --bg: #F3F8E8;
+    /* === BRAND COLORS === */
+    --primary: #4361EE;
+    --primary-dark: #3451D1;
+    --primary-light: #EEF1FF;
+    --color-primary: #4361EE; /* alias backward compat */
+
+    --peach: #F77F5E;
+    --peach-dark: #E56840;
+    --peach-light: #FFF0EB;
+
+    --teal: #2EC4B6;
+    --teal-light: #E8FAF9;
+
+    /* === NEUTRALS === */
+    --bg: #F4F6FF;
     --card: #FFFFFF;
-    --border: #DFF0BC;
-    --text: #1C2B1A;
-    --text-light: #4A5E42;
-    --text-muted: #7A8E72;
-    --danger: #E53E3E;
-    --danger-light: #FFF5F5;
-    --shadow-sm: 0 2px 8px rgba(28, 43, 26, 0.07);
-    --shadow: 0 4px 20px rgba(28, 43, 26, 0.1);
-    --shadow-lg: 0 10px 40px rgba(28, 43, 26, 0.14);
-    --radius: 20px;
-    --radius-sm: 12px;
+    --border: #E4E8F5;
+    --text: #1A1D3B;
+    --text-light: #535B8E;
+    --text-muted: #9197BD;
+
+    /* === SIDEBAR === */
+    --sidebar-bg: #1A1D3B;
+    --sidebar-mid: #252952;
+    --sidebar-hover: #2A3060;
+
+    /* === STATUS === */
+    --success: #10B981;
+    --success-light: #ECFDF5;
+    --danger: #EF4444;
+    --danger-light: #FEF2F2;
+
+    /* === SHADOWS === */
+    --shadow-sm: 0 1px 4px rgba(26, 29, 59, 0.07);
+    --shadow: 0 4px 18px rgba(26, 29, 59, 0.1);
+    --shadow-lg: 0 12px 44px rgba(26, 29, 59, 0.16);
+
+    /* === RADII === */
+    --radius: 18px;
+    --radius-sm: 11px;
+    --radius-xs: 7px;
+
+    /* === FONT === */
     --font: 'Nunito', sans-serif;
-    --sidebar-width: 220px;
+
+    /* === LAYOUT === */
+    --sidebar-width: 240px;
 }
 
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
 * {
     margin: 0;
     padding: 0;
@@ -33,33 +67,28 @@ body {
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* ===== APP LAYOUT ===== */
+/* ============================================================
+   APP LAYOUT
+   ============================================================ */
 .app-layout {
     display: flex;
     min-height: 100vh;
 }
 
-.home-actions {
-    display: flex;
-    justify-content: center;
-    padding: 24px 0;
-}
-
-/* ===== SIDEBAR ===== */
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
 .sidebar {
     width: var(--sidebar-width);
     min-height: 100vh;
-    background: transparent;
-    border-right: none;
-    display: flex;
-    flex-direction: column;
-    padding: 28px 16px;
+    padding: 20px 16px;
     position: fixed;
     top: 0;
     left: 0;
@@ -72,108 +101,188 @@ body {
 }
 
 .sidebar-card {
-    background: var(--dark);
+    background: var(--sidebar-bg);
     border-radius: var(--radius);
-    padding: 16px 12px;
-    box-shadow: 0 8px 32px rgba(28, 43, 26, 0.3);
-    border: none;
-    flex: 1;
+    padding: 20px 12px;
+    height: calc(100vh - 40px);
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    max-height: calc(100vh - 56px);
+    gap: 0;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(26, 29, 59, 0.3);
 }
 
+/* Logo area */
+.sidebar-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 8px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+.sidebar-logo-badge {
+    background: var(--primary);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 900;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.5);
+}
+
+.sidebar-logo-wordmark {
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+}
+
+/* Profile section */
 .sidebar-profile {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 12px;
-    padding: 4px;
-    margin-bottom: 8px;
+    padding: 0 4px 16px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
 }
 
 .sidebar-avatar {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: var(--dark-mid);
+    background: var(--sidebar-mid);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    border: 2px solid var(--lime);
+    font-size: 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    flex-shrink: 0;
 }
 
 .sidebar-email {
-    font-size: 0.82rem;
-    color: rgba(206, 241, 123, 0.7);
-    font-weight: 700;
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
     text-align: left;
     word-break: break-all;
+    line-height: 1.3;
 }
 
+/* Nav buttons */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 3px;
     flex: 1;
 }
 
 .sidebar-btn {
-    background: var(--dark-mid);
+    background: transparent;
     border: none;
     border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    font-size: 0.85rem;
-    font-weight: 800;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
     font-family: var(--font);
-    color: rgba(206, 241, 123, 0.6);
+    color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    text-align: center;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     transition: all 0.2s;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
 }
 
 .sidebar-btn:hover {
-    background: var(--dark-light);
-    color: var(--lime);
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .sidebar-btn.active {
-    background: var(--lime);
-    color: var(--dark);
-    box-shadow: 0 4px 16px rgba(206, 241, 123, 0.4);
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 16px rgba(67, 97, 238, 0.4);
 }
 
-#nav-btn-home { background: var(--dark-mid); color: rgba(206, 241, 123, 0.6); }
-#nav-btn-home.active { background: var(--lime); color: var(--dark); }
+.sidebar-btn-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
 
-#nav-btn-attendance { background: var(--dark-mid); color: rgba(206, 241, 123, 0.6); }
-#nav-btn-attendance.active { background: var(--lime); color: var(--dark); }
+/* Specific nav button overrides (keep for backward compat) */
+#nav-btn-home,
+#nav-btn-attendance,
+#nav-btn-settings,
+#nav-btn-calendar-global {
+    /* inherits from .sidebar-btn */
+}
 
-#nav-btn-settings { background: var(--dark-mid); color: rgba(206, 241, 123, 0.6); }
-#nav-btn-settings.active { background: var(--lime); color: var(--dark); }
-
-.sidebar-logout {
-    margin-top: auto;
-    padding: 12px;
-    text-align: center;
-    color: rgba(229, 62, 62, 0.7);
-    font-weight: 800;
-    font-size: 0.85rem;
-    cursor: pointer;
+/* Add child CTA button */
+.sidebar-add-child {
+    background: rgba(247, 127, 94, 0.12);
+    border: 1.5px solid rgba(247, 127, 94, 0.28);
+    color: #F77F5E;
     border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    font-family: var(--font);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.04em;
+    margin-top: 8px;
     transition: all 0.2s;
 }
 
+.sidebar-add-child:hover {
+    background: rgba(247, 127, 94, 0.22);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(247, 127, 94, 0.2);
+}
+
+/* Logout button */
+.sidebar-logout {
+    margin-top: auto;
+    padding: 12px 14px;
+    text-align: left;
+    color: rgba(239, 68, 68, 0.6);
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
 .sidebar-logout:hover {
-    background: rgba(229, 62, 62, 0.15);
+    background: rgba(239, 68, 68, 0.1);
     color: var(--danger);
 }
 
-/* ===== CONTENU PRINCIPAL ===== */
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
 .app-content {
     margin-left: var(--sidebar-width);
     flex: 1;
@@ -182,17 +291,79 @@ body {
     overflow-y: auto;
 }
 
-/* ===== BARRE ENFANTS ===== */
-#children-bar {
+/* ============================================================
+   PAGES
+   ============================================================ */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 28px;
+}
+
+.page-header h2 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--text);
+}
+
+/* ============================================================
+   HOME PAGE
+   ============================================================ */
+.home-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.home-greeting {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.home-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: capitalize;
+}
+
+.home-actions {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+}
+
+/* Children bar */
+#children-bar {
+    margin-bottom: 32px;
 }
 
 .children-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 14px;
 }
 
+#children-cards-container {
+    margin-bottom: 32px;
+}
+
+/* ============================================================
+   CHILD CARDS (home page)
+   ============================================================ */
 .child-card {
     background: var(--card);
     border-radius: var(--radius);
@@ -212,8 +383,8 @@ body {
 }
 
 .child-card.active {
-    border-color: var(--lime-dark);
-    box-shadow: 0 0 0 4px rgba(168, 217, 79, 0.25);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.18);
 }
 
 .child-photo-container {
@@ -222,8 +393,8 @@ body {
     border-radius: 14px;
     overflow: hidden;
     margin: 0 auto 10px;
-    border: 2px solid var(--lime-light);
-    box-shadow: 0 4px 12px rgba(168, 217, 79, 0.2);
+    border: 2px solid var(--border);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.12);
 }
 
 .child-photo-img {
@@ -232,12 +403,12 @@ body {
     object-fit: cover;
 }
 
-/* ===== BOUTON PHOTO ENFANT ===== */
+/* Child photo button (new style used by JS) */
 .child-photo-btn {
     background: var(--card);
     border: 2px solid transparent;
     border-radius: var(--radius);
-    padding: 16px 12px;
+    padding: 18px 14px;
     text-align: center;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
@@ -248,26 +419,27 @@ body {
     gap: 10px;
     width: 130px;
     font-family: inherit;
+    position: relative;
 }
 
 .child-photo-btn:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow);
-    border-color: var(--lime-dark);
+    border-color: var(--primary);
 }
 
 .child-photo-btn.active {
-    border-color: var(--lime-dark);
-    box-shadow: 0 0 0 4px rgba(168, 217, 79, 0.25);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.18);
+    background: var(--primary-light);
 }
 
 .child-photo-btn .child-photo-img {
-    width: 72px;
-    height: 72px;
+    width: 68px;
+    height: 68px;
     border-radius: 14px;
     object-fit: cover;
-    border: 2px solid var(--lime-light);
-    box-shadow: 0 4px 12px rgba(168, 217, 79, 0.2);
+    border: 2px solid var(--border);
     display: block;
 }
 
@@ -294,6 +466,7 @@ body {
     font-weight: 600;
 }
 
+/* Settings icon on child card */
 .settings-card-button {
     position: absolute;
     top: 8px;
@@ -307,7 +480,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
-    color: var(--text-light);
+    color: var(--text-muted);
     margin: 0;
     padding: 0;
     box-shadow: var(--shadow-sm);
@@ -315,11 +488,14 @@ body {
 }
 
 .settings-card-button:hover {
-    background: var(--lime);
+    background: var(--primary-light);
+    color: var(--primary);
     transform: rotate(20deg);
 }
 
-/* ===== RÉSUMÉ DU MOIS ===== */
+/* ============================================================
+   GLOBAL STATS STRIP (home page)
+   ============================================================ */
 #summary-bar {
     margin-bottom: 28px;
 }
@@ -333,10 +509,10 @@ body {
 }
 
 .summary-card-title {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.07em;
     color: var(--text-muted);
     margin-bottom: 16px;
 }
@@ -356,12 +532,12 @@ body {
 }
 
 .figure-box h3 {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 700;
     color: var(--text-muted);
     margin-bottom: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
 }
 
 .figure-value {
@@ -372,50 +548,76 @@ body {
 }
 
 .figure-box.highlight {
-    background: var(--lime);
-    border-color: var(--lime-dark);
+    background: var(--primary);
+    border-color: var(--primary-dark);
 }
 
 .figure-box.highlight h3 {
-    color: var(--dark-mid);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .figure-box.highlight .figure-value {
-    color: var(--dark);
+    color: white;
 }
 
-/* ===== DASHBOARD ===== */
+/* Global strip (3 dark boxes) */
+.global-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 0 0 32px;
+}
+
+.dgc-box {
+    background: var(--card);
+    border-radius: var(--radius);
+    min-height: 110px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.dgc-box-lime {
+    background: var(--sidebar-bg);
+    border: none;
+    box-shadow: var(--shadow);
+}
+
+/* ============================================================
+   DASHBOARD SUMMARIES (per child)
+   ============================================================ */
 .dashboard-summaries {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 32px;
-    margin-top: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
 }
 
 .dashboard-child-summary {
     background: var(--card);
     border-radius: var(--radius);
     padding: 24px;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
 }
 
 .dcs-name {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 900;
     color: var(--text);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 24px;
-    margin-top: 0;
+    margin-bottom: 20px;
 }
 
 .dcs-figures {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .dcs-figure {
@@ -423,40 +625,39 @@ body {
     justify-content: space-between;
     align-items: center;
     background: var(--bg);
-    padding: 16px 20px;
-    border-radius: 12px;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border);
 }
 
 .dcs-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: var(--text-light);
+    color: var(--text-muted);
     letter-spacing: 0.05em;
 }
 
 .dcs-value {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 900;
     color: var(--text);
 }
 
 .dcs-figure.highlight {
-    background: var(--lime);
-    border-color: var(--lime-dark);
-    margin-top: 4px;
+    background: var(--primary);
+    border-color: var(--primary-dark);
 }
 
 .dcs-figure.highlight .dcs-label {
-    color: var(--dark-mid);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .dcs-figure.highlight .dcs-value {
-    color: var(--dark);
+    color: white;
 }
 
-/* Global totals */
+/* Global totals card */
 .dashboard-global-card {
     background: var(--card);
     border-radius: var(--radius);
@@ -467,7 +668,7 @@ body {
 }
 
 .dgc-title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 900;
     color: var(--text);
     text-transform: uppercase;
@@ -481,73 +682,50 @@ body {
     gap: 16px;
 }
 
-.dgc-box {
-    background: var(--bg);
-    border-radius: 12px;
-    height: 100px;
-    border: 1px solid var(--border);
-}
-
-/* ===== PAGES ===== */
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-/* ===== PAGE HEADER ===== */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-
-.page-header h2 {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--text);
-}
-
-/* ===== BOUTONS ===== */
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 button {
     font-family: var(--font);
     cursor: pointer;
 }
 
 .action-button {
-    background: var(--lime);
-    color: var(--dark);
+    background: var(--primary);
+    color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 11px 22px;
     border-radius: 50px;
     font-weight: 800;
     font-size: 0.88rem;
     font-family: var(--font);
     transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-    box-shadow: 0 4px 14px rgba(168, 217, 79, 0.4);
+    box-shadow: 0 4px 16px rgba(67, 97, 238, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .action-button:hover {
-    background: var(--lime-dark);
+    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(168, 217, 79, 0.5);
+    box-shadow: 0 7px 22px rgba(67, 97, 238, 0.45);
 }
 
 .delete-button {
     background: var(--danger) !important;
     color: white !important;
-    box-shadow: 0 4px 14px rgba(229, 62, 62, 0.3) !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3) !important;
     width: 100%;
 }
 
 .delete-button:hover {
-    box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4) !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
 }
 
-/* ===== TABLE PRÉSENCES ===== */
+/* ============================================================
+   ATTENDANCE TABLE
+   ============================================================ */
 .table-wrapper {
     background: var(--card);
     border-radius: var(--radius);
@@ -567,10 +745,10 @@ button {
     background: var(--bg);
     padding: 14px 12px;
     text-align: left;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.07em;
     color: var(--text-muted);
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
@@ -586,7 +764,7 @@ button {
 }
 
 #attendanceTable tbody tr:hover {
-    background: var(--lime-light);
+    background: var(--primary-light);
 }
 
 #attendanceTable tbody td {
@@ -600,49 +778,13 @@ button {
     padding: 14px 12px;
     font-weight: 800;
     font-size: 0.88rem;
-    background: var(--dark);
-    color: var(--lime);
+    background: var(--sidebar-bg);
+    color: white;
     border-top: 2px solid var(--border);
 }
 
 .total-row td:first-child {
     text-align: right;
-}
-
-.data-input {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 8px;
-    font-size: 0.85rem;
-    font-family: var(--font);
-    color: var(--text);
-    width: 90%;
-    max-width: 100px;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-}
-
-.data-input:focus {
-    outline: none;
-    border-color: var(--lime-dark);
-    background: white;
-}
-
-input[type="time"].data-input {
-    max-width: 85px;
-}
-
-.total-hours,
-.indemnity-cost,
-.total-day {
-    font-weight: 700;
-    color: var(--text);
-}
-
-.total-day {
-    color: var(--dark-light);
-    font-weight: 800;
 }
 
 #attendanceTable tbody td:last-child {
@@ -666,8 +808,8 @@ input[type="time"].data-input {
 }
 
 #attendanceTable tbody td:last-child button:first-child {
-    background: var(--lime-light);
-    color: var(--dark);
+    background: var(--primary-light);
+    color: var(--primary);
 }
 
 #attendanceTable tbody td:last-child button:last-child {
@@ -675,7 +817,45 @@ input[type="time"].data-input {
     color: var(--danger);
 }
 
-/* ===== PARAMÈTRES ===== */
+.data-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    font-family: var(--font);
+    color: var(--text);
+    width: 90%;
+    max-width: 100px;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.data-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+}
+
+input[type="time"].data-input {
+    max-width: 85px;
+}
+
+.total-hours,
+.indemnity-cost,
+.total-day {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.total-day {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+/* ============================================================
+   SETTINGS PAGE
+   ============================================================ */
 .settings-page-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -696,7 +876,7 @@ input[type="time"].data-input {
     color: var(--text);
     margin-bottom: 20px;
     padding-bottom: 14px;
-    border-bottom: 2px solid var(--lime);
+    border-bottom: 2px solid var(--primary-light);
 }
 
 .settings-form {
@@ -716,7 +896,7 @@ input[type="time"].data-input {
 .settings-form input[type="text"],
 .settings-form input[type="password"] {
     width: 100%;
-    padding: 10px 14px;
+    padding: 11px 14px;
     border: 1.5px solid var(--border);
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
@@ -729,7 +909,7 @@ input[type="time"].data-input {
 
 .settings-form input:focus {
     outline: none;
-    border-color: var(--lime-dark);
+    border-color: var(--primary);
     background: white;
 }
 
@@ -745,6 +925,8 @@ input[type="time"].data-input {
     margin-top: 20px;
     padding: 12px;
     font-size: 0.92rem;
+    border-radius: var(--radius-sm);
+    justify-content: center;
 }
 
 .settings-form .message {
@@ -752,7 +934,7 @@ input[type="time"].data-input {
     margin-top: 10px;
     font-weight: 700;
     font-size: 0.85rem;
-    color: var(--dark-light);
+    color: var(--primary);
 }
 
 .photo-uploader {
@@ -767,46 +949,22 @@ input[type="time"].data-input {
     object-fit: cover;
     margin: 12px auto 8px;
     display: block;
-    border: 3px solid var(--lime);
-    box-shadow: 0 4px 12px rgba(168, 217, 79, 0.3);
+    border: 3px solid var(--primary-light);
+    box-shadow: 0 4px 14px rgba(67, 97, 238, 0.18);
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-    .settings-page-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .key-figures {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 64px;
-        padding: 20px 8px;
-    }
-
-    .sidebar-logo,
-    .sidebar-email,
-    .sidebar-btn span {
-        display: none;
-    }
-
-    .app-content {
-        margin-left: 64px;
-        padding: 24px 16px;
-    }
-}
-
-/* ===== MODALES ===== */
+/* ============================================================
+   MODALS
+   ============================================================ */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(28, 43, 26, 0.55);
-    backdrop-filter: blur(6px);
+    background: rgba(26, 29, 59, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 2000;
     display: flex;
     align-items: center;
@@ -817,16 +975,22 @@ input[type="time"].data-input {
 .modal-content {
     background: white;
     width: 90%;
-    max-width: 450px;
+    max-width: 460px;
     border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(28, 43, 26, 0.25);
+    box-shadow: 0 24px 64px rgba(26, 29, 59, 0.28);
     overflow: hidden;
-    animation: modalBounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: modalBounce 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes modalBounce {
-    from { transform: scale(0.85); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.86);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .modal-header {
@@ -840,7 +1004,7 @@ input[type="time"].data-input {
 
 .modal-header h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 900;
     color: var(--text);
 }
@@ -855,13 +1019,13 @@ input[type="time"].data-input {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--text-light);
+    color: var(--text-muted);
     transition: background 0.2s;
 }
 
 .modal-close:hover {
-    background: var(--lime);
-    color: var(--dark);
+    background: var(--primary-light);
+    color: var(--primary);
 }
 
 .modal-body {
@@ -886,7 +1050,7 @@ input[type="time"].data-input {
 .form-group input {
     padding: 12px 16px;
     border: 2px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     font-size: 0.95rem;
     font-family: inherit;
     transition: border-color 0.2s;
@@ -895,7 +1059,7 @@ input[type="time"].data-input {
 }
 
 .form-group input:focus {
-    border-color: var(--lime-dark);
+    border-color: var(--primary);
     outline: none;
     background: white;
 }
@@ -916,7 +1080,7 @@ input[type="time"].data-input {
     font-weight: 700;
     color: var(--text-muted);
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: var(--radius-xs);
     transition: background 0.2s;
 }
 
@@ -927,566 +1091,29 @@ input[type="time"].data-input {
 
 .btn-save {
     padding: 10px 24px;
-    background: var(--lime);
-    color: var(--dark);
+    background: var(--primary);
+    color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     font-weight: 900;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(168, 217, 79, 0.4);
+    box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);
     transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
 .btn-save:hover {
-    background: var(--lime-dark);
+    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(168, 217, 79, 0.5);
+    box-shadow: 0 7px 20px rgba(67, 97, 238, 0.45);
 }
 
 .modal-overlay.hidden {
     display: none;
 }
 
-/* ===== ATTENDANCE PAGE ===== */
-.attendance-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding-bottom: 60px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.attendance-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-}
-
-.card-title {
-    font-size: 0.85rem;
-    font-weight: 900;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-/* 1. Profile Header Card */
-.profile-header-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--dark);
-    border: none;
-}
-
-.profile-header-card .ph-info h2 {
-    color: white;
-}
-
-.profile-header-card .ph-age {
-    color: var(--lime);
-}
-
-.profile-header-card .ph-desc {
-    color: rgba(206, 241, 123, 0.5);
-}
-
-.profile-header-card .ph-docs-btn {
-    color: var(--lime);
-}
-
-.profile-header-card .ph-docs-icon {
-    border-color: var(--lime);
-}
-
-.profile-header-card .ph-docs-btn span {
-    color: rgba(206, 241, 123, 0.7);
-}
-
-.ph-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.ph-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 20px;
-    object-fit: cover;
-    background: var(--dark-mid);
-    border: 3px solid var(--lime);
-}
-
-.ph-info h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 4px;
-}
-
-.ph-age {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.ph-desc {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-}
-
-.ph-docs-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: var(--text);
-}
-
-.ph-docs-icon {
-    width: 48px;
-    height: 48px;
-    border: 2px solid var(--text);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ph-docs-btn span {
-    font-size: 0.65rem;
-    font-weight: 800;
-}
-
-/* 2. Today Card */
-.today-card {
-    background: var(--lime-light);
-    border-color: var(--lime);
-}
-
-.today-card .card-title {
-    color: var(--dark-mid);
-}
-
-.today-grid {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.today-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.today-icon {
-    font-size: 24px;
-    color: var(--dark);
-}
-
-.divider-v {
-    width: 1px;
-    height: 32px;
-    background: rgba(28, 43, 26, 0.15);
-}
-
-.meal-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(28, 43, 26, 0.15);
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-}
-
-.dot:hover {
-    transform: scale(1.3);
-}
-
-.dot.active {
-    background: var(--dark);
-}
-
-.counter-btn {
-    background: white;
-    border: 1.5px solid rgba(28, 43, 26, 0.2);
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 0.9rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    padding: 0;
-    transition: background 0.15s;
-    color: var(--dark);
-}
-
-.counter-btn:hover {
-    background: var(--lime);
-    border-color: var(--lime-dark);
-}
-
-.counter-btn-lg {
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
-}
-
-.nap-time, .diaper-count, .activity-text {
-    font-weight: 800;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: var(--dark);
-}
-
-/* 3. Health Card */
-.health-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.health-add-btn {
-    background: var(--dark);
-    color: var(--lime);
-    border: none;
-    border-radius: 12px;
-    padding: 10px 20px;
-    font-weight: 800;
-    font-size: 0.7rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.health-add-btn:hover {
-    background: var(--dark-light);
-}
-
-/* 4. Billing Card */
-.billing-placeholder {
-    padding: 30px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    text-align: center;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-}
-
-.action-button-sm {
-    background: var(--dark);
-    color: var(--lime);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.75rem;
-    cursor: pointer;
-}
-
-.mini-table {
-    margin-top: 20px;
-    overflow-x: auto;
-}
-
-.mini-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.mini-table th {
-    text-align: left;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    padding: 12px 8px;
-    border-bottom: 1px solid var(--border);
-}
-
-.mini-table td {
-    padding: 12px 8px;
-    border-bottom: 1px solid var(--bg);
-}
-
-/* 5. Calendar Card */
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-
-.cal-nav {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    color: var(--text-muted);
-}
-
-.cal-current {
-    font-size: 0.7rem;
-    font-weight: 800;
-    background: var(--dark);
-    color: var(--lime);
-    padding: 6px 14px;
-    border-radius: 8px;
-    transition: background 0.2s;
-}
-
-.cal-current:hover {
-    background: var(--dark-light);
-}
-
-.visual-calendar {
-    display: flex;
-    flex-direction: column;
-}
-
-.cal-days-row {
-    display: flex;
-    margin-left: 50px;
-    margin-bottom: 16px;
-}
-
-.cal-day {
-    flex: 1;
-    text-align: center;
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: var(--text-muted);
-}
-
-.cal-day.active {
-    color: var(--dark) !important;
-    background: var(--lime);
-    padding: 4px 0;
-    border-radius: 12px;
-}
-
-.cal-grid-container {
-    display: flex;
-    position: relative;
-    height: 400px;
-    border-bottom: 1px solid var(--border);
-}
-
-.cal-time-axis {
-    width: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    padding-bottom: 10px;
-}
-
-.cal-columns {
-    flex: 1;
-    display: flex;
-    border-top: 1px solid var(--border);
-}
-
-.cal-col {
-    flex: 1;
-    border-left: 1px solid var(--border);
-    position: relative;
-    transition: background 0.15s;
-}
-
-.cal-col:hover {
-    background: var(--lime-light);
-}
-
-.cal-col:last-child {
-    border-right: 1px solid var(--border);
-}
-
-.cal-col.active {
-    background: rgba(206, 241, 123, 0.08);
-}
-
-.cal-bar {
-    position: absolute;
-    left: 10%;
-    right: 10%;
-    background: var(--lime);
-    border-radius: 12px;
-    opacity: 0.9;
-    border: 2px solid var(--lime-dark);
-}
-
-@media (max-width: 768px) {
-    .profile-header-card {
-        flex-direction: column;
-        text-align: center;
-        gap: 20px;
-    }
-    .ph-left {
-        flex-direction: column;
-    }
-    .today-grid {
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    .divider-v {
-        display: none;
-    }
-}
-
-/* Animation de rotation */
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-.rotating {
-    animation: rotate 1.5s linear infinite;
-    display: inline-block;
-}
-
-/* Utilitaires */
-.full-width-card {
-    grid-column: 1 / -1 !important;
-    width: 100%;
-}
-
 /* ============================================================
-   REDESIGN 2026 — NEW CLASSES
+   CHILD DETAIL — LAYOUT
    ============================================================ */
-
-/* ===== SIDEBAR — LOGO AREA ===== */
-.sidebar-logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 4px 16px;
-    border-bottom: 1px solid rgba(206, 241, 123, 0.12);
-    margin-bottom: 8px;
-}
-
-.sidebar-logo-badge {
-    background: var(--lime);
-    color: var(--dark);
-    font-size: 0.75rem;
-    font-weight: 900;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    letter-spacing: 0.03em;
-}
-
-.sidebar-logo-wordmark {
-    font-size: 0.78rem;
-    font-weight: 900;
-    color: var(--lime);
-    letter-spacing: 0.12em;
-}
-
-/* ===== SIDEBAR — NAV BUTTON ICONS ===== */
-.sidebar-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-align: left;
-}
-
-.sidebar-btn-icon {
-    font-size: 18px;
-    flex-shrink: 0;
-}
-
-/* ===== SIDEBAR — ADD CHILD BUTTON ===== */
-.sidebar-add-child {
-    background: var(--lime);
-    color: var(--dark);
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    font-size: 0.78rem;
-    font-weight: 900;
-    font-family: var(--font);
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: 0.04em;
-    margin-top: 8px;
-    transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 4px 14px rgba(206, 241, 123, 0.35);
-}
-
-.sidebar-add-child:hover {
-    background: var(--lime-dark);
-    transform: translateY(-1px);
-}
-
-/* ===== HOME PAGE — HEADER ===== */
-.home-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
-}
-
-.home-greeting {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--text);
-    line-height: 1.1;
-    margin-bottom: 4px;
-}
-
-.home-date {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: capitalize;
-}
-
-/* ===== HOME PAGE — GLOBAL STRIP ===== */
-.global-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin: 28px 0;
-}
-
-.dgc-box-lime {
-    background: var(--dark);
-    border-radius: var(--radius);
-    min-height: 100px;
-    border: none;
-    box-shadow: var(--shadow);
-}
-
-/* ===== CHILD DETAIL — LAYOUT WRAPPER ===== */
 .child-detail-layout {
     max-width: 960px;
     margin: 0 auto;
@@ -1496,9 +1123,11 @@ input[type="time"].data-input {
     gap: 20px;
 }
 
-/* ===== CHILD DETAIL — HERO CARD ===== */
+/* ============================================================
+   CHILD DETAIL — HERO CARD
+   ============================================================ */
 .hero-card {
-    background: var(--dark);
+    background: var(--sidebar-bg);
     border-radius: var(--radius);
     padding: 28px 32px;
     display: flex;
@@ -1518,8 +1147,8 @@ input[type="time"].data-input {
     height: 90px;
     border-radius: 18px;
     object-fit: cover;
-    border: 3px solid var(--lime);
-    background: var(--dark-mid);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    background: var(--sidebar-mid);
     flex-shrink: 0;
 }
 
@@ -1533,26 +1162,113 @@ input[type="time"].data-input {
 .hero-age {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--lime);
+    color: rgba(255, 255, 255, 0.6);
     letter-spacing: 0.04em;
 }
 
-/* Ensure docs button is styled properly on dark hero */
-.hero-card .ph-docs-btn {
-    color: var(--lime);
+/* Old profile header aliases (still referenced in CSS) */
+.profile-header-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--sidebar-bg);
+    border: none;
 }
 
-.hero-card .ph-docs-icon {
-    border-color: rgba(206, 241, 123, 0.5);
-    color: var(--lime);
+.ph-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
 }
 
-.hero-card .ph-docs-btn span {
-    color: rgba(206, 241, 123, 0.7);
+.ph-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    object-fit: cover;
+    background: var(--sidebar-mid);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.ph-info h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: white;
+}
+
+.ph-age {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.ph-desc {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+}
+
+.ph-docs-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.ph-docs-icon {
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ph-docs-btn span {
     font-size: 0.65rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.5);
 }
 
-/* ===== CHILD DETAIL — BENTO GRID ===== */
+/* ============================================================
+   CHILD DETAIL — GENERIC CARDS
+   ============================================================ */
+.detail-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.attendance-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.card-title {
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ============================================================
+   CHILD DETAIL — BENTO GRID (Today)
+   ============================================================ */
 .today-bento {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1569,71 +1285,71 @@ input[type="time"].data-input {
     box-shadow: var(--shadow-sm);
 }
 
-/* REPAS — lime-light background */
+/* REPAS — light peach */
 .bento-meals {
-    background: var(--lime-light);
-    border: 1px solid var(--lime);
+    background: var(--peach-light);
+    border: 1px solid rgba(247, 127, 94, 0.2);
 }
 
 .bento-meals .bento-label {
-    color: var(--dark-mid);
+    color: var(--peach-dark);
 }
 
 .bento-meals .dot {
     width: 20px;
     height: 20px;
-    background: rgba(28, 43, 26, 0.2);
+    background: rgba(247, 127, 94, 0.2);
 }
 
 .bento-meals .dot.active {
-    background: var(--dark);
+    background: var(--peach);
 }
 
-/* SIESTE — dark background */
+/* SIESTE — dark sidebar */
 .bento-nap {
-    background: var(--dark);
+    background: var(--sidebar-bg);
     border: none;
 }
 
 .bento-nap .bento-label {
-    color: rgba(206, 241, 123, 0.55);
+    color: rgba(255, 255, 255, 0.45);
 }
 
 .bento-nap .bento-big {
-    color: var(--lime);
+    color: white;
 }
 
-/* COUCHES — lime-light background */
+/* COUCHES — light teal */
 .bento-diapers {
-    background: var(--lime-light);
-    border: 1px solid var(--lime);
+    background: var(--teal-light);
+    border: 1px solid rgba(46, 196, 182, 0.25);
 }
 
 .bento-diapers .bento-label {
-    color: var(--dark-mid);
+    color: #1B9E94;
 }
 
 .bento-diapers .bento-big {
-    color: var(--dark);
+    color: #1B9E94;
 }
 
-/* ACTIVITÉ — dark background */
+/* ACTIVITÉ — primary blue */
 .bento-activity {
-    background: var(--dark);
+    background: var(--primary);
     border: none;
 }
 
 .bento-activity .bento-label {
-    color: rgba(206, 241, 123, 0.55);
+    color: rgba(255, 255, 255, 0.55);
 }
 
 .bento-activity .bento-big {
-    color: var(--lime);
+    color: white;
 }
 
-/* Shared bento text elements */
+/* Shared bento text */
 .bento-label {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -1658,84 +1374,118 @@ input[type="time"].data-input {
     height: 32px;
     font-size: 1.2rem;
     background: white;
-    border: 2px solid rgba(28, 43, 26, 0.2);
+    border: 2px solid rgba(46, 196, 182, 0.25);
 }
 
-/* ===== CHILD DETAIL — GENERIC DETAIL CARD ===== */
-.detail-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border);
-}
-
-/* ===== CHILD DETAIL — BILLING HEADER ===== */
-.billing-header {
+/* ============================================================
+   MEAL DOTS
+   ============================================================ */
+.meal-dots {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
+    gap: 6px;
 }
 
-.btn-add-row {
-    background: var(--dark);
-    color: var(--lime);
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 0.75rem;
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(26, 29, 59, 0.12);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.dot:hover {
+    transform: scale(1.3);
+}
+
+.dot.active {
+    background: var(--peach);
+}
+
+/* ============================================================
+   COUNTER BUTTONS
+   ============================================================ */
+.counter-btn {
+    background: white;
+    border: 1.5px solid rgba(26, 29, 59, 0.15);
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.9rem;
     font-weight: 800;
-    font-family: var(--font);
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    transition: background 0.15s;
+    color: var(--text);
+}
+
+.counter-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.counter-btn-lg {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+}
+
+.nap-time,
+.diaper-count,
+.activity-text {
+    font-weight: 800;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text);
+}
+
+/* ============================================================
+   HEALTH / TREATMENTS
+   ============================================================ */
+.health-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.health-add-btn {
+    background: var(--sidebar-bg);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-weight: 800;
+    font-size: 0.7rem;
+    cursor: pointer;
     transition: background 0.2s;
+    letter-spacing: 0.04em;
 }
 
-.btn-add-row:hover {
-    background: var(--dark-light);
+.health-add-btn:hover {
+    background: var(--sidebar-mid);
 }
 
-/* ===== RESPONSIVE — CHILD DETAIL ===== */
-@media (max-width: 700px) {
-    .today-bento {
-        grid-template-columns: 1fr;
-    }
-
-    .hero-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-    }
-
-    .home-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-    }
-
-    .global-strip {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ===== TRAITEMENTS ===== */
 .treatment-row {
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 14px 0;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.15s;
-    border-radius: 8px;
+    border-radius: var(--radius-xs);
     padding: 14px 12px;
     margin: 0 -12px;
 }
 
 .treatment-row:hover {
-    background: var(--lime-light);
+    background: var(--primary-light);
 }
 
 .treatment-row:last-child {
@@ -1743,7 +1493,7 @@ input[type="time"].data-input {
 }
 
 .treatment-reason {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -1772,18 +1522,183 @@ input[type="time"].data-input {
 }
 
 .treatment-freq {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 900;
-    color: var(--dark);
-    background: var(--lime);
+    color: white;
+    background: var(--primary);
     padding: 4px 10px;
     border-radius: 20px;
     white-space: nowrap;
 }
 
-/* ===== CALENDRIER GLOBAL ===== */
+/* ============================================================
+   BILLING / ATTENDANCE HEADER
+   ============================================================ */
+.billing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.billing-placeholder {
+    padding: 30px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.btn-add-row {
+    background: var(--sidebar-bg);
+    color: white;
+    border: none;
+    border-radius: var(--radius-xs);
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s;
+}
+
+.btn-add-row:hover {
+    background: var(--sidebar-mid);
+}
+
+.action-button-sm {
+    background: var(--sidebar-bg);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+/* ============================================================
+   CALENDAR (child detail)
+   ============================================================ */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cal-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-muted);
+}
+
+.cal-current {
+    font-size: 0.7rem;
+    font-weight: 800;
+    background: var(--sidebar-bg);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.cal-current:hover {
+    background: var(--sidebar-mid);
+}
+
+.visual-calendar {
+    display: flex;
+    flex-direction: column;
+}
+
+.cal-days-row {
+    display: flex;
+    margin-left: 50px;
+    margin-bottom: 16px;
+}
+
+.cal-day {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+.cal-day.active {
+    color: white !important;
+    background: var(--primary);
+    padding: 4px 0;
+    border-radius: var(--radius-sm);
+}
+
+.cal-grid-container {
+    display: flex;
+    position: relative;
+    height: 400px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cal-time-axis {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding-bottom: 10px;
+}
+
+.cal-columns {
+    flex: 1;
+    display: flex;
+    border-top: 1px solid var(--border);
+}
+
+.cal-col {
+    flex: 1;
+    border-left: 1px solid var(--border);
+    position: relative;
+    transition: background 0.15s;
+}
+
+.cal-col:hover {
+    background: var(--primary-light);
+}
+
+.cal-col:last-child {
+    border-right: 1px solid var(--border);
+}
+
+.cal-col.active {
+    background: rgba(67, 97, 238, 0.05);
+}
+
+.cal-bar {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    background: var(--primary);
+    border-radius: var(--radius-sm);
+    opacity: 0.85;
+    border: 2px solid var(--primary-dark);
+}
+
+/* ============================================================
+   GLOBAL CALENDAR
+   ============================================================ */
 .global-cal-layout {
-    max-width: 1000px;
+    max-width: 1060px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -1810,6 +1725,13 @@ input[type="time"].data-input {
     margin-top: 4px;
 }
 
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-muted);
+}
+
 .global-cal-legend {
     display: flex;
     gap: 20px;
@@ -1818,13 +1740,14 @@ input[type="time"].data-input {
     background: var(--card);
     border-radius: var(--radius);
     border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 .legend-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 800;
     color: var(--text);
     text-transform: uppercase;
@@ -1832,9 +1755,9 @@ input[type="time"].data-input {
 }
 
 .legend-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
     flex-shrink: 0;
 }
 
@@ -1869,21 +1792,23 @@ input[type="time"].data-input {
 }
 
 .global-day-col.active {
-    background: rgba(206, 241, 123, 0.07);
+    background: rgba(67, 97, 238, 0.04);
 }
 
 .global-child-col {
     flex: 1;
     position: relative;
     height: 100%;
-    border-right: 1px solid rgba(223, 240, 188, 0.4);
+    border-right: 1px solid rgba(228, 232, 245, 0.5);
 }
 
 .global-child-col:last-child {
     border-right: none;
 }
 
-/* ===== PERSONNALISATION ENFANT ===== */
+/* ============================================================
+   PERSONALIZATION PICKERS
+   ============================================================ */
 .emoji-picker {
     display: flex;
     flex-wrap: wrap;
@@ -1894,7 +1819,7 @@ input[type="time"].data-input {
 .emoji-btn {
     width: 44px;
     height: 44px;
-    border-radius: 12px;
+    border-radius: var(--radius-sm);
     border: 2px solid var(--border);
     background: var(--card);
     font-size: 1.4rem;
@@ -1906,14 +1831,14 @@ input[type="time"].data-input {
 }
 
 .emoji-btn:hover {
-    border-color: var(--color-primary);
+    border-color: var(--primary);
     transform: scale(1.1);
 }
 
 .emoji-btn.selected {
-    border-color: var(--color-primary);
-    background: rgba(206, 241, 123, 0.15);
-    box-shadow: 0 0 0 3px rgba(206, 241, 123, 0.3);
+    border-color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
 }
 
 .color-picker {
@@ -1939,11 +1864,13 @@ input[type="time"].data-input {
 
 .color-swatch.selected {
     border-color: white;
-    box-shadow: 0 0 0 3px var(--color-primary), 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 0 0 3px var(--primary), 0 2px 8px rgba(0, 0, 0, 0.2);
     transform: scale(1.1);
 }
 
-/* ===== EMOJI AVATAR DANS LES CARTES ENFANTS ===== */
+/* ============================================================
+   EMOJI AVATAR (child cards & hero)
+   ============================================================ */
 .child-emoji-avatar {
     width: 52px;
     height: 52px;
@@ -1956,59 +1883,6 @@ input[type="time"].data-input {
     flex-shrink: 0;
 }
 
-/* ===== HERO EDIT & PROFILE PERSONALIZATION ===== */
-.hero-edit-btn {
-    background: rgba(206, 241, 123, 0.12);
-    border: 1px solid rgba(206, 241, 123, 0.25);
-    border-radius: 12px;
-    color: var(--color-primary);
-    padding: 10px 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-}
-.hero-edit-btn:hover {
-    background: rgba(206, 241, 123, 0.22);
-    transform: scale(1.05);
-}
-
-.profile-edit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-}
-@media (max-width: 600px) {
-    .profile-edit-grid { grid-template-columns: 1fr; }
-}
-
-.perso-label {
-    display: block;
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.perso-input {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.9rem;
-    outline: none;
-    box-sizing: border-box;
-}
-.perso-input:focus {
-    border-color: var(--color-primary);
-}
-
-/* Hero emoji avatar (grand) */
 .hero-emoji-avatar {
     width: 80px;
     height: 80px;
@@ -2019,4 +1893,266 @@ input[type="time"].data-input {
     font-size: 2.2rem;
     border: 3px solid transparent;
     flex-shrink: 0;
+}
+
+/* ============================================================
+   HERO EDIT & PROFILE PERSONALIZATION
+   ============================================================ */
+.hero-edit-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.hero-edit-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: scale(1.05);
+}
+
+.profile-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 600px) {
+    .profile-edit-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.perso-label {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.perso-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.perso-input:focus {
+    border-color: var(--primary);
+    background: white;
+}
+
+/* ============================================================
+   TODAY CARD (alternate style)
+   ============================================================ */
+.today-card {
+    background: var(--primary-light);
+    border-color: var(--primary);
+}
+
+.today-card .card-title {
+    color: var(--primary-dark);
+}
+
+.today-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.today-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.today-icon {
+    font-size: 24px;
+    color: var(--text);
+}
+
+.divider-v {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+}
+
+/* ============================================================
+   MINI TABLE (miscellaneous)
+   ============================================================ */
+.mini-table {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.mini-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mini-table th {
+    text-align: left;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.mini-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--bg);
+}
+
+/* ============================================================
+   ATTENDANCE CONTAINER (page wrapper)
+   ============================================================ */
+.attendance-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ============================================================
+   ANIMATION UTILITIES
+   ============================================================ */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    animation: rotate 1.5s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.full-width-card {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+    .settings-page-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .key-figures {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 72px;
+        padding: 16px 8px;
+    }
+
+    .sidebar-profile,
+    .sidebar-email,
+    .sidebar-logo-wordmark,
+    .sidebar-add-child span:not(.material-icons),
+    .sidebar-btn span:not(.material-icons):not(.sidebar-btn-icon) {
+        display: none;
+    }
+
+    .sidebar-btn {
+        justify-content: center;
+        padding: 14px 8px;
+    }
+
+    .sidebar-add-child {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .sidebar-logout {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .app-content {
+        margin-left: 72px;
+        padding: 24px 20px;
+    }
+
+    .sidebar-logo-area {
+        justify-content: center;
+    }
+
+    .sidebar-profile {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .ph-left {
+        flex-direction: column;
+    }
+
+    .today-grid {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .divider-v {
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .today-bento {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .home-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .global-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-summaries {
+        grid-template-columns: 1fr;
+    }
 }
